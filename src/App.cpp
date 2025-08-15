@@ -1,0 +1,193 @@
+#include "App.hpp"
+#include "RendererGlobals.hpp"
+#include <cstdint>
+
+const int MAX_FRAMES_IN_FLIGHT = 2;
+namespace renderer {
+    void App::run(){
+        initVulkan();
+        mainLoop();
+        cleanup();
+    }
+
+    void App::initVulkan(){
+        glfwSetWindowUserPointer(appWindow.getWindow(), this);
+        appInstance.createInstance(instance);
+        appWindow.createSurface(instance, window,surface);
+        appInstance.pickPhysicalDevice(instance, surface);
+        queueFamilyIndices = appQueue.FindQueueFamily(physicalDevice, surface);
+        appInstance.createLogicalDevice(surface, queueFamilyIndices);
+        vkGetDeviceQueue(device, queueFamilyIndices.graphicsFamily.value(), 0, &graphicsQueue);
+        vkGetDeviceQueue(device, queueFamilyIndices.presentFamily.value(), 0, &presentQueue);
+        appSwapChain.createSwapChain(surface, queueFamilyIndices);
+        swapChain = appSwapChain.getSwapChain();
+        appSwapChain.createImageViews();
+        renderFinishedSemaphores.resize(appSwapChain.swapChainImages.size());        
+        appPipeline.createRenderPass(appSwapChain.swapChainImageFormat);
+        uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
+        appPipeline.createGraphicsPipeline(appSwapChain.swapChainExtent, descriptorSetLayout);
+        appSwapChain.createFramebuffers(appPipeline.renderPass);
+        appCommand.createCommandPool(surface, queueFamilyIndices);
+        textureLoader.createTextureImage(textureImage, textureImageMemory, appCommand.commandPool);
+        textureLoader.createTextureImageView(textureImage, textureImageView);
+        textureLoader.createTextureSampler(textureSampler);
+        vertexCommand.createVertexBuffer(vertexBuffer, vertexBufferMemory, appCommand.commandPool, graphicsQueue);
+        vertexCommand.createIndexBuffer(indexBuffer, indexBufferMemory, appCommand.commandPool, graphicsQueue, indices);
+        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, uniformBuffers, uniformBuffersMemory, uniformBuffersMapped, physicalDevice, device);
+        uniformBufferCommand.createDescriptorPool(MAX_FRAMES_IN_FLIGHT, descriptorPool);
+        uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, descriptorSetLayout, descriptorPool, descriptorSets, textureImageView, textureSampler);
+        appCommand.createCommandBuffers(commandbuffers, MAX_FRAMES_IN_FLIGHT);
+        createSyncObjects();
+    }
+
+    void App::createSyncObjects(){
+        imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+        inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+
+        VkSemaphoreCreateInfo semaphoreInfo{};
+        semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+        
+        VkFenceCreateInfo fenceInfo{};
+        fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+        fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+        for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
+            if(vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
+            vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS){
+                throw std::runtime_error("Failed to create semaphores!");
+            }
+        }   
+
+        for(size_t i = 0; i < renderFinishedSemaphores.size(); i++){
+            if(vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS){
+                throw std::runtime_error("Failed to create renderFinished semaphore!");
+            }
+        }
+    }
+    
+    void App::drawFrame(){
+        vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+
+        uint32_t imageIndex;
+        VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+        if(result == VK_ERROR_OUT_OF_DATE_KHR){
+            framebuffersrResized = false;
+            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appWindow.getWindow());
+            swapChain = appSwapChain.getSwapChain();
+            return;
+        } else if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR){
+            throw std::runtime_error("Failed to acquire swap chain image!");
+        }
+
+        vkResetFences(device, 1, &inFlightFences[currentFrame]);
+
+        vkResetCommandBuffer(commandbuffers[currentFrame], 0);
+
+        appCommand.recordCommandBuffers(commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipeline, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, indices,descriptorSets);
+
+        uniformBufferCommand.updateUniformBuffers(currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);
+
+        VkSubmitInfo submitInfo{};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+        VkSemaphore waitSemaphores[] = {imageAvailableSemaphores[currentFrame]};
+        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+        submitInfo.waitSemaphoreCount = 1;
+        submitInfo.pWaitSemaphores = waitSemaphores;
+        submitInfo.pWaitDstStageMask = waitStages;
+
+        submitInfo.commandBufferCount = 1;
+        submitInfo.pCommandBuffers = &commandbuffers[currentFrame];
+
+        VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[imageIndex]};
+        submitInfo.signalSemaphoreCount = 1;
+        submitInfo.pSignalSemaphores = signalSemaphores;
+
+        VkResult submitResult = vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]);
+        if(submitResult != VK_SUCCESS){
+            throw std::runtime_error("Failed to submit queue error code: " + std::to_string(submitResult) + "!");
+        }
+
+        VkPresentInfoKHR presentInfo{};
+        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+
+        presentInfo.waitSemaphoreCount = 1;
+        presentInfo.pWaitSemaphores = signalSemaphores;
+
+        VkSwapchainKHR swapChains[] = {swapChain};
+        presentInfo.swapchainCount = 1;
+        presentInfo.pSwapchains = swapChains;
+        presentInfo.pImageIndices = &imageIndex;
+
+        presentInfo.pResults = nullptr;
+
+        result = vkQueuePresentKHR(presentQueue, &presentInfo);
+        if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebuffersrResized){
+            framebuffersrResized = false;
+            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appWindow.getWindow());
+            swapChain = appSwapChain.getSwapChain();
+            return;
+        } else if(result != VK_SUCCESS){
+            throw std::runtime_error("Failed to present swap chain image!");
+        }
+
+
+        currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+    }
+
+    void App::mainLoop(){
+        while(!glfwWindowShouldClose(window)){
+            glfwPollEvents();
+            drawFrame();
+        }
+        vkDeviceWaitIdle(device);
+    }
+
+    void App::cleanup(){
+        appSwapChain.cleanupSwapChain(device);
+
+        vkDestroyBuffer(device, indexBuffer, nullptr);
+        vkFreeMemory(device, indexBufferMemory, nullptr);
+
+        vkDestroyBuffer(device, vertexBuffer, nullptr);
+        vkFreeMemory(device, vertexBufferMemory, nullptr);
+
+        for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
+            vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(device, inFlightFences[i], nullptr);
+        }
+
+        for (size_t i = 0; i < renderFinishedSemaphores.size(); i++) {
+            vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
+        }
+        
+        vkDestroySampler(device, textureSampler, nullptr);
+        vkDestroyImageView(device, textureImageView, nullptr);
+
+        vkDestroyImage(device, textureImage, nullptr);
+        vkFreeMemory(device, textureImageMemory, nullptr);
+
+        appCommand.cleanup();
+
+        appPipeline.cleanupPipeline();
+        
+        for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
+            vkDestroyBuffer(device, uniformBuffers[i], nullptr);
+            vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+        }
+
+        vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+
+        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+
+        vkDestroyDevice(device, nullptr);
+
+        vkDestroySurfaceKHR(instance, surface, nullptr);
+
+        vkDestroyInstance(instance, nullptr);
+
+        glfwDestroyWindow(window);
+
+        glfwTerminate();
+    }
+}

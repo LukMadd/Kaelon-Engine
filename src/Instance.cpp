@@ -1,0 +1,63 @@
+#include "Instance.hpp"
+#include <GLFW/glfw3.h>
+#include <vulkan/vulkan_macos.h> 
+#include <cstdint>
+#include <stdexcept>
+
+namespace renderer {
+    Instance::Instance(VkInstance& instance){
+        createInstance(instance);
+    }
+
+    void Instance::createInstance(VkInstance &instance){
+        #ifdef NDEBUG
+            enableValidationLaye = false;
+        #else
+            enableValidationLaye = true;
+        #endif
+            
+        if(enableValidationLaye && !m_ValidationLaye.CheckValidationSupport()){
+            throw std::runtime_error("Validation laye requested but not available");
+        } 
+
+        VkApplicationInfo appInfo{};
+        appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+        appInfo.pApplicationName = " Triangle";
+        appInfo.applicationVersion = VK_MAKE_VERSION(1,0,0);
+        appInfo.pEngineName = "No Engine";
+        appInfo.engineVersion = VK_MAKE_VERSION(1,0,0);
+        appInfo.apiVersion = VK_API_VERSION_1_3;
+
+        uint32_t glfwExtensionCount = 0;
+        const char** glfwExtensions;
+
+        glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+        std::vector<const char*> requiredExtensions;
+
+        for(int i = 0; i < glfwExtensionCount; i++){
+            requiredExtensions.emplace_back(glfwExtensions[i]);
+        }
+
+       requiredExtensions.emplace_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+
+        VkInstanceCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+        createInfo.pApplicationInfo = &appInfo;
+        createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+        createInfo.enabledExtensionCount = (uint32_t)requiredExtensions.size();
+        createInfo.ppEnabledExtensionNames = requiredExtensions.data();
+
+        if(enableValidationLaye){
+            createInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLaye.validationLaye.size());
+            createInfo.ppEnabledLayerNames = m_ValidationLaye.validationLaye.data();
+        } else{
+            createInfo.enabledLayerCount = 0;
+        }
+
+        VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+        if(result != VK_SUCCESS){
+            throw std::runtime_error("Failed to create instance error code: " + std::to_string(result) + "!");
+        }
+    }
+}

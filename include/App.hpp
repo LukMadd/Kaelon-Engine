@@ -6,6 +6,7 @@
 #include "Command.hpp"
 #include "Vertex.hpp"
 #include "UniformBuffer.hpp"
+#include "ModelLoader.hpp"
 #include "TextureLoader.hpp"
 #include "DepthBuffer.hpp"
 #include "Utility.hpp"
@@ -45,10 +46,6 @@ namespace renderer {
             VkDeviceMemory vertexBufferMemory;
             VkBuffer indexBuffer;
             VkDeviceMemory indexBufferMemory;
-            const std::vector<uint16_t> indices = {
-                0, 1, 2, 2, 3, 0,
-                4, 5, 6, 6, 7, 4
-            };
 
             UniformBuffer uniformBufferCommand;
             VkDescriptorSetLayout descriptorSetLayout;
@@ -72,6 +69,8 @@ namespace renderer {
             VkDeviceMemory textureImageMemory;
             VkImageView textureImageView;
             VkSampler textureSampler;
+
+            modelLoader modelLoader;
 
             depthBuffer depthBuffer;
     };

@@ -12,6 +12,6 @@ namespace renderer{
 
             void createCommandBuffers(std::vector<VkCommandBuffer> &commandBuffers, int MAX_FRAMES_IN_FLIGHT);
 
-            void recordCommandBuffers(VkCommandBuffer commandBuffer, uint32_t imageIndex, VkRenderPass renderPass, SwapChain swapChain, VkPipeline &graphicsPipeline, VkPipelineLayout &pipelineLayout, uint32_t currentFrame, VkBuffer &vertexBuffer, VkBuffer &indexBuffer, const std::vector<uint16_t> &indices, std::vector<VkDescriptorSet> &descriptorSets);
+            void recordCommandBuffers(VkCommandBuffer commandBuffer, uint32_t imageIndex, VkRenderPass renderPass, SwapChain swapChain, VkPipeline &graphicsPipeline, VkPipelineLayout &pipelineLayout, uint32_t currentFrame, VkBuffer &vertexBuffer, VkBuffer &indexBuffer, const std::vector<uint32_t> &indices, std::vector<VkDescriptorSet> &descriptorSets);
     };
 }

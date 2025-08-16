@@ -32,8 +32,9 @@ namespace renderer {
         textureLoader.createTextureImage(textureImage, textureImageMemory, appCommand.commandPool);
         textureLoader.createTextureImageView(textureImage, textureImageView);
         textureLoader.createTextureSampler(textureSampler);
+        modelLoader.loadModel();
         vertexCommand.createVertexBuffer(vertexBuffer, vertexBufferMemory, appCommand.commandPool, graphicsQueue);
-        vertexCommand.createIndexBuffer(indexBuffer, indexBufferMemory, appCommand.commandPool, graphicsQueue, indices);
+        vertexCommand.createIndexBuffer(indexBuffer, indexBufferMemory, appCommand.commandPool, graphicsQueue);
         uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, uniformBuffers, uniformBuffersMemory, uniformBuffersMapped, physicalDevice, device);
         uniformBufferCommand.createDescriptorPool(MAX_FRAMES_IN_FLIGHT, descriptorPool);
         uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, descriptorSetLayout, descriptorPool, descriptorSets, textureImageView, textureSampler);
@@ -84,7 +85,7 @@ namespace renderer {
 
         vkResetCommandBuffer(commandbuffers[currentFrame], 0);
 
-        appCommand.recordCommandBuffers(commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipeline, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, indices,descriptorSets);
+        appCommand.recordCommandBuffers(commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipeline, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, indices ,descriptorSets);
 
         uniformBufferCommand.updateUniformBuffers(currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);
 

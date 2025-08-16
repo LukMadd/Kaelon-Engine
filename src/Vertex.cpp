@@ -3,18 +3,6 @@
 #include "RendererGlobals.hpp"
 
 namespace renderer{
-    const std::vector<Vertex> vertices = {
-        {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-        {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-        {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-        {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-
-        {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-        {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-        {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-        {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
-    };
-
     VkVertexInputBindingDescription Vertex::getBindingDescription(){
         VkVertexInputBindingDescription bindingDescription{};
         bindingDescription.binding = 0;
@@ -49,6 +37,7 @@ namespace renderer{
         
         VkBuffer stagingBuffer;
         VkDeviceMemory stagingBufferMemory;
+
         createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
         void* data;
@@ -64,7 +53,7 @@ namespace renderer{
         vkFreeMemory(device, stagingBufferMemory, nullptr);
     }
 
-    void Vertex::createIndexBuffer(VkBuffer &buffer, VkDeviceMemory &bufferMemory, VkCommandPool commandPool, VkQueue &graphicsQueue,  const std::vector<uint16_t> indices){
+    void Vertex::createIndexBuffer(VkBuffer &buffer, VkDeviceMemory &bufferMemory, VkCommandPool commandPool, VkQueue &graphicsQueue){
         VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
         
         VkBuffer stagingBuffer;

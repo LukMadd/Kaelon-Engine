@@ -17,6 +17,14 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(stb)
 
+FetchContent_Declare(
+    tinyobjloader
+    GIT_REPOSITORY https://github.com/tinyobjloader/tinyobjloader.git
+    GIT_TAG release
+)
+
+FetchContent_MakeAvailable(tinyobjloader)
+
 add_library(stb_image INTERFACE)
 target_include_directories(stb_image INTERFACE ${stb_SOURCE_DIR})
 
@@ -126,6 +134,7 @@ target_include_directories(Vulkan-Renderer PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${Vulkan_INCLUDE_DIRS}
     ${GLFW_INCLUDE_DIRS}
+    ${tinyobjloader_SOURCE_DIR}
 )
 
 message(STATUS "GLFW LIB PATH: ${GLFW_LIB_DIR}")

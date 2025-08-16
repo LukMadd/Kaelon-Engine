@@ -26,8 +26,9 @@ namespace renderer {
         appPipeline.createRenderPass(appSwapChain.swapChainImageFormat);
         uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
         appPipeline.createGraphicsPipeline(appSwapChain.swapChainExtent, descriptorSetLayout);
-        appSwapChain.createFramebuffers(appPipeline.renderPass);
         appCommand.createCommandPool(surface, queueFamilyIndices);
+        depthBuffer.createDepthResources(appCommand.commandPool, appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
+        appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView);
         textureLoader.createTextureImage(textureImage, textureImageMemory, appCommand.commandPool);
         textureLoader.createTextureImageView(textureImage, textureImageView);
         textureLoader.createTextureSampler(textureSampler);
@@ -72,7 +73,7 @@ namespace renderer {
         VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
         if(result == VK_ERROR_OUT_OF_DATE_KHR){
             framebuffersrResized = false;
-            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appWindow.getWindow());
+            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appCommand.commandPool, depthBuffer, appWindow.getWindow());
             swapChain = appSwapChain.getSwapChain();
             return;
         } else if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR){
@@ -124,13 +125,12 @@ namespace renderer {
         result = vkQueuePresentKHR(presentQueue, &presentInfo);
         if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebuffersrResized){
             framebuffersrResized = false;
-            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appWindow.getWindow());
+            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appCommand.commandPool, depthBuffer, appWindow.getWindow());
             swapChain = appSwapChain.getSwapChain();
             return;
         } else if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to present swap chain image!");
         }
-
 
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
@@ -144,7 +144,8 @@ namespace renderer {
     }
 
     void App::cleanup(){
-        appSwapChain.cleanupSwapChain(device);
+        appSwapChain.cleanupSwapChain(depthBuffer);
+        depthBuffer.cleanup();
 
         vkDestroyBuffer(device, indexBuffer, nullptr);
         vkFreeMemory(device, indexBufferMemory, nullptr);

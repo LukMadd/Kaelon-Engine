@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Queue.hpp"
+#include "DepthBuffer.hpp"
 
 namespace renderer {
     class SwapChainSupportDetails{
@@ -36,13 +37,12 @@ namespace renderer {
 
             void createImageViews();    
 
-            void createFramebuffers(VkRenderPass renderPass);
+            void createFramebuffers(VkRenderPass renderPass, VkImageView depthImageView);
 
             VkSwapchainKHR getSwapChain();
 
-            void recreateSwapChain(VkSurfaceKHR surface,QueueFamilyIndices indices, VkRenderPass renderPass, GLFWwindow* window);
-
-            void cleanupSwapChain(VkDevice device);
+            void recreateSwapChain(VkSurfaceKHR surface,QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, depthBuffer &depthBuffer, GLFWwindow* window);
+            void cleanupSwapChain(depthBuffer &depthBuffer);
 
         private:
             GLFWwindow* m_window;

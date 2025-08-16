@@ -7,7 +7,7 @@
 #include "Vertex.hpp"
 #include "UniformBuffer.hpp"
 #include "TextureLoader.hpp"
-#include "DepthBuffer.Hpp"
+#include "DepthBuffer.hpp"
 #include "Utility.hpp"
 namespace renderer {
     class App{
@@ -74,8 +74,5 @@ namespace renderer {
             VkSampler textureSampler;
 
             depthBuffer depthBuffer;
-            VkImage depthImage;
-            VkDeviceMemory depthImageMemory;
-            VkImageView depthImageView;
     };
 }

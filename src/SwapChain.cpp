@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <limits>
 #include "SwapChain.hpp"
+#include "DepthBuffer.hpp"
 #include "Utility.hpp"
 #include "RendererGlobals.hpp"
 
@@ -128,19 +129,20 @@ namespace renderer {
         swapChainExtent = extent;
     }
 
-    void SwapChain::createFramebuffers(VkRenderPass renderPass){
+    void SwapChain::createFramebuffers(VkRenderPass renderPass, VkImageView depthImageView){
         swapChainFramebuffers.resize(m_swapChainImageViews.size());
 
         for(size_t i = 0; i < m_swapChainImageViews.size(); i++){
-            VkImageView attachments[] = {
-                m_swapChainImageViews[i]
+            std::array<VkImageView, 2> attachments = {
+                m_swapChainImageViews[i],
+                depthImageView
             };
 
             VkFramebufferCreateInfo framebuffersrInfo{};
             framebuffersrInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
             framebuffersrInfo.renderPass = renderPass;
-            framebuffersrInfo.attachmentCount = 1;
-            framebuffersrInfo.pAttachments = attachments;
+            framebuffersrInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
+            framebuffersrInfo.pAttachments = attachments.data();
             framebuffersrInfo.width = swapChainExtent.width;
             framebuffersrInfo.height = swapChainExtent.height;
             framebuffersrInfo.layers = 1;
@@ -160,11 +162,11 @@ namespace renderer {
         m_swapChainImageViews.resize(swapChainImages.size());
 
         for(size_t i = 0; i < swapChainImages.size(); i++){
-            m_swapChainImageViews[i] = createImageView(swapChainImages[i], swapChainImageFormat);
+            m_swapChainImageViews[i] = createImageView(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
         }
     }
 
-    void SwapChain::recreateSwapChain(VkSurfaceKHR surface, QueueFamilyIndices indices, VkRenderPass renderPass, GLFWwindow* window){
+    void SwapChain::recreateSwapChain(VkSurfaceKHR surface, QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, depthBuffer &depthBuffer, GLFWwindow* window){
         int width = 0, height = 0;
         glfwGetFramebufferSize(window, &width, &height);
         while(width == 0 || height == 0){
@@ -174,14 +176,15 @@ namespace renderer {
 
         vkDeviceWaitIdle(device);
 
-        cleanupSwapChain(device);
+        cleanupSwapChain(depthBuffer);
 
         createSwapChain(surface, indices);
         createImageViews();
-        createFramebuffers(renderPass);
+        depthBuffer.createDepthResources(commandPool, swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
+        createFramebuffers(renderPass, depthBuffer.depthImageView);
     }
 
-    void SwapChain::cleanupSwapChain(VkDevice device){
+    void SwapChain::cleanupSwapChain(depthBuffer &depthBuffer){
         for (auto framebuffersr : swapChainFramebuffers){
             vkDestroyFramebuffer(device, framebuffersr, nullptr);
         }
@@ -191,5 +194,7 @@ namespace renderer {
         }
 
         vkDestroySwapchainKHR(device, m_swapChain, nullptr);
+
+        depthBuffer.cleanup();
     }
 }

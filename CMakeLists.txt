@@ -77,7 +77,7 @@ endif()
 find_package(glm REQUIRED)
 
 #-----------------------------------------Set source files-----------------------------------------#
-file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp" "${CMAKE_SOURCE_DIR}/src/*.mm")
+file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/Renderer/*.cpp")
 
 add_executable(Vulkan-Renderer ${SOURCES})
 
@@ -91,7 +91,7 @@ else()
 endif()
 
 #-----------------------------------------Shader compilation-----------------------------------------#
-file(GLOB SHADER_SOURCES "${CMAKE_SOURCE_DIR}/shaders/*.vert" "${CMAKE_SOURCE_DIR}/shaders/*.frag")
+file(GLOB SHADER_SOURCES "${CMAKE_SOURCE_DIR}/Renderer/shaders/*.vert" "${CMAKE_SOURCE_DIR}/Renderer/shaders/*.frag")
 
 set(SHADER_OUTPUT_DIR "${CMAKE_BINARY_DIR}/shaders")
 file(MAKE_DIRECTORY ${SHADER_OUTPUT_DIR})
@@ -131,7 +131,7 @@ add_dependencies(Vulkan-Renderer Shaders)
 
 #-----------------------------------------Include directories and libraries-----------------------------------------#
 target_include_directories(Vulkan-Renderer PRIVATE
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/Renderer
     ${Vulkan_INCLUDE_DIRS}
     ${GLFW_INCLUDE_DIRS}
     ${tinyobjloader_SOURCE_DIR}

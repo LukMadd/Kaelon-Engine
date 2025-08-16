@@ -42,8 +42,8 @@ VkShaderModule createShaderModule(const std::vector<char>& code, VkDevice device
 }
 namespace renderer {
     void Pipeline::createGraphicsPipeline(VkExtent2D swapChainExtent, VkDescriptorSetLayout descriptorSetLayout){
-        std::vector<char> vertShaderCode = readFile("../bin/shaders/shader_vert.spv");
-        std::vector<char> fragShaderCode = readFile("../bin/shaders/shader_frag.spv");
+        std::vector<char> vertShaderCode = readFile("shaders/shader_vert.spv");
+        std::vector<char> fragShaderCode = readFile("shaders/shader_frag.spv");
 
         vertShaderModule = createShaderModule(vertShaderCode, device);
         fragShaderModule = createShaderModule(fragShaderCode, device);

@@ -1,1 +1,22 @@
-This is my small project I am working which is to render a triangle or just things in general. I plan on using this to learn graphics to hopefully create my own game and game engine. 
+
+(All commits before August 15th were accidently deleted)
+------------------------------------------------------------------How to Build------------------------------------------------------------------
+1. Create a build and bin directory
+    - mkdir build && mkdir bin
+2. Navigate to build and build project
+    - cd build
+    - cmake ..
+    - make
+3. Navigate to bin and run the executable(./Vulkan-Renderer)
+    - cd .. && cd bin
+    - ./Vulkan-Renderer    
+
+---------------------------------------------------------------Required Libraries---------------------------------------------------------------
+1. Vulkan SDK(1.2+)
+2. GLFW(3.3+)
+3. stb(included in repo)
+
+----------------------------------------------------------------------Notes----------------------------------------------------------------------
+1. This renderer currently is un-customizable (unless you update the code)
+2. There is currently no way to contribute as this is a personal project
+3. You may have to adjust CMake or linker settings depending on your platform(Linux/macOS/Windows)

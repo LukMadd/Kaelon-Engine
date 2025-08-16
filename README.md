@@ -12,7 +12,7 @@
     - cd .. && cd bin
     - ./Vulkan-Renderer    
 
-----------Required Librarie----------
+----------Required Libraries----------
 1. Vulkan SDK(1.2+)
 2. GLFW(3.3+)
 3. stb(included in repo)

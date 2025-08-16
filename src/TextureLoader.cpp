@@ -12,6 +12,7 @@ namespace renderer{
         Vertex vertex;
 
         int texWidth, texHeight, texChannels;
+        stbi_set_flip_vertically_on_load(true);
         stbi_uc* pixels = stbi_load("../textures/GigaSus.png", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
         VkDeviceSize imageSize = texWidth * texHeight * 4;
 

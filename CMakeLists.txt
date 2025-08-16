@@ -12,8 +12,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 #-----------------------------------------Find GLFW and Vulkan-----------------------------------------#
 FetchContent_Declare(
     stb
-    GIT_REPOSITORY https://github.com/nothings/stb.git
-    GIT_TAG master
+    URL https://github.com/nothings/stb/archive/refs/heads/master.zip
 )
 
 FetchContent_MakeAvailable(stb)

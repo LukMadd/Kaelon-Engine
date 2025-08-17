@@ -77,7 +77,7 @@ endif()
 find_package(glm REQUIRED)
 
 #-----------------------------------------Set source files-----------------------------------------#
-file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/Renderer/*.cpp")
+file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/Renderer/*.cpp" "${CMAKE_SOURCE_DIR}/src/main.cpp")
 
 add_executable(Vulkan-Renderer ${SOURCES})
 

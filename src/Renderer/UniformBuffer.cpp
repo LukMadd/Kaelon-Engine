@@ -1,5 +1,4 @@
 #include "UniformBuffer.hpp"
-#include "Vertex.hpp"
 #include "Utility.hpp"
 #include "RendererGlobals.hpp"
 #include <array>

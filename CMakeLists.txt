@@ -91,7 +91,7 @@ else()
 endif()
 
 #-----------------------------------------Shader compilation-----------------------------------------#
-file(GLOB SHADER_SOURCES "${CMAKE_SOURCE_DIR}/Renderer/shaders/*.vert" "${CMAKE_SOURCE_DIR}/Renderer/shaders/*.frag")
+file(GLOB SHADER_SOURCES "${CMAKE_SOURCE_DIR}/src/Renderer/shaders/*.vert" "${CMAKE_SOURCE_DIR}/src/Renderer/shaders/*.frag")
 
 set(SHADER_OUTPUT_DIR "${CMAKE_BINARY_DIR}/shaders")
 file(MAKE_DIRECTORY ${SHADER_OUTPUT_DIR})

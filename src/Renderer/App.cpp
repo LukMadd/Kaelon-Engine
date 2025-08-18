@@ -27,8 +27,9 @@ namespace renderer {
         uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
         appPipeline.createGraphicsPipeline(appSwapChain.swapChainExtent, descriptorSetLayout);
         appCommand.createCommandPool(surface, queueFamilyIndices);
+        multiSampler.createColorResources(appSwapChain.swapChainImageFormat, appSwapChain.swapChainExtent);
         depthBuffer.createDepthResources(appCommand.commandPool, appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
-        appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView);
+        appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView, multiSampler.colorImageView);
         textureLoader.createTextureImage(textureImage, mipMap, textureImageMemory, appCommand.commandPool);
         textureLoader.createTextureImageView(textureImage, textureImageView, mipMap);
         textureLoader.createTextureSampler(textureSampler, mipMap.mipLevels);
@@ -74,7 +75,7 @@ namespace renderer {
         VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
         if(result == VK_ERROR_OUT_OF_DATE_KHR){
             framebuffersrResized = false;
-            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appCommand.commandPool, depthBuffer, appWindow.getWindow());
+            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appCommand.commandPool, depthBuffer, multiSampler, appWindow.getWindow());
             swapChain = appSwapChain.getSwapChain();
             return;
         } else if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR){
@@ -126,7 +127,7 @@ namespace renderer {
         result = vkQueuePresentKHR(presentQueue, &presentInfo);
         if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebuffersrResized){
             framebuffersrResized = false;
-            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appCommand.commandPool, depthBuffer, appWindow.getWindow());
+            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appCommand.commandPool, depthBuffer,multiSampler, appWindow.getWindow());
             swapChain = appSwapChain.getSwapChain();
             return;
         } else if(result != VK_SUCCESS){
@@ -145,7 +146,7 @@ namespace renderer {
     }
 
     void App::cleanup(){
-        appSwapChain.cleanupSwapChain(depthBuffer);
+        appSwapChain.cleanupSwapChain(depthBuffer, multiSampler);
         depthBuffer.cleanup();
 
         vkDestroyBuffer(device, indexBuffer, nullptr);

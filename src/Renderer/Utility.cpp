@@ -43,7 +43,7 @@ namespace renderer{
         throw std::runtime_error("Failed to find suitable memory type!");
     }
 
-    void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory){
+    void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory){
         VkImageCreateInfo imageInfo{};
         imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         imageInfo.format = format;
@@ -57,7 +57,7 @@ namespace renderer{
         imageInfo.arrayLayers = 1;
         imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
         imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.samples = numSamples;
         imageInfo.flags = 0;
 
         VkResult result = vkCreateImage(device, &imageInfo, nullptr, &image);
@@ -191,6 +191,21 @@ namespace renderer{
         vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0,0,  nullptr, 0, nullptr, 1, &barrier);
 
         endSingleTimeCommands(commandBuffer, commandPool);
+    }
+    
+    VkSampleCountFlagBits getMaxUsableSampleCount(){
+        VkPhysicalDeviceProperties physicalDeviceProperties;
+        vkGetPhysicalDeviceProperties(physicalDevice, &physicalDeviceProperties);
+
+        VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
+        if(counts & VK_SAMPLE_COUNT_64_BIT){return VK_SAMPLE_COUNT_64_BIT;}
+        if(counts & VK_SAMPLE_COUNT_32_BIT){return VK_SAMPLE_COUNT_32_BIT;}
+        if(counts & VK_SAMPLE_COUNT_16_BIT){return VK_SAMPLE_COUNT_16_BIT;}
+        if(counts & VK_SAMPLE_COUNT_8_BIT){return VK_SAMPLE_COUNT_8_BIT;}
+        if(counts & VK_SAMPLE_COUNT_4_BIT){return VK_SAMPLE_COUNT_4_BIT;}
+        if(counts & VK_SAMPLE_COUNT_2_BIT){return VK_SAMPLE_COUNT_2_BIT;}
+
+        return VK_SAMPLE_COUNT_1_BIT;
     }
 
     VkCommandBuffer beginSingleTimeCommands(VkCommandPool commandPool){

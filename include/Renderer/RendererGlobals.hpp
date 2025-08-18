@@ -8,9 +8,11 @@ namespace renderer{
     inline VkDevice device;
     inline VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
+    inline std::vector<Vertex> vertices;
+    inline std::vector<uint32_t> indices;
+
     const std::string MODEL_PATH = "models/viking_room.obj";
     const std::string TEXTURE_PATH = "textures/viking_room.png";
 
-    inline std::vector<Vertex> vertices;
-    inline std::vector<uint32_t> indices;
+    inline VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 }

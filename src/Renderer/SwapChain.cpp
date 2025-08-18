@@ -1,7 +1,7 @@
 #include <cstdint>
 #include <limits>
 #include "SwapChain.hpp"
-#include "DepthBuffer.hpp"
+#include "MultiSampling.hpp"
 #include "Utility.hpp"
 #include "RendererGlobals.hpp"
 
@@ -129,13 +129,14 @@ namespace renderer {
         swapChainExtent = extent;
     }
 
-    void SwapChain::createFramebuffers(VkRenderPass renderPass, VkImageView depthImageView){
+    void SwapChain::createFramebuffers(VkRenderPass renderPass, VkImageView depthImageView, VkImageView colorImageView){
         swapChainFramebuffers.resize(m_swapChainImageViews.size());
 
         for(size_t i = 0; i < m_swapChainImageViews.size(); i++){
-            std::array<VkImageView, 2> attachments = {
-                m_swapChainImageViews[i],
-                depthImageView
+            std::array<VkImageView, 3> attachments = {
+                colorImageView, 
+                depthImageView,            
+                m_swapChainImageViews[i]        
             };
 
             VkFramebufferCreateInfo framebuffersrInfo{};
@@ -166,7 +167,7 @@ namespace renderer {
         }
     }
 
-    void SwapChain::recreateSwapChain(VkSurfaceKHR surface, QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, DepthBuffer &depthBuffer, GLFWwindow* window){
+    void SwapChain::recreateSwapChain(VkSurfaceKHR surface, QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, DepthBuffer &depthBuffer, MultiSampler &multiSampler, GLFWwindow* window){
         int width = 0, height = 0;
         glfwGetFramebufferSize(window, &width, &height);
         while(width == 0 || height == 0){
@@ -176,15 +177,16 @@ namespace renderer {
 
         vkDeviceWaitIdle(device);
 
-        cleanupSwapChain(depthBuffer);
+        cleanupSwapChain(depthBuffer, multiSampler);
 
         createSwapChain(surface, indices);
         createImageViews();
+        multiSampler.createColorResources(swapChainImageFormat, swapChainExtent);
         depthBuffer.createDepthResources(commandPool, swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
-        createFramebuffers(renderPass, depthBuffer.depthImageView);
+        createFramebuffers(renderPass, depthBuffer.depthImageView, multiSampler.colorImageView);
     }
 
-    void SwapChain::cleanupSwapChain(DepthBuffer &depthBuffer){
+    void SwapChain::cleanupSwapChain(DepthBuffer &depthBuffer, MultiSampler &multiSampler){
         for (auto framebuffersr : swapChainFramebuffers){
             vkDestroyFramebuffer(device, framebuffersr, nullptr);
         }
@@ -196,5 +198,7 @@ namespace renderer {
         vkDestroySwapchainKHR(device, m_swapChain, nullptr);
 
         depthBuffer.cleanup();
+
+        multiSampler.cleanup();
     }
 }

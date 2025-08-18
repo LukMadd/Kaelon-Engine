@@ -4,6 +4,7 @@
 
 #include "Queue.hpp"
 #include "DepthBuffer.hpp"
+#include "MultiSampling.hpp"
 
 namespace renderer {
     class SwapChainSupportDetails{
@@ -37,12 +38,12 @@ namespace renderer {
 
             void createImageViews();    
 
-            void createFramebuffers(VkRenderPass renderPass, VkImageView depthImageView);
+            void createFramebuffers(VkRenderPass renderPass, VkImageView depthImageView, VkImageView colorImageView);
 
             VkSwapchainKHR getSwapChain();
 
-            void recreateSwapChain(VkSurfaceKHR surface,QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, DepthBuffer &depthBuffer, GLFWwindow* window);
-            void cleanupSwapChain(DepthBuffer &depthBuffer);
+            void recreateSwapChain(VkSurfaceKHR surface,QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, DepthBuffer &depthBuffer, MultiSampler &multiSampler, GLFWwindow* window);
+            void cleanupSwapChain(DepthBuffer &depthBuffer, MultiSampler &multiSampler);
 
         private:
             GLFWwindow* m_window;

@@ -1,6 +1,7 @@
 #include "Instance.hpp"
 #include "SwapChain.hpp"
 #include "RendererGlobals.hpp"
+#include "Utility.hpp"
 
 #include <stdexcept>
 #include <cstdint>
@@ -23,6 +24,7 @@ namespace renderer {
             QueueFamilyIndices indices = queue.FindQueueFamily(currentPhysicalDevice, surface);
             if(isDeviceSuitable(currentPhysicalDevice, surface, indices)){
                 physicalDevice = currentPhysicalDevice;
+                msaaSamples = getMaxUsableSampleCount();
                 break;
             }
         }

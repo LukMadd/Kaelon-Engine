@@ -10,6 +10,7 @@
 #include "TextureLoader.hpp"
 #include "DepthBuffer.hpp"
 #include "MipMap.hpp"
+#include "MultiSampling.hpp"
 #include "Utility.hpp"
 namespace renderer {
     class App{
@@ -76,5 +77,7 @@ namespace renderer {
             DepthBuffer depthBuffer;
 
             MipMap mipMap;
+
+            MultiSampler multiSampler;
     };
 }

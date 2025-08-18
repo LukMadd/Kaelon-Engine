@@ -162,11 +162,11 @@ namespace renderer {
         m_swapChainImageViews.resize(swapChainImages.size());
 
         for(size_t i = 0; i < swapChainImages.size(); i++){
-            m_swapChainImageViews[i] = createImageView(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
+            m_swapChainImageViews[i] = createImageView(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
         }
     }
 
-    void SwapChain::recreateSwapChain(VkSurfaceKHR surface, QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, depthBuffer &depthBuffer, GLFWwindow* window){
+    void SwapChain::recreateSwapChain(VkSurfaceKHR surface, QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, DepthBuffer &depthBuffer, GLFWwindow* window){
         int width = 0, height = 0;
         glfwGetFramebufferSize(window, &width, &height);
         while(width == 0 || height == 0){
@@ -184,7 +184,7 @@ namespace renderer {
         createFramebuffers(renderPass, depthBuffer.depthImageView);
     }
 
-    void SwapChain::cleanupSwapChain(depthBuffer &depthBuffer){
+    void SwapChain::cleanupSwapChain(DepthBuffer &depthBuffer){
         for (auto framebuffersr : swapChainFramebuffers){
             vkDestroyFramebuffer(device, framebuffersr, nullptr);
         }

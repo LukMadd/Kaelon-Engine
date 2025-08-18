@@ -41,8 +41,8 @@ namespace renderer {
 
             VkSwapchainKHR getSwapChain();
 
-            void recreateSwapChain(VkSurfaceKHR surface,QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, depthBuffer &depthBuffer, GLFWwindow* window);
-            void cleanupSwapChain(depthBuffer &depthBuffer);
+            void recreateSwapChain(VkSurfaceKHR surface,QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, DepthBuffer &depthBuffer, GLFWwindow* window);
+            void cleanupSwapChain(DepthBuffer &depthBuffer);
 
         private:
             GLFWwindow* m_window;

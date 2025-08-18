@@ -9,6 +9,7 @@
 #include "ModelLoader.hpp"
 #include "TextureLoader.hpp"
 #include "DepthBuffer.hpp"
+#include "MipMap.hpp"
 #include "Utility.hpp"
 namespace renderer {
     class App{
@@ -64,7 +65,7 @@ namespace renderer {
 
             uint32_t currentFrame = 0;
 
-            textureLoader textureLoader;
+            TextureLoader textureLoader;
             VkImage textureImage;
             VkDeviceMemory textureImageMemory;
             VkImageView textureImageView;
@@ -72,6 +73,8 @@ namespace renderer {
 
             modelLoader modelLoader;
 
-            depthBuffer depthBuffer;
+            DepthBuffer depthBuffer;
+
+            MipMap mipMap;
     };
 }

@@ -214,7 +214,7 @@ namespace renderer {
         colorAttachmentRef.attachment = 0;
         colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-        depthBuffer depthBuffer;
+        DepthBuffer depthBuffer;
 
         VkAttachmentDescription depthAttachment{};
         depthAttachment.format = depthBuffer.findDepthFormat();

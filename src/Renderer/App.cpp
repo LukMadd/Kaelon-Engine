@@ -29,9 +29,9 @@ namespace renderer {
         appCommand.createCommandPool(surface, queueFamilyIndices);
         depthBuffer.createDepthResources(appCommand.commandPool, appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
         appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView);
-        textureLoader.createTextureImage(textureImage, textureImageMemory, appCommand.commandPool);
-        textureLoader.createTextureImageView(textureImage, textureImageView);
-        textureLoader.createTextureSampler(textureSampler);
+        textureLoader.createTextureImage(textureImage, mipMap, textureImageMemory, appCommand.commandPool);
+        textureLoader.createTextureImageView(textureImage, textureImageView, mipMap);
+        textureLoader.createTextureSampler(textureSampler, mipMap.mipLevels);
         modelLoader.loadModel();
         vertexCommand.createVertexBuffer(vertexBuffer, vertexBufferMemory, appCommand.commandPool, graphicsQueue);
         vertexCommand.createIndexBuffer(indexBuffer, indexBufferMemory, appCommand.commandPool, graphicsQueue);

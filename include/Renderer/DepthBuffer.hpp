@@ -4,7 +4,7 @@
 #include <vulkan/vulkan.hpp>
 
 namespace renderer{
-    struct depthBuffer{
+    struct DepthBuffer{
         VkImage depthImage;
         VkDeviceMemory depthImageMemory;
         VkImageView depthImageView;

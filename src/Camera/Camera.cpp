@@ -1,9 +1,6 @@
 #include "Camera.hpp"
 #include "Action.hpp"
 #include "Input.hpp"
-
-#include <iostream>
-
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace EngineInput;

@@ -5,8 +5,6 @@
 
 #include "Input.hpp"
 
-#include <iostream>
-
 namespace Engine{
     void toggleFullscreen(GLFWwindow* window){
         static int windowedX, windowedY, windowedWidth, windowedHeight;

@@ -21,3 +21,11 @@
 1. The only way to currently customize this renderer is through editing the source code
 2. There is currently no way to contribute as this is a personal project
 3. You may have to adjust CMake or linker settings depending on your platform(Linux/macOS/Windows)
+
+----------Current Commands----------
+1. WASD for movement
+2. Up and Down arrows for quick up and down
+3. F10 for full screen
+4. Tab for hiding cursor
+5. Esc for showing cursor and exiting full screen(exiting full screen will in some cases cause a jerk)
+(These are all editable in Input.hpp(for linking custom keys to GLFW keys), Action.hpp(For creating unique actions), and Action.cpp(for linking keys to the actions))

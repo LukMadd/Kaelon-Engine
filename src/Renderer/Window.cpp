@@ -12,7 +12,6 @@ namespace Engine{
         static int windowedX, windowedY, windowedWidth, windowedHeight;
 
         if(!isFullscreen){
-            std::cout << "Going fullscreen...\n";
             glfwGetWindowPos(window, &windowedX, &windowedY);
             glfwGetWindowSize(window, &windowedWidth, & windowedHeight);
 
@@ -21,7 +20,6 @@ namespace Engine{
 
             glfwSetWindowMonitor(window, primary, 0, 0, videoMode->width, videoMode->height, videoMode->refreshRate);
         } else{
-            std::cout << "Going windowed...";
             glfwSetWindowMonitor(window, nullptr, windowedX, windowedY, windowedWidth, windowedHeight, 0);
         }
 

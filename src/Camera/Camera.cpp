@@ -53,7 +53,6 @@ namespace EngineCamera{
 
         yaw += offsets[0] * sensitivity;
         pitch += offsets[1] * sensitivity;
-        std::cout << "xOffset: " << offsets[0] << " yOffset: " << offsets[1] << std::endl;
 
         if(pitch > 89.0f) pitch = 89.0f;
         if(pitch < -89.0f) pitch = -89.0f;

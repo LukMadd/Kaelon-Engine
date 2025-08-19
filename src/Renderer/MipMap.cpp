@@ -3,7 +3,7 @@
 #include "RendererGlobals.hpp"
 #include <cstdint>
 
-namespace renderer{
+namespace EngineRenderer{
     void MipMap::generateMipMaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels, VkCommandPool commandPool){
         VkFormatProperties formatProperties;
         vkGetPhysicalDeviceFormatProperties(physicalDevice, imageFormat, &formatProperties);

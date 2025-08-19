@@ -1,7 +1,7 @@
 #include <vulkan/vulkan.hpp>
 #include "MipMap.hpp"
 
-namespace renderer{
+namespace EngineRenderer{
     struct TextureLoader{
         void createTextureImage(VkImage &textureImage, MipMap &mipMap, VkDeviceMemory&textureImageMemory, VkCommandPool commandPool);
         void createTextureImageView(VkImage textureImage, VkImageView &textureImageView, MipMap mipMap);

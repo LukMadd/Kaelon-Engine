@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <stdexcept>
 
-namespace renderer {
+namespace EngineRenderer {
     Instance::Instance(VkInstance& instance){
         createInstance(instance);
     }

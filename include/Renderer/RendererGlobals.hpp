@@ -2,7 +2,7 @@
 
 #include "Vertex.hpp"
 
-namespace renderer{
+namespace EngineRenderer{
     inline VkQueue graphicsQueue;
     inline VkQueue presentQueue;
     inline VkDevice device;

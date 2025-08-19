@@ -1,6 +1,9 @@
+#ifndef _PIPELINE_HPP
+#define _PIPELINE_HPP
+
 #include <vulkan/vulkan.hpp>
 
-namespace renderer {
+namespace EngineRenderer {
     class Pipeline{
         public:
             VkPipelineLayout pipelineLayout;
@@ -20,3 +23,5 @@ namespace renderer {
             VkShaderModule fragShaderModule;
         };
 }
+
+#endif

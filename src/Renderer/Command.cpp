@@ -1,7 +1,7 @@
 #include "Command.hpp"
 #include "RendererGlobals.hpp"
 #include <cstdint>
-namespace renderer{
+namespace EngineRenderer{
     void Command::createCommandPool(VkSurfaceKHR surface, QueueFamilyIndices queueFamilyIndices){
         VkCommandPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;

@@ -1,7 +1,7 @@
 #include "Queue.hpp"
 #include <cstdint>
 
-namespace renderer {
+namespace EngineRenderer {
     QueueFamilyIndices Queue::FindQueueFamily(VkPhysicalDevice device, VkSurfaceKHR surface){
         QueueFamilyIndices indices;
 

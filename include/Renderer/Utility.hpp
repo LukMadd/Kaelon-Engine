@@ -1,5 +1,5 @@
 #include <vulkan/vulkan.hpp>
-namespace renderer{
+namespace EngineRenderer{
     void createBuffer(VkDeviceSize &size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory);
     VkCommandBuffer beginSingleTimeCommands(VkCommandPool commandPool);
     void endSingleTimeCommands(VkCommandBuffer commandBuffer, VkCommandPool commandPool);;

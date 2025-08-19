@@ -77,7 +77,7 @@ endif()
 find_package(glm REQUIRED)
 
 #-----------------------------------------Set source files-----------------------------------------#
-file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/Renderer/*.cpp" "${CMAKE_SOURCE_DIR}/src/main.cpp")
+file(GLOB_RECURSE SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
 add_executable(Vulkan-Renderer ${SOURCES})
 
@@ -93,7 +93,7 @@ endif()
 #-----------------------------------------Shader compilation-----------------------------------------#
 file(GLOB SHADER_SOURCES "${CMAKE_SOURCE_DIR}/src/Renderer/shaders/*.vert" "${CMAKE_SOURCE_DIR}/src/Renderer/shaders/*.frag")
 
-set(SHADER_OUTPUT_DIR "${CMAKE_BINARY_DIR}/shaders")
+set(SHADER_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/bin/shaders")
 file(MAKE_DIRECTORY ${SHADER_OUTPUT_DIR})
 
 set(SPIRV_SHADERS "")
@@ -102,7 +102,7 @@ foreach(SHADER_FILE ${SHADER_SOURCES})
     get_filename_component(SHADER_NAME ${SHADER_FILE} NAME_WE)
     get_filename_component(SHADER_EXT ${SHADER_FILE} EXT)
     string(SUBSTRING ${SHADER_EXT} 1 -1 SHADER_EXT_NO_DOT)
-    set(SHADER_OUTPUT "${SHADER_OUTPUT_DIR}/${SHADER_NAME}_${SHADER_EXT_NO_DOT}.spv")
+    set(SHADER_OUTPUT "${SHADER_OUTPUT_DIR}/${SHADER_NAME}.spv")
 
     add_custom_command(
         OUTPUT ${SHADER_OUTPUT}
@@ -119,19 +119,14 @@ add_custom_target(
     DEPENDS ${SPIRV_SHADERS}
 )
 
-set(RUNTIME_SHADER_DIR "${CMAKE_SOURCE_DIR}/bin/shaders")
-file(MAKE_DIRECTORY ${RUNTIME_SHADER_DIR})
-
-add_custom_command(
-    TARGET Shaders POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${SHADER_OUTPUT_DIR} ${RUNTIME_SHADER_DIR}
-)
-
 add_dependencies(Vulkan-Renderer Shaders)
 
 #-----------------------------------------Include directories and libraries-----------------------------------------#
 target_include_directories(Vulkan-Renderer PRIVATE
+    ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/include/Renderer
+    ${CMAKE_SOURCE_DIR}/include/Input
+    ${CMAKE_SOURCE_DIR}/include/Camera
     ${Vulkan_INCLUDE_DIRS}
     ${GLFW_INCLUDE_DIRS}
     ${tinyobjloader_SOURCE_DIR}

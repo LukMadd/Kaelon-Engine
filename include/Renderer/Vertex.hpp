@@ -7,7 +7,7 @@
 
 #include <vulkan/vulkan.hpp>
 
-namespace renderer{
+namespace EngineRenderer{
     struct Vertex{
         glm::vec3 pos;
         glm::vec3 color;
@@ -28,8 +28,8 @@ namespace renderer{
 
 //I have NO idea what this does, but it works
 namespace std {
-    template<> struct hash<renderer::Vertex> {
-        size_t operator()(renderer::Vertex const& vertex) const {
+    template<> struct hash<EngineRenderer::Vertex> {
+        size_t operator()(EngineRenderer::Vertex const& vertex) const {
             return ((hash<glm::vec3>()(vertex.pos) ^
                    (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
                    (hash<glm::vec2>()(vertex.texCoord) << 1);

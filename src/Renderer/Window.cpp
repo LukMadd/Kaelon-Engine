@@ -1,8 +1,36 @@
 #include "Window.hpp"
-#include "App.hpp"
+#include "Renderer.hpp"
 #include <stdexcept>
+#include <glm/glm.hpp>
 
-namespace renderer {
+#include "Input.hpp"
+
+#include <iostream>
+
+namespace Engine{
+    void toggleFullscreen(GLFWwindow* window){
+        static int windowedX, windowedY, windowedWidth, windowedHeight;
+
+        if(!isFullscreen){
+            std::cout << "Going fullscreen...\n";
+            glfwGetWindowPos(window, &windowedX, &windowedY);
+            glfwGetWindowSize(window, &windowedWidth, & windowedHeight);
+
+            GLFWmonitor *primary = glfwGetPrimaryMonitor();
+            const GLFWvidmode *videoMode = glfwGetVideoMode(primary);
+
+            glfwSetWindowMonitor(window, primary, 0, 0, videoMode->width, videoMode->height, videoMode->refreshRate);
+        } else{
+            std::cout << "Going windowed...";
+            glfwSetWindowMonitor(window, nullptr, windowedX, windowedY, windowedWidth, windowedHeight, 0);
+        }
+
+        EngineInput::Input::get().resetMouse();
+        isFullscreen = !isFullscreen;
+    }
+}
+
+namespace EngineRenderer {
     Window::Window(){
         initWindow(1000, 800, "Vulkan");
     }
@@ -13,6 +41,7 @@ namespace renderer {
 
         window = glfwCreateWindow(WIDTH, HEIGHT, name.c_str(), nullptr, nullptr);
         glfwSetFramebufferSizeCallback(window, framebuffersrResizeCallback);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
     void Window::createSurface(VkInstance instance, GLFWwindow *window, VkSurfaceKHR &surface){
@@ -24,7 +53,7 @@ namespace renderer {
     void Window::framebuffersrResizeCallback(GLFWwindow* window, int width, int height){
         if(width == 0 || height == 0) return;  
 
-        auto app = reinterpret_cast<renderer::App*>(glfwGetWindowUserPointer(window));
+        auto app = reinterpret_cast<EngineRenderer::Renderer*>(glfwGetWindowUserPointer(window));
         app->framebuffersrResized = true;
     }
 }

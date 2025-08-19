@@ -1,7 +1,11 @@
+#ifndef _COMMAND_HPP
+#define _COMMAND_HPP
+
+
 #include <vulkan/vulkan.hpp>
 #include "SwapChain.hpp"
 #include "Queue.hpp"
-namespace renderer{
+namespace EngineRenderer{
     class Command{
         public:
             VkCommandPool commandPool;
@@ -15,3 +19,5 @@ namespace renderer{
             void recordCommandBuffers(VkCommandBuffer commandBuffer, uint32_t imageIndex, VkRenderPass renderPass, SwapChain swapChain, VkPipeline &graphicsPipeline, VkPipelineLayout &pipelineLayout, uint32_t currentFrame, VkBuffer &vertexBuffer, VkBuffer &indexBuffer, const std::vector<uint32_t> &indices, std::vector<VkDescriptorSet> &descriptorSets);
     };
 }
+
+#endif

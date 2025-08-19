@@ -1,8 +1,11 @@
+#ifndef _INSTANCE_HPP
+#define _INSTANCE_HPP
+
 #include <vulkan/vulkan.hpp>
 #include "ValidationLayers.hpp"
 #include "Queue.hpp"
 
-namespace renderer {
+namespace EngineRenderer {
     class Instance{
         public:
             VkQueue presentQueue;
@@ -13,12 +16,12 @@ namespace renderer {
 
             void pickPhysicalDevice(VkInstance instance, VkSurfaceKHR surface);
 
-            void createLogicalDevice(VkSurfaceKHR surface, QueueFamilyIndices indices);
+            VkDevice createLogicalDevice(VkSurfaceKHR surface, QueueFamilyIndices indices);
 
         private:
             bool m_extensionSupport;
 
-            ValidationLaye m_ValidationLaye;
+            ValidationLayers m_ValidationLaye;
 
             const std::vector<const char*> m_DeviceFeatures = {
                 VK_KHR_SWAPCHAIN_EXTENSION_NAME
@@ -30,3 +33,5 @@ namespace renderer {
             bool checkDeviceExtensionSupport(VkPhysicalDevice physDevice);
     };
 }
+
+#endif

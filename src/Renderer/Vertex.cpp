@@ -2,7 +2,7 @@
 #include "Utility.hpp"
 #include "RendererGlobals.hpp"
 
-namespace renderer{
+namespace EngineRenderer{
     VkVertexInputBindingDescription Vertex::getBindingDescription(){
         VkVertexInputBindingDescription bindingDescription{};
         bindingDescription.binding = 0;

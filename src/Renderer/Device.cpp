@@ -11,7 +11,7 @@
 
 
 
-namespace renderer {
+namespace EngineRenderer {
     void Instance::pickPhysicalDevice(VkInstance instance, VkSurfaceKHR surface){
         Queue queue;
         uint32_t physicalDeviceCount = 0;
@@ -72,7 +72,7 @@ namespace renderer {
         return requiredExtension.empty();
     }
 
-    void Instance::createLogicalDevice(VkSurfaceKHR surface, QueueFamilyIndices indices){
+    VkDevice Instance::createLogicalDevice(VkSurfaceKHR surface, QueueFamilyIndices indices){
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos{};
         std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
@@ -117,7 +117,7 @@ namespace renderer {
         if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to create logicial device error code: " + std::to_string(result) + "!");
         }
-
-        vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
+        
+        return device;
     }
 }

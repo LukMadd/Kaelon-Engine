@@ -1,8 +1,8 @@
 #include <vector>
 
 
-namespace renderer {
-    class ValidationLaye{
+namespace EngineRenderer {
+    class ValidationLayers{
         public:
             bool CheckValidationSupport();
            

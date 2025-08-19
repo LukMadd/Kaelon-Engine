@@ -1,3 +1,6 @@
+#ifndef _RENDERER_HPP
+#define _RENDERER_HPP
+
 #include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
 #include "Window.hpp"
@@ -12,33 +15,25 @@
 #include "MipMap.hpp"
 #include "MultiSampling.hpp"
 #include "Utility.hpp"
-namespace renderer {
-    class App{
-        public:
-            bool framebuffersrResized = false;
 
-            void run();
-
+namespace EngineRenderer {
+    class Renderer{
         private:
             void initVulkan();
             void mainLoop();
             void createSyncObjects();
-            void drawFrame();
-            void cleanup();
-
 
             Window appWindow;
-            GLFWwindow* window = appWindow.getWindow();
             
             VkSurfaceKHR surface;
 
-            Instance appInstance{instance};
             VkInstance instance;
+            Instance appInstance{instance};
 
             Queue appQueue;
             QueueFamilyIndices queueFamilyIndices;
 
-            SwapChain appSwapChain{window};
+            SwapChain appSwapChain;
             VkSwapchainKHR swapChain;
 
             Pipeline appPipeline;
@@ -72,12 +67,29 @@ namespace renderer {
             VkImageView textureImageView;
             VkSampler textureSampler;
 
-            modelLoader modelLoader;
+            ModelLoader modelLoader;
 
             DepthBuffer depthBuffer;
 
             MipMap mipMap;
 
             MultiSampler multiSampler;
+
+            public: 
+                Renderer();
+
+                GLFWwindow* window;
+                bool framebuffersrResized = false;
+
+                void init();
+                void cleanup();
+                void drawFrame();
+
+                void updateUniformBuffers(UniformBufferObject &ubo){
+                    uniformBufferCommand.updateUniformBuffers(ubo, currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);
+                }
+
     };
 }
+
+#endif

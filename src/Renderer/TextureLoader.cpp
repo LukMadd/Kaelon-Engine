@@ -7,7 +7,7 @@
 #include "Utility.hpp"
 #include "RendererGlobals.hpp"
 
-namespace renderer{
+namespace EngineRenderer{
     void TextureLoader::createTextureImage(VkImage &textureImage, MipMap &mipMap, VkDeviceMemory &textureImageMemory, VkCommandPool commandPool){
         Vertex vertex;
 

@@ -1,22 +1,26 @@
-#include "App.hpp"
+#include "Renderer.hpp"
 #include "RendererGlobals.hpp"
 #include <cstdint>
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
-namespace renderer {
-    void App::run(){
-        initVulkan();
-        mainLoop();
-        cleanup();
+namespace EngineRenderer{
+    Renderer::Renderer() : appWindow(){
+        window = appWindow.getWindow();
+        appSwapChain.initSwapChain(window);
     }
 
-    void App::initVulkan(){
+    void Renderer::init(){
+        initVulkan();
+        glfwSetWindowUserPointer(window, this);
+    }
+
+    void Renderer::initVulkan(){
         glfwSetWindowUserPointer(appWindow.getWindow(), this);
         appInstance.createInstance(instance);
         appWindow.createSurface(instance, window,surface);
         appInstance.pickPhysicalDevice(instance, surface);
         queueFamilyIndices = appQueue.FindQueueFamily(physicalDevice, surface);
-        appInstance.createLogicalDevice(surface, queueFamilyIndices);
+        EngineRenderer::device = appInstance.createLogicalDevice(surface, queueFamilyIndices);
         vkGetDeviceQueue(device, queueFamilyIndices.graphicsFamily.value(), 0, &graphicsQueue);
         vkGetDeviceQueue(device, queueFamilyIndices.presentFamily.value(), 0, &presentQueue);
         appSwapChain.createSwapChain(surface, queueFamilyIndices);
@@ -43,7 +47,7 @@ namespace renderer {
         createSyncObjects();
     }
 
-    void App::createSyncObjects(){
+    void Renderer::createSyncObjects(){
         imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
 
@@ -68,7 +72,7 @@ namespace renderer {
         }
     }
     
-    void App::drawFrame(){
+    void Renderer::drawFrame(){
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex;
@@ -87,8 +91,6 @@ namespace renderer {
         vkResetCommandBuffer(commandbuffers[currentFrame], 0);
 
         appCommand.recordCommandBuffers(commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipeline, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, indices ,descriptorSets);
-
-        uniformBufferCommand.updateUniformBuffers(currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -137,7 +139,7 @@ namespace renderer {
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
 
-    void App::mainLoop(){
+    void Renderer::mainLoop(){
         while(!glfwWindowShouldClose(window)){
             glfwPollEvents();
             drawFrame();
@@ -145,7 +147,7 @@ namespace renderer {
         vkDeviceWaitIdle(device);
     }
 
-    void App::cleanup(){
+    void Renderer::cleanup(){
         appSwapChain.cleanupSwapChain(depthBuffer, multiSampler);
         depthBuffer.cleanup();
 

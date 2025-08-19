@@ -6,7 +6,7 @@
 #include "DepthBuffer.hpp"
 #include "MultiSampling.hpp"
 
-namespace renderer {
+namespace EngineRenderer {
     class SwapChainSupportDetails{
             public:
             VkSurfaceCapabilitiesKHR capabilities;
@@ -26,7 +26,7 @@ namespace renderer {
 
             std::vector<VkFramebuffer> swapChainFramebuffers;
 
-            SwapChain(GLFWwindow* window);
+            void initSwapChain(GLFWwindow* window);
 
             VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 

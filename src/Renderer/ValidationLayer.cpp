@@ -2,8 +2,8 @@
 #include <cstring>
 #include <vulkan/vulkan.hpp>
 
-namespace renderer {
-    bool ValidationLaye::CheckValidationSupport(){
+namespace EngineRenderer {
+    bool ValidationLayers::CheckValidationSupport(){
         uint32_t layerCount;
         vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 

@@ -5,7 +5,7 @@
 #include "Utility.hpp"
 #include "RendererGlobals.hpp"
 
-namespace renderer {
+namespace EngineRenderer {
     SwapChainSupportDetails SwapChainSupportDetails::querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface){
         SwapChainSupportDetails swapChainDetails;
 
@@ -32,7 +32,9 @@ namespace renderer {
         return swapChainDetails;
     }
 
-    SwapChain::SwapChain(GLFWwindow* window) : m_window(window){};
+    void SwapChain::initSwapChain(GLFWwindow* window){
+        m_window = window;
+    };
 
     VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats){
         for(const auto& surfaceFormat : availableFormats){

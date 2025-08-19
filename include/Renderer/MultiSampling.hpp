@@ -3,7 +3,7 @@
 
 #include <vulkan/vulkan.hpp>
 
-namespace renderer{
+namespace EngineRenderer{
     class MultiSampler{
         VkImage colorImage;
         VkDeviceMemory colorImageMemory;

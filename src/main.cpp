@@ -1,20 +1,17 @@
-#include "App.hpp"
+#include "Engine.hpp"
 
-#include <iostream>
-#include <exception>
 #include <cstdlib>
 
-using namespace renderer;
+using namespace EngineRenderer;
+using namespace EngineInput;
+using namespace Engine;
 
 int main(){
-    App app;
+    GameEngine engine;
 
-    try{
-        app.run();
-    } catch(const std::exception& e){
-        std::cerr << e.what() << std::endl;
-        return EXIT_FAILURE;
-    }
+    engine.init();
+    engine.mainLoop();
+    engine.cleanup();
 
     return EXIT_SUCCESS;
 }

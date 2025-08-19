@@ -3,7 +3,7 @@
 
 #include <vulkan/vulkan.hpp>
 
-namespace renderer{
+namespace EngineRenderer{
     struct DepthBuffer{
         VkImage depthImage;
         VkDeviceMemory depthImageMemory;

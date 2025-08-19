@@ -1,14 +1,20 @@
 #ifndef _WINDOW_HPP
 #define _WINDOW_HPP
 
+#include <vulkan/vulkan.hpp>
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 #include <string>
 
+namespace Engine{
+    inline bool isFullscreen = false;
 
-namespace renderer {
+    void toggleFullscreen(GLFWwindow* window);
+}
+
+namespace EngineRenderer {
     class Window{
         public:
             Window();

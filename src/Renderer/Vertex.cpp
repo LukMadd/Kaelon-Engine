@@ -3,7 +3,7 @@
 #include "RendererGlobals.hpp"
 
 namespace EngineRenderer{
-    VkVertexInputBindingDescription Vertex::getBindingDescription(){
+    VkVertexInputBindingDescription VertexBuffer::getBindingDescription(){
         VkVertexInputBindingDescription bindingDescription{};
         bindingDescription.binding = 0;
         bindingDescription.stride = sizeof(Vertex);
@@ -12,7 +12,7 @@ namespace EngineRenderer{
         return bindingDescription;
     }
 
-    std::array<VkVertexInputAttributeDescription, 3> Vertex::getAttributeDescriptions(){
+    std::array<VkVertexInputAttributeDescription, 3> VertexBuffer::getAttributeDescriptions(){
         std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
         attributeDescriptions[0].binding = 0;
         attributeDescriptions[0].location = 0;
@@ -32,7 +32,7 @@ namespace EngineRenderer{
         return attributeDescriptions;
     }
 
-    void Vertex::createVertexBuffer(VkBuffer &buffer,VkDeviceMemory &bufferMemory, VkCommandPool commandPool, VkQueue &graphicsQueue){
+    void VertexBuffer::createVertexBuffer(VkBuffer &buffer,VkDeviceMemory &bufferMemory){
         VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
         
         VkBuffer stagingBuffer;
@@ -53,7 +53,7 @@ namespace EngineRenderer{
         vkFreeMemory(device, stagingBufferMemory, nullptr);
     }
 
-    void Vertex::createIndexBuffer(VkBuffer &buffer, VkDeviceMemory &bufferMemory, VkCommandPool commandPool, VkQueue &graphicsQueue){
+    void IndexBuffer::createIndexBuffer(VkBuffer &buffer, VkDeviceMemory &bufferMemory){
         VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
         
         VkBuffer stagingBuffer;

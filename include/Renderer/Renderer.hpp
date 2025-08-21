@@ -15,12 +15,14 @@
 #include "MipMap.hpp"
 #include "MultiSampling.hpp"
 #include "Utility.hpp"
+#include "Object.hpp"
 
+using namespace EngineScene;
 namespace EngineRenderer {
     class Renderer{
         private:
             void initVulkan();
-            void mainLoop();
+            void mainLoop(std::vector<std::unique_ptr<Object>> objects);
             void createSyncObjects();
 
             Window appWindow;
@@ -39,8 +41,10 @@ namespace EngineRenderer {
             Pipeline appPipeline;
 
             Vertex vertexCommand;
+            VertexBuffer vertexBufferCommand;
             VkBuffer vertexBuffer;
             VkDeviceMemory vertexBufferMemory;
+            IndexBuffer indexBufferCommand;
             VkBuffer indexBuffer;
             VkDeviceMemory indexBufferMemory;
 
@@ -83,7 +87,7 @@ namespace EngineRenderer {
 
                 void init();
                 void cleanup();
-                void drawFrame();
+                void drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
 
                 void updateUniformBuffers(UniformBufferObject &ubo){
                     uniformBufferCommand.updateUniformBuffers(ubo, currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);

@@ -42,7 +42,7 @@ namespace EngineRenderer {
 
             VkSwapchainKHR getSwapChain();
 
-            void recreateSwapChain(VkSurfaceKHR surface,QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, DepthBuffer &depthBuffer, MultiSampler &multiSampler, GLFWwindow* window);
+            void recreateSwapChain(VkSurfaceKHR surface, QueueFamilyIndices indices, VkRenderPass renderPass, DepthBuffer &depthBuffer, MultiSampler &multiSampler, GLFWwindow* window);
             void cleanupSwapChain(DepthBuffer &depthBuffer, MultiSampler &multiSampler);
 
         private:

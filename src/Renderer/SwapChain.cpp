@@ -169,7 +169,7 @@ namespace EngineRenderer {
         }
     }
 
-    void SwapChain::recreateSwapChain(VkSurfaceKHR surface, QueueFamilyIndices indices, VkRenderPass renderPass, VkCommandPool commandPool, DepthBuffer &depthBuffer, MultiSampler &multiSampler, GLFWwindow* window){
+    void SwapChain::recreateSwapChain(VkSurfaceKHR surface, QueueFamilyIndices indices, VkRenderPass renderPass, DepthBuffer &depthBuffer, MultiSampler &multiSampler, GLFWwindow* window){
         int width = 0, height = 0;
         glfwGetFramebufferSize(window, &width, &height);
         while(width == 0 || height == 0){
@@ -184,7 +184,7 @@ namespace EngineRenderer {
         createSwapChain(surface, indices);
         createImageViews();
         multiSampler.createColorResources(swapChainImageFormat, swapChainExtent);
-        depthBuffer.createDepthResources(commandPool, swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
+        depthBuffer.createDepthResources(swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
         createFramebuffers(renderPass, depthBuffer.depthImageView, multiSampler.colorImageView);
     }
 

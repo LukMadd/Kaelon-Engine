@@ -1,3 +1,4 @@
+#include "Scene.hpp"
 #include "Renderer.hpp"
 #include "InputHandler.hpp"
 #include "Camera.hpp"
@@ -6,6 +7,7 @@
 
 namespace Engine{
     struct GameEngine{    
+        EngineScene::Scene scene;
         ActionManager actionManager;
         EngineInput::InputHandler inputHandler;
         EngineCamera::Camera camera;

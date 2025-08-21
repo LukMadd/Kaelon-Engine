@@ -14,6 +14,7 @@ namespace EngineInput{
                 toggleFullscreen(window);
             } else{
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                Input::get().resetMouse();
             }
         }
         if(actionManager.isActionActive(Action::USER_FULL_SCREEN)){

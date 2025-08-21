@@ -8,7 +8,7 @@
 #include "RendererGlobals.hpp"
 
 namespace EngineRenderer{
-    void TextureLoader::createTextureImage(VkImage &textureImage, MipMap &mipMap, VkDeviceMemory &textureImageMemory, VkCommandPool commandPool){
+    void TextureLoader::createTextureImage(VkImage &textureImage, MipMap &mipMap, VkDeviceMemory &textureImageMemory){
         Vertex vertex;
 
         int texWidth, texHeight, texChannels;

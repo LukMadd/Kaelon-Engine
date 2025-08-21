@@ -11,6 +11,7 @@ namespace Engine{
 
     void GameEngine::init(){
         renderer.init();
+        scene.initScene();
         Input::get().init(window);
         Input::get().setCallBacks();
         actionManager.setupBindings();
@@ -35,12 +36,13 @@ namespace Engine{
 
             renderer.updateUniformBuffers(ubo);
 
-            renderer.drawFrame();
+            renderer.drawFrame(scene.objects);
         }
         vkDeviceWaitIdle(EngineRenderer::device);
     }
 
     void GameEngine::cleanup(){
+        scene.cleanup();
         renderer.cleanup();
     }
 }

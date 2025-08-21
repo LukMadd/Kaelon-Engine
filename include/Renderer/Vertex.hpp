@@ -12,17 +12,33 @@ namespace EngineRenderer{
         glm::vec3 pos;
         glm::vec3 color;
         glm::vec2 texCoord;
-        
-        static VkVertexInputBindingDescription getBindingDescription();
-        static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions();
-
-        void createVertexBuffer(VkBuffer &buffer, VkDeviceMemory &bufferMemory, VkCommandPool commandPool, VkQueue &graphicsQueue);
-        void createIndexBuffer(VkBuffer &buffer, VkDeviceMemory &bufferMemory, VkCommandPool commandPool, VkQueue &graphicsQueue);
 
         bool operator==(const Vertex &other) const{
             return pos == other.pos && color == other.color && texCoord == other.texCoord;
         }
     }; 
+
+    class VertexBuffer{      
+        public:  
+            VkBuffer buffer;
+            VkDeviceMemory bufferMemory;
+            std::vector<Vertex> vertices;
+
+            static VkVertexInputBindingDescription getBindingDescription();
+            static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions();
+
+            void createVertexBuffer(VkBuffer &buffer, VkDeviceMemory &bufferMemory);
+    };
+
+    class IndexBuffer{
+        public:
+            VkBuffer buffer;
+            VkDeviceMemory bufferMemory;
+            std::vector<uint32_t> indices;
+
+            void createIndexBuffer(VkBuffer &buffer, VkDeviceMemory &bufferMemory);
+    };
+
 }
 
 

@@ -127,6 +127,7 @@ target_include_directories(Vulkan-Renderer PRIVATE
     ${CMAKE_SOURCE_DIR}/include/Renderer
     ${CMAKE_SOURCE_DIR}/include/Input
     ${CMAKE_SOURCE_DIR}/include/Camera
+    ${CMAKE_SOURCE_DIR}/include/Scene
     ${Vulkan_INCLUDE_DIRS}
     ${GLFW_INCLUDE_DIRS}
     ${tinyobjloader_SOURCE_DIR}

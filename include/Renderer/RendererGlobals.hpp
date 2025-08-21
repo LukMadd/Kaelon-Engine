@@ -8,6 +8,8 @@ namespace EngineRenderer{
     inline VkDevice device;
     inline VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
+    inline VkCommandPool commandPool;
+
     inline std::vector<Vertex> vertices;
     inline std::vector<uint32_t> indices;
 

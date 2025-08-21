@@ -9,7 +9,7 @@ namespace EngineRenderer{
         VkDeviceMemory depthImageMemory;
         VkImageView depthImageView;
 
-        void createDepthResources(VkCommandPool commandPool, VkExtent2D swapChainExtent, VkImage &depthImage, VkDeviceMemory &depthImageMemory, VkImageView &depthImageView);
+        void createDepthResources(VkExtent2D swapChainExtent, VkImage &depthImage, VkDeviceMemory &depthImageMemory, VkImageView &depthImageView);
         VkFormat findDepthFormat();
         void cleanup();
     };

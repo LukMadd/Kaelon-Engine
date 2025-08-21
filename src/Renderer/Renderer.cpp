@@ -32,14 +32,12 @@ namespace EngineRenderer{
         appPipeline.createGraphicsPipeline(appSwapChain.swapChainExtent, descriptorSetLayout);
         appCommand.createCommandPool(surface, queueFamilyIndices);
         multiSampler.createColorResources(appSwapChain.swapChainImageFormat, appSwapChain.swapChainExtent);
-        depthBuffer.createDepthResources(appCommand.commandPool, appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
+        depthBuffer.createDepthResources(appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
         appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView, multiSampler.colorImageView);
-        textureLoader.createTextureImage(textureImage, mipMap, textureImageMemory, appCommand.commandPool);
+        textureLoader.createTextureImage(textureImage, mipMap, textureImageMemory);
         textureLoader.createTextureImageView(textureImage, textureImageView, mipMap);
         textureLoader.createTextureSampler(textureSampler, mipMap.mipLevels);
         modelLoader.loadModel();
-        vertexCommand.createVertexBuffer(vertexBuffer, vertexBufferMemory, appCommand.commandPool, graphicsQueue);
-        vertexCommand.createIndexBuffer(indexBuffer, indexBufferMemory, appCommand.commandPool, graphicsQueue);
         uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, uniformBuffers, uniformBuffersMemory, uniformBuffersMapped, physicalDevice, device);
         uniformBufferCommand.createDescriptorPool(MAX_FRAMES_IN_FLIGHT, descriptorPool);
         uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, descriptorSetLayout, descriptorPool, descriptorSets, textureImageView, textureSampler);
@@ -72,14 +70,14 @@ namespace EngineRenderer{
         }
     }
     
-    void Renderer::drawFrame(){
+    void Renderer::drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects){
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex;
         VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
         if(result == VK_ERROR_OUT_OF_DATE_KHR){
             framebuffersrResized = false;
-            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appCommand.commandPool, depthBuffer, multiSampler, appWindow.getWindow());
+            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, depthBuffer, multiSampler, appWindow.getWindow());
             swapChain = appSwapChain.getSwapChain();
             return;
         } else if(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR){
@@ -90,7 +88,7 @@ namespace EngineRenderer{
 
         vkResetCommandBuffer(commandbuffers[currentFrame], 0);
 
-        appCommand.recordCommandBuffers(commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipeline, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, indices ,descriptorSets);
+        appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipeline, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, indices ,descriptorSets);
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -129,7 +127,7 @@ namespace EngineRenderer{
         result = vkQueuePresentKHR(presentQueue, &presentInfo);
         if(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebuffersrResized){
             framebuffersrResized = false;
-            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, appCommand.commandPool, depthBuffer,multiSampler, appWindow.getWindow());
+            appSwapChain.recreateSwapChain(surface, queueFamilyIndices, appPipeline.renderPass, depthBuffer,multiSampler, appWindow.getWindow());
             swapChain = appSwapChain.getSwapChain();
             return;
         } else if(result != VK_SUCCESS){
@@ -139,10 +137,10 @@ namespace EngineRenderer{
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
 
-    void Renderer::mainLoop(){
+    void Renderer::mainLoop(std::vector<std::unique_ptr<Object>> objects){
         while(!glfwWindowShouldClose(window)){
             glfwPollEvents();
-            drawFrame();
+            drawFrame(objects);
         }
         vkDeviceWaitIdle(device);
     }

@@ -2,7 +2,6 @@
 #include "Action.hpp"
 #include "Input.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
 
 using namespace EngineInput;
 

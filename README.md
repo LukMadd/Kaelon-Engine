@@ -24,10 +24,10 @@
 
 ----------Current Commands----------
 1. WASD for movement
-2. Up and Down arrows for quick up and down
+2. Space, tab, and up & down arrows for quick up and down
 3. F10 for full screen
-4. Tab for hiding cursor
-5. Esc for showing cursor and exiting full screen(exiting full screen will in some cases cause a jerk)
+4. Shift for hiding cursor
+5. Esc for showing cursor and exiting full screen
 
 
 (These are all editable in Input.hpp(for linking custom keys to GLFW keys), Action.hpp(For creating unique actions), and Action.cpp(for linking keys to the actions))

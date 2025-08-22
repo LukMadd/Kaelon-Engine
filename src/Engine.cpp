@@ -10,8 +10,9 @@ namespace Engine{
     };
 
     void GameEngine::init(){
-        renderer.init();
         scene.initScene();
+        renderer.init(scene.objects);
+        renderer.initObjects(scene.objects);
         Input::get().init(window);
         Input::get().setCallBacks();
         actionManager.setupBindings();
@@ -42,7 +43,8 @@ namespace Engine{
     }
 
     void GameEngine::cleanup(){
-        scene.cleanup();
+        vkDeviceWaitIdle(device);
+        scene.cleanupObjects();
         renderer.cleanup();
     }
 }

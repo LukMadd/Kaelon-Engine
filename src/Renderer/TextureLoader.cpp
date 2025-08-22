@@ -1,25 +1,27 @@
 #include <cstdint>
+#include <string>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 #include "TextureLoader.hpp"
 #include "Vertex.hpp"
 #include "Utility.hpp"
+#include "Renderer.hpp"
 #include "RendererGlobals.hpp"
 
 namespace EngineRenderer{
-    void TextureLoader::createTextureImage(VkImage &textureImage, MipMap &mipMap, VkDeviceMemory &textureImageMemory){
+    void TextureLoader::createTextureImage(std::string texturePath, VkImage &textureImage, VkDeviceMemory &textureImageMemory){
         Vertex vertex;
 
         int texWidth, texHeight, texChannels;
         stbi_set_flip_vertically_on_load(true);
-        stbi_uc* pixels = stbi_load(("../" + TEXTURE_PATH).c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+        stbi_uc* pixels = stbi_load(("../" + texturePath).c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
         VkDeviceSize imageSize = texWidth * texHeight * 4;
 
         if(!pixels){
             throw std::runtime_error("Failed to load texture image!");
         }
-
+ 
         mipMap.mipLevels = static_cast<uint32_t>(std::floor(std::log2((std::max(texWidth, texHeight))))) + 1;
 
         VkBuffer stagingBuffer;
@@ -45,11 +47,11 @@ namespace EngineRenderer{
         vkFreeMemory(device, stagingBufferMemory, nullptr);
     }
 
-    void TextureLoader::createTextureImageView(VkImage textureImage, VkImageView &textureImageView, MipMap mipMap){
+    void TextureLoader::createTextureImageView(VkImage textureImage, VkImageView &textureImageView){
         textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipMap.mipLevels);
     }
 
-    void TextureLoader::createTextureSampler(VkSampler &textureSampler, uint32_t mipLevels){
+    void TextureLoader::createTextureSampler(VkSampler &textureSampler){
         VkPhysicalDeviceProperties properties{};
         vkGetPhysicalDeviceProperties(physicalDevice, &properties);
 

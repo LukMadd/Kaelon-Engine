@@ -1,6 +1,7 @@
 #include "Command.hpp"
 #include "RendererGlobals.hpp"
 #include <cstdint>
+
 namespace EngineRenderer{
     void Command::createCommandPool(VkSurfaceKHR surface, QueueFamilyIndices queueFamilyIndices){
         VkCommandPoolCreateInfo poolInfo{};
@@ -19,6 +20,9 @@ namespace EngineRenderer{
     }
 
     void Command::createCommandBuffers(std::vector<VkCommandBuffer> &commandBuffers, int MAX_FRAMES_IN_FLIGHT){
+        if(commandPool == VK_NULL_HANDLE){
+            throw std::runtime_error("Command pool invalid");
+        }
         commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
         
         VkCommandBufferAllocateInfo allocInfo{};
@@ -33,7 +37,7 @@ namespace EngineRenderer{
         }
     }
 
-    void Command::recordCommandBuffers(std::vector<std::unique_ptr<Object>> &objects, VkCommandBuffer commandBuffer, uint32_t imageIndex, VkRenderPass renderPass, SwapChain swapChain, VkPipeline &graphicsPipeline, VkPipelineLayout &pipelineLayout, uint32_t currentFrame, VkBuffer &vertexBuffer, VkBuffer &indexBuffer, const std::vector<uint32_t> &indices, std::vector<VkDescriptorSet> &descriptorSets){
+    void Command::recordCommandBuffers(std::vector<std::unique_ptr<Object>> &objects, VkCommandBuffer commandBuffer, uint32_t imageIndex, VkRenderPass renderPass, SwapChain swapChain, VkPipeline &graphicsPipeline, VkPipelineLayout &pipelineLayout, uint32_t currentFrame, VkBuffer &vertexBuffer, VkBuffer &indexBuffer){
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         beginInfo.flags = 0;
@@ -78,7 +82,7 @@ namespace EngineRenderer{
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
         for(auto& obj : objects){
-            vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
+            vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &obj->descriptorSets[currentFrame], 0, nullptr);
 
             obj->draw(commandBuffer, pipelineLayout);
         }

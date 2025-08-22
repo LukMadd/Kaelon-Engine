@@ -2,15 +2,16 @@
 #include "Action.hpp"
 #include "Input.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 using namespace EngineInput;
 
 namespace EngineCamera{
     Camera::Camera(){
-        position = glm::vec3(3.0f, 1.0f, 0.0f);
+        position = glm::vec3(5.0f, 12.5f, -30.0f);
         up = glm::vec3(0.0f, 1.0f, 0.0f);
 
-        glm::vec3 target = glm::vec3((0.0f));
+        glm::vec3 target = glm::vec3((6.75f));
         glm::vec direction = glm::normalize(target - position);
 
         yaw = glm::degrees(atan2(direction.z, direction.x ));
@@ -67,10 +68,10 @@ namespace EngineCamera{
     void Camera::updateCameraPosition(float deltaTime, ActionManager &actionManager){
         velocity = speed * deltaTime;
 
-        if(actionManager.isActionActive(Action::PLAYER_MOVE_UP)){
+        if(actionManager.isActionActive(Action::PLAYER_MOVE_UP) || actionManager.isActionActive(Action::PLAYER_JUMP)){
             moveUp(velocity);
         }
-        if(actionManager.isActionActive(Action::PLAYER_MOVE_DOWN)){
+        if(actionManager.isActionActive(Action::PLAYER_MOVE_DOWN) || actionManager.isActionActive(Action::PLAYER_CROUCH)){
             moveDown(velocity);
         }
         if(actionManager.isActionActive(Action::PLAYER_MOVE_FORWARD)){

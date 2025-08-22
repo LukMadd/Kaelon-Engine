@@ -12,7 +12,7 @@ namespace EngineCamera{
             glm::vec3 position;
             glm::vec3 front;
             glm::vec3 up;
-            float speed = 2.5f;
+            float speed = 10.0f;
             float velocity;
             float yaw = 0.0f;
             float pitch = 0.0f;

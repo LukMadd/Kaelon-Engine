@@ -1,12 +1,14 @@
+#ifndef _TEXTURE_LOADER_HPP
+#define _TEXTURE_LOADER_HPP
+
 #include <vulkan/vulkan.hpp>
-#include "MipMap.hpp"
 
 namespace EngineRenderer{
     struct TextureLoader{
-        void createTextureImage(VkImage &textureImage, MipMap &mipMap, VkDeviceMemory&textureImageMemory);
-        void createTextureImageView(VkImage textureImage, VkImageView &textureImageView, MipMap mipMap);
-        void createTextureSampler(VkSampler &textureSampler, uint32_t mipLevels);
+        static void createTextureImage(std::string texturePath, VkImage &textureImage, VkDeviceMemory&textureImageMemory);
+        static void createTextureImageView(VkImage textureImage, VkImageView &textureImageView);
+        static void createTextureSampler(VkSampler &textureSampler);
     };
 }
 
-
+#endif

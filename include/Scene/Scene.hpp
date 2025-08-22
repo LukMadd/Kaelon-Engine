@@ -7,6 +7,6 @@ namespace EngineScene{
 
             void initScene();
 
-            void cleanup();
+            void cleanupObjects();
     };
 }

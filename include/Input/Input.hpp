@@ -14,6 +14,8 @@ namespace Engine{
         KEY_A = GLFW_KEY_A,
         KEY_S = GLFW_KEY_S,
         KEY_D = GLFW_KEY_D,
+        KEY_SPACE = GLFW_KEY_SPACE,
+        KEY_SHIFT = GLFW_KEY_LEFT_SHIFT,
         KEY_ESCAPE = GLFW_KEY_ESCAPE,
         KEY_TAB = GLFW_KEY_TAB,
         KEY_F10 = GLFW_KEY_F10

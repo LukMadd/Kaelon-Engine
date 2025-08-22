@@ -11,6 +11,8 @@ namespace Engine{
         PLAYER_MOVE_BACKWARD,
         PLAYER_MOVE_LEFT,
         PLAYER_MOVE_RIGHT,
+        PLAYER_JUMP,
+        PLAYER_CROUCH,
         USER_ESCAPE_PROGRAM,
         USER_FULL_SCREEN,
         USER_HIDE_CURSOR

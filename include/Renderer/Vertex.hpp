@@ -27,7 +27,7 @@ namespace EngineRenderer{
             static VkVertexInputBindingDescription getBindingDescription();
             static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions();
 
-            void createVertexBuffer(VkBuffer &buffer, VkDeviceMemory &bufferMemory);
+            void createVertexBuffer(std::vector<Vertex> &vertices, VkBuffer &buffer, VkDeviceMemory &bufferMemory);
     };
 
     class IndexBuffer{
@@ -36,7 +36,7 @@ namespace EngineRenderer{
             VkDeviceMemory bufferMemory;
             std::vector<uint32_t> indices;
 
-            void createIndexBuffer(VkBuffer &buffer, VkDeviceMemory &bufferMemory);
+            void createIndexBuffer(std::vector<uint32_t> &indices,VkBuffer &buffer, VkDeviceMemory &bufferMemory);
     };
 
 }

@@ -1,6 +1,7 @@
 #include "Vertex.hpp"
 #include "Utility.hpp"
 #include "RendererGlobals.hpp"
+#include <cstdint>
 
 namespace EngineRenderer{
     VkVertexInputBindingDescription VertexBuffer::getBindingDescription(){
@@ -32,7 +33,7 @@ namespace EngineRenderer{
         return attributeDescriptions;
     }
 
-    void VertexBuffer::createVertexBuffer(VkBuffer &buffer,VkDeviceMemory &bufferMemory){
+    void VertexBuffer::createVertexBuffer(std::vector<Vertex> &vertices, VkBuffer &buffer,VkDeviceMemory &bufferMemory){
         VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
         
         VkBuffer stagingBuffer;
@@ -53,7 +54,7 @@ namespace EngineRenderer{
         vkFreeMemory(device, stagingBufferMemory, nullptr);
     }
 
-    void IndexBuffer::createIndexBuffer(VkBuffer &buffer, VkDeviceMemory &bufferMemory){
+    void IndexBuffer::createIndexBuffer(std::vector<uint32_t> &indices, VkBuffer &buffer, VkDeviceMemory &bufferMemory){
         VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
         
         VkBuffer stagingBuffer;

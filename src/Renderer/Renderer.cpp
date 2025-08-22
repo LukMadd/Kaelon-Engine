@@ -9,12 +9,12 @@ namespace EngineRenderer{
         appSwapChain.initSwapChain(window);
     }
 
-    void Renderer::init(){
-        initVulkan();
+    void Renderer::init(std::vector<std::unique_ptr<EngineScene::Object>>& objects){
+        initVulkan(objects);
         glfwSetWindowUserPointer(window, this);
     }
 
-    void Renderer::initVulkan(){
+    void Renderer::initVulkan(std::vector<std::unique_ptr<EngineScene::Object>>& objects){
         glfwSetWindowUserPointer(appWindow.getWindow(), this);
         appInstance.createInstance(instance);
         appWindow.createSurface(instance, window,surface);
@@ -28,21 +28,43 @@ namespace EngineRenderer{
         appSwapChain.createImageViews();
         renderFinishedSemaphores.resize(appSwapChain.swapChainImages.size());        
         appPipeline.createRenderPass(appSwapChain.swapChainImageFormat);
-        uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
-        appPipeline.createGraphicsPipeline(appSwapChain.swapChainExtent, descriptorSetLayout);
         appCommand.createCommandPool(surface, queueFamilyIndices);
+        dummyRecourses.createDummyRecourses();
+        auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout, dummyRecourses.texture);
+        descriptorLayouts.push_back(layout);
+        appPipeline.createGraphicsPipeline(appSwapChain.swapChainExtent, descriptorSetLayout);
         multiSampler.createColorResources(appSwapChain.swapChainImageFormat, appSwapChain.swapChainExtent);
         depthBuffer.createDepthResources(appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
         appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView, multiSampler.colorImageView);
-        textureLoader.createTextureImage(textureImage, mipMap, textureImageMemory);
-        textureLoader.createTextureImageView(textureImage, textureImageView, mipMap);
-        textureLoader.createTextureSampler(textureSampler, mipMap.mipLevels);
-        modelLoader.loadModel();
-        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, uniformBuffers, uniformBuffersMemory, uniformBuffersMapped, physicalDevice, device);
-        uniformBufferCommand.createDescriptorPool(MAX_FRAMES_IN_FLIGHT, descriptorPool);
-        uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, descriptorSetLayout, descriptorPool, descriptorSets, textureImageView, textureSampler);
+        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, uniformBuffers, uniformBuffersMemory, uniformBuffersMapped);
+        uniformBufferCommand.createDescriptorPool(objects.size(), MAX_FRAMES_IN_FLIGHT, descriptorPool);
         appCommand.createCommandBuffers(commandbuffers, MAX_FRAMES_IN_FLIGHT);
         createSyncObjects();
+    }
+
+    void Renderer::initObjects(std::vector<std::unique_ptr<EngineScene::Object>>& objects){
+        for(auto &obj : objects){
+            obj->initVulkanRecourses();
+
+            std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
+            obj->descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
+            
+            VkDescriptorSetAllocateInfo allocInfo{};
+            allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+            allocInfo.descriptorPool = descriptorPool;
+            allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+            allocInfo.pSetLayouts = layouts.data();
+
+            if (vkAllocateDescriptorSets(device, &allocInfo, obj->descriptorSets.data()) != VK_SUCCESS) {
+                throw std::runtime_error("Failed to allocate descriptor sets for object");
+            }
+            
+            
+            auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout,obj->texture);
+            obj->descriptorSetLayout = layout;
+            descriptorLayouts.push_back(layout);
+            uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, descriptorSetLayout, descriptorPool, obj->descriptorSets, obj->texture);
+        }
     }
 
     void Renderer::createSyncObjects(){
@@ -88,7 +110,7 @@ namespace EngineRenderer{
 
         vkResetCommandBuffer(commandbuffers[currentFrame], 0);
 
-        appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipeline, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, indices ,descriptorSets);
+        appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipeline, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer);
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -137,7 +159,7 @@ namespace EngineRenderer{
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
 
-    void Renderer::mainLoop(std::vector<std::unique_ptr<Object>> objects){
+    void Renderer::mainLoop(std::vector<std::unique_ptr<Object>> &objects){
         while(!glfwWindowShouldClose(window)){
             glfwPollEvents();
             drawFrame(objects);
@@ -149,12 +171,6 @@ namespace EngineRenderer{
         appSwapChain.cleanupSwapChain(depthBuffer, multiSampler);
         depthBuffer.cleanup();
 
-        vkDestroyBuffer(device, indexBuffer, nullptr);
-        vkFreeMemory(device, indexBufferMemory, nullptr);
-
-        vkDestroyBuffer(device, vertexBuffer, nullptr);
-        vkFreeMemory(device, vertexBufferMemory, nullptr);
-
         for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
             vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
             vkDestroyFence(device, inFlightFences[i], nullptr);
@@ -163,12 +179,6 @@ namespace EngineRenderer{
         for (size_t i = 0; i < renderFinishedSemaphores.size(); i++) {
             vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
         }
-        
-        vkDestroySampler(device, textureSampler, nullptr);
-        vkDestroyImageView(device, textureImageView, nullptr);
-
-        vkDestroyImage(device, textureImage, nullptr);
-        vkFreeMemory(device, textureImageMemory, nullptr);
 
         appCommand.cleanup();
 
@@ -181,7 +191,14 @@ namespace EngineRenderer{
 
         vkDestroyDescriptorPool(device, descriptorPool, nullptr);
 
-        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+        for(auto &layout : descriptorLayouts){
+            vkDestroyDescriptorSetLayout(device, layout, nullptr);
+        }
+
+        vkDestroyImageView(device, dummyRecourses.texture.textureImageView, nullptr);
+        vkDestroyImage(device, dummyRecourses.texture.textureImage, nullptr);
+        vkFreeMemory(device, dummyRecourses.texture.textureImageMemory, nullptr);
+        vkDestroySampler(device, dummyRecourses.texture.textureSampler, nullptr);
 
         vkDestroyDevice(device, nullptr);
 

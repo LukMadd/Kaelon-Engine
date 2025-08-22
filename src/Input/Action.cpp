@@ -17,8 +17,10 @@ namespace EngineInput{
         bind(Action::PLAYER_MOVE_BACKWARD, Key::KEY_S);
         bind(Action::PLAYER_MOVE_LEFT, Key::KEY_A);
         bind(Action::PLAYER_MOVE_RIGHT, Key::KEY_D);
+        bind(Action::PLAYER_JUMP, Key::KEY_SPACE);
+        bind(Action::PLAYER_CROUCH, Key::KEY_TAB);
         bind(Action::USER_ESCAPE_PROGRAM, Key::KEY_ESCAPE);
         bind(Action::USER_FULL_SCREEN, Key::KEY_F10);
-        bind(Action::USER_HIDE_CURSOR, Key::KEY_TAB);
+        bind(Action::USER_HIDE_CURSOR, Key::KEY_SHIFT);
     }
 }

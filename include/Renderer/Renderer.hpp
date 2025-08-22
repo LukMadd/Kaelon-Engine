@@ -9,11 +9,6 @@
 #include "Command.hpp"
 #include "Vertex.hpp"
 #include "UniformBuffer.hpp"
-#include "ModelLoader.hpp"
-#include "TextureLoader.hpp"
-#include "DepthBuffer.hpp"
-#include "MipMap.hpp"
-#include "MultiSampling.hpp"
 #include "Utility.hpp"
 #include "Object.hpp"
 
@@ -21,8 +16,8 @@ using namespace EngineScene;
 namespace EngineRenderer {
     class Renderer{
         private:
-            void initVulkan();
-            void mainLoop(std::vector<std::unique_ptr<Object>> objects);
+            void initVulkan(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
+            void mainLoop(std::vector<std::unique_ptr<Object>> &objects);
             void createSyncObjects();
 
             Window appWindow;
@@ -51,7 +46,7 @@ namespace EngineRenderer {
             UniformBuffer uniformBufferCommand;
             VkDescriptorSetLayout descriptorSetLayout;
             VkDescriptorPool descriptorPool;
-            std::vector<VkDescriptorSet> descriptorSets;
+            std::vector<VkDescriptorSetLayout> descriptorLayouts;
             std::vector<VkBuffer> uniformBuffers;
             std::vector<VkDeviceMemory> uniformBuffersMemory;
             std::vector<void*> uniformBuffersMapped;
@@ -65,19 +60,7 @@ namespace EngineRenderer {
 
             uint32_t currentFrame = 0;
 
-            TextureLoader textureLoader;
-            VkImage textureImage;
-            VkDeviceMemory textureImageMemory;
-            VkImageView textureImageView;
-            VkSampler textureSampler;
-
-            ModelLoader modelLoader;
-
-            DepthBuffer depthBuffer;
-
-            MipMap mipMap;
-
-            MultiSampler multiSampler;
+            DummyRecources dummyRecourses;
 
             public: 
                 Renderer();
@@ -85,7 +68,9 @@ namespace EngineRenderer {
                 GLFWwindow* window;
                 bool framebuffersrResized = false;
 
-                void init();
+                void init(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
+                void initObjects(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
+                void initSceneDescriptors(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
                 void cleanup();
                 void drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
 

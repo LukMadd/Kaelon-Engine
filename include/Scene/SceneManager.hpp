@@ -5,6 +5,7 @@
 #include <cstdint>
 #include "Scene.hpp"
 #include "nlohmann/json.hpp"
+#include "RecourseManager.hpp"
 
 using namespace nlohmann;
 
@@ -13,7 +14,7 @@ namespace EngineScene{
         public:
             SceneManager();
 
-            void init();
+            void init(EngineRecourse::RecourseManager &recourseManager);
 
             void addScene();
             void changeScenes(int indexChange);
@@ -27,10 +28,13 @@ namespace EngineScene{
             void deserializeScene(const std::string& filename);
 
             void saveScenes();
+            void cleanup();
 
             uint32_t currentSceneIndex = 0;
 
         private:
+            EngineRecourse::RecourseManager *recourseManager;
+
             std::vector<Scene> scenes;
     };
 }

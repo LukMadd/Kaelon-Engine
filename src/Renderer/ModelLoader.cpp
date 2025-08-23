@@ -9,7 +9,7 @@
 #include <tiny_obj_loader.h>
 
 namespace EngineRenderer{
-    Mesh ModelLoader::loadModel(std::string meshPath){
+    Mesh ModelLoader::loadMesh(std::string meshPath){
         tinyobj::ObjReaderConfig reader_config;
         reader_config.triangulate = true;
 
@@ -61,6 +61,7 @@ namespace EngineRenderer{
         mesh.vertexBuffer.vertices = vertices;
         mesh.indexBuffer.indices = indices;
         mesh.indexCount = static_cast<uint32_t>(indices.size());
+        mesh.meshPath = meshPath;
         mesh.vertexBuffer.createVertexBuffer(vertices, mesh.vertexBuffer.buffer, mesh.vertexBuffer.bufferMemory);
         mesh.indexBuffer.createIndexBuffer(indices, mesh.indexBuffer.buffer, mesh.indexBuffer.bufferMemory);
 

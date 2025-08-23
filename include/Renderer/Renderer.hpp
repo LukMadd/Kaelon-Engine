@@ -70,7 +70,7 @@ namespace EngineRenderer {
                 bool framebuffersrResized = false;
 
                 void init(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects);
-                void initObjects(Scene &scene);
+                void initObjects(Scene &scene, EngineRecourse::RecourseManager &recourseManage);
                 void initSceneDescriptors(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
                 void cleanup();
                 void drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects);

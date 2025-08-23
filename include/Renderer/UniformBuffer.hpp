@@ -2,11 +2,13 @@
 #include <glm/glm.hpp>
 #include <vulkan/vulkan.hpp>
 
-#include "Object.hpp"
+#include "Texture.hpp"
+
+using namespace EngineObject;
 
 namespace EngineRenderer{
     struct DummyRecources{
-        EngineScene::Texture texture;
+        std::shared_ptr<Texture> texture;
         void createDummyRecourses();
     };
 
@@ -18,10 +20,10 @@ namespace EngineRenderer{
 
     struct UniformBuffer{
         DummyRecources dummyRecourses;
-        VkDescriptorSetLayout createDescriptorSetLayout(VkDescriptorSetLayout &descriptorSetLayout, EngineScene::Texture texture);
+        VkDescriptorSetLayout createDescriptorSetLayout(VkDescriptorSetLayout &descriptorSetLayout, std::shared_ptr<Texture> texture);
         void createUniformBuffers(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, std::vector<VkDeviceMemory> &uniformBuffersMemory, std::vector<void*> &uniformBuffersMapped);
         void createDescriptorPool(uint32_t objectCount, int MAX_FRAMES_IN_FLIGHT, VkDescriptorPool &descriptorPool);
-        void createDescriptorSets(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, VkDescriptorSetLayout descriptorSetLayout, VkDescriptorPool &descriptorPool, std::vector<VkDescriptorSet> &descriptorSets, EngineScene::Texture texture);
+        void createDescriptorSets(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, VkDescriptorSetLayout descriptorSetLayout, VkDescriptorPool &descriptorPool, std::vector<VkDescriptorSet> &descriptorSets, std::shared_ptr<Texture> texture);
         void updateUniformBuffers(UniformBufferObject ubo, uint32_t currentImage, VkExtent2D swapChainExtent, std::vector<void*> &uniformBuffersMapped);
     };
 }

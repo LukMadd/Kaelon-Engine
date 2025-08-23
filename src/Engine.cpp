@@ -13,7 +13,7 @@ namespace Engine{
     };
 
     void GameEngine::init(){
-        sceneManager.init();
+        sceneManager.init(recourseManager);
 
         size_t totalObjects = 0;
         for (auto &scene : sceneManager.getScenes()) {
@@ -24,7 +24,7 @@ namespace Engine{
         renderer.init(totalObjects, sceneManager.getCurrentScene().objects);
     
         for(auto &scene : sceneManager.getScenes()){
-            renderer.initObjects(scene);
+            renderer.initObjects(scene, recourseManager);
         }
 
         Input::get().init(window);

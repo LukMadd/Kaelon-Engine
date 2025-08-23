@@ -7,12 +7,14 @@ using namespace EngineObject;
 
 namespace EngineScene{
     //Will probably be removed later, right now just used because there is nothing to add scenes
-    void Scene::initScene(bool whichScene){
+    void Scene::initScene(bool whichScene, EngineRecourse::RecourseManager &recourseManager){
+        glm::vec3 pos = glm::vec3(0.0, 0.0, 0.0);
         if(whichScene){
-            glm::vec3 pos = glm::vec3(0.0, 0.0, 0.0);
             for(int i = 0; i < 10; i++){
                 for(int j = 0; j < 10; j++){
-                    auto cube = std::make_unique<MeshObject>(pos, "models/Crate1.obj", "textures/crate_1.jpg");
+                    auto mesh = recourseManager.loadMesh("models/Crate1.obj");
+                    auto texture = recourseManager.loadTexture("textures/crate_1.jpg");
+                    auto cube = std::make_unique<MeshObject>(pos, mesh, texture);
                     cube->modelMatrix = glm::scale(cube->modelMatrix, glm::vec3(0.5f));
 
                     objects.push_back(std::move(cube));
@@ -24,8 +26,10 @@ namespace EngineScene{
                 pos.y+=1.5;
         }
     } else{
-        auto mesh = std::make_unique<MeshObject>(glm::vec3(0.0f , 0.0f, 0.0f), "models/viking_room.obj", "textures/viking_room.png");
-        objects.push_back(std::move(mesh));
+        auto mesh = recourseManager.loadMesh("models/Crate1.obj");
+        auto texture = recourseManager.loadTexture("textures/viking_room.png");
+        auto sphere = std::make_unique<MeshObject>(pos, mesh, texture);
+        objects.push_back(std::move(sphere));
     }
     }
 

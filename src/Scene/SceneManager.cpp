@@ -4,6 +4,8 @@
 #include <memory>
 
 #include "ObjectRegistry.hpp"
+#include "RecourseManager.hpp"
+#include "RendererGlobals.hpp"
 #include "nlohmann/json.hpp"
 
 using namespace EngineObject;
@@ -13,7 +15,7 @@ namespace EngineScene{
 
     void SceneManager::addScene(){
         Scene scene = Scene::createScene();
-        scene.initScene(true);
+        scene.initScene(false, *recourseManager);
         scenes.push_back(std::move(scene));
     }
 
@@ -22,13 +24,15 @@ namespace EngineScene{
             return;
         }
         if(scenes[currentSceneIndex + indexChange].isInitialized == false){
-            scenes[currentSceneIndex + indexChange].initScene(false);
+            scenes[currentSceneIndex + indexChange].initScene(false, *recourseManager);
         }
 
         currentSceneIndex+=indexChange;
     }
 
-    void SceneManager::init(){
+    void SceneManager::init(EngineRecourse::RecourseManager &recourseManagerRef){
+        recourseManager = &recourseManagerRef;
+
         std::vector<std::filesystem::path> files;
         for (auto& entry : std::filesystem::directory_iterator("../scenes"))
             if (std::filesystem::is_regular_file(entry.path()) && entry.path().extension() == ".json")
@@ -49,8 +53,8 @@ namespace EngineScene{
         json jsonData;
         jsonData["type"] = object.type;
         jsonData["position"] = {object.position.x, object.position.y, object.position.z};
-        jsonData["mesh"] = object.mesh.meshPath;
-        jsonData["texture"] = object.texture.texturePath;
+        jsonData["mesh"] = object.mesh->meshPath;
+        jsonData["texture"] = object.texture->texturePath;
         jsonData["shader"] = {
             {"vert", object.shader.vertShader},
             {"frag", object.shader.fragShader}
@@ -82,7 +86,7 @@ namespace EngineScene{
         file << sceneData.dump(4);
         file.close();
     }
-    
+
     void SceneManager::deserializeScene(const std::string& filename){
         std::ifstream file(filename);
         if(!file.is_open()) throw std::runtime_error("Failed to open file " + filename + " for deseralization");

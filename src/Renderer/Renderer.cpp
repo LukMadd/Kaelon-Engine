@@ -1,8 +1,11 @@
 #include "Renderer.hpp"
+#include "RecourseManager.hpp"
+#include "ObjectGlobals.hpp"
 #include "RendererGlobals.hpp"
 #include <cstdint>
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
+
 namespace EngineRenderer{
     Renderer::Renderer() : appWindow(){
         window = appWindow.getWindow();
@@ -42,9 +45,10 @@ namespace EngineRenderer{
         createSyncObjects();
     }
 
-    void Renderer::initObjects(Scene &scene){
+    void Renderer::initObjects(Scene &scene, EngineRecourse::RecourseManager &recourseManager){
         for(auto &obj : scene.objects){
-            obj->initVulkanRecourses();
+            obj->initVulkanRecourses(recourseManager);
+            defaultResources.init(recourseManager);
 
             auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout,obj->texture);
             obj->descriptorSetLayout = layout;
@@ -195,10 +199,10 @@ namespace EngineRenderer{
             vkDestroyDescriptorSetLayout(device, layout, nullptr);
         }
 
-        vkDestroyImageView(device, dummyRecourses.texture.textureImageView, nullptr);
-        vkDestroyImage(device, dummyRecourses.texture.textureImage, nullptr);
-        vkFreeMemory(device, dummyRecourses.texture.textureImageMemory, nullptr);
-        vkDestroySampler(device, dummyRecourses.texture.textureSampler, nullptr);
+        vkDestroyImageView(device, dummyRecourses.texture->textureImageView, nullptr);
+        vkDestroyImage(device, dummyRecourses.texture->textureImage, nullptr);
+        vkFreeMemory(device, dummyRecourses.texture->textureImageMemory, nullptr);
+        vkDestroySampler(device, dummyRecourses.texture->textureSampler, nullptr);
 
         vkDestroyDevice(device, nullptr);
 

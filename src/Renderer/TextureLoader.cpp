@@ -10,6 +10,16 @@
 #include "RendererGlobals.hpp"
 
 namespace EngineRenderer{
+    Texture TextureLoader::createTexture(const std::string &filePath){
+        Texture texture;
+        texture.texturePath = filePath;
+        createTextureImage(filePath, texture.textureImage, texture.textureImageMemory);
+        createTextureImageView(texture.textureImage, texture.textureImageView);
+        createTextureSampler(texture.textureSampler);
+
+        return texture;
+    }
+
     void TextureLoader::createTextureImage(std::string texturePath, VkImage &textureImage, VkDeviceMemory &textureImageMemory){
         Vertex vertex;
 

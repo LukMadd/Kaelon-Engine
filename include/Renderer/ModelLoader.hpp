@@ -1,14 +1,14 @@
 #ifndef _MODEL_LOADER_HPP
 #define _MODEL_LOADER_HPP
 
-#include "Object.hpp"
+#include "Mesh.hpp"
 
-using namespace EngineScene;
+using namespace EngineObject;
 
 namespace EngineRenderer{
     class ModelLoader{
         public:
-            static Mesh loadModel(std::string meshPath);
+            static Mesh loadMesh(std::string meshPath);
     };
 }
 

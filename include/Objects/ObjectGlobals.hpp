@@ -1,14 +1,17 @@
 #include <vulkan/vulkan.hpp>
-#include "Object.hpp"
+#include "RecourseManager.hpp"
+#include "Texture.hpp"
 
 namespace EngineObject{
     struct DefaultResources{
-        void init();
+        std::shared_ptr<Texture> init(EngineRecourse::RecourseManager &recourseManager);
 
-        EngineScene::Texture texture;
+        std::shared_ptr<Texture> texture;
 
         void cleanupDefault();
 
         bool isInitialized = false;
     };
+
+    inline DefaultResources defaultResources;
 }

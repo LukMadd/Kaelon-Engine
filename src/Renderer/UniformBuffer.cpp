@@ -12,6 +12,8 @@
 
 namespace EngineRenderer{
     void DummyRecources::createDummyRecourses(){
+        texture = std::make_shared<Texture>();
+        
         uint32_t whitePixel = 0xFFFFFFFF;
         VkDeviceSize imageSize = sizeof(whitePixel);
 
@@ -24,14 +26,14 @@ namespace EngineRenderer{
         memcpy(data, &whitePixel, static_cast<size_t>(imageSize));
         vkUnmapMemory(device, stagingMemory);
 
-        createImage(1, 1, 1, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture.textureImage, texture.textureImageMemory);
-        transitionImageLayout(commandPool, texture.textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1);
+        createImage(1, 1, 1, VK_SAMPLE_COUNT_1_BIT, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture->textureImage, texture->textureImageMemory);
+        transitionImageLayout(commandPool, texture->textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1);
 
-        texture.textureImageView = createImageView(texture.textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+        texture->textureImageView = createImageView(texture->textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 
-        copyBufferToImage(commandPool, stagingBuffer, texture.textureImage, 1, 1);
+        copyBufferToImage(commandPool, stagingBuffer, texture->textureImage, 1, 1);
 
-        transitionImageLayout(commandPool, texture.textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 1);
+        transitionImageLayout(commandPool, texture->textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 1);
 
         VkSamplerCreateInfo samplerInfo{};
         samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -48,7 +50,7 @@ namespace EngineRenderer{
         samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
         samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 
-        if(vkCreateSampler(device, &samplerInfo, nullptr, &texture.textureSampler) != VK_SUCCESS){
+        if(vkCreateSampler(device, &samplerInfo, nullptr, &texture->textureSampler) != VK_SUCCESS){
             throw std::runtime_error("Failed to create dummy sampler!");
         }
 
@@ -56,7 +58,7 @@ namespace EngineRenderer{
         vkFreeMemory(device, stagingMemory, nullptr);
     }
 
-     VkDescriptorSetLayout UniformBuffer::createDescriptorSetLayout(VkDescriptorSetLayout &descriptorSetLayout, EngineScene::Texture texture){
+     VkDescriptorSetLayout UniformBuffer::createDescriptorSetLayout(VkDescriptorSetLayout &descriptorSetLayout, std::shared_ptr<Texture> texture){
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = 0;
         uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -119,7 +121,7 @@ namespace EngineRenderer{
         }    
     }
 
-    void UniformBuffer::createDescriptorSets(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, VkDescriptorSetLayout descriptorSetLayout, VkDescriptorPool &descriptorPool, std::vector<VkDescriptorSet> &descriptorSets, EngineScene::Texture texture){
+    void UniformBuffer::createDescriptorSets(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, VkDescriptorSetLayout descriptorSetLayout, VkDescriptorPool &descriptorPool, std::vector<VkDescriptorSet> &descriptorSets, std::shared_ptr<Texture> texture){
         for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
             VkDescriptorBufferInfo bufferInfo{};
             bufferInfo.buffer = uniformBuffers[i];
@@ -128,8 +130,8 @@ namespace EngineRenderer{
 
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = texture.textureImageView;
-            imageInfo.sampler = texture.textureSampler;
+            imageInfo.imageView = texture->textureImageView;
+            imageInfo.sampler = texture->textureSampler;
 
             std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 

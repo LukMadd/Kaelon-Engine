@@ -2,6 +2,7 @@
 #define _SCENE_HPP
 
 #include "Object.hpp"
+#include "RecourseManager.hpp"
 
 namespace EngineScene{
     class Scene{
@@ -11,7 +12,7 @@ namespace EngineScene{
             bool isInitialized = false;;
 
             static Scene createScene();
-            void initScene(bool whichScene);
+            void initScene(bool whichScene, EngineRecourse::RecourseManager &recourseManagerRef);
 
             void cleanupObjects();
     };

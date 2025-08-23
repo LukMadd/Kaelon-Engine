@@ -1,0 +1,18 @@
+{
+    "objects": [
+        {
+            "mesh": "models/sphere.obj",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "shader": {
+                "frag": "shaders/base_frag_shader.spv",
+                "vert": "shaders/base_vert_shader.spv"
+            },
+            "texture": "textures/viking_room.png",
+            "type": "Mesh_Object"
+        }
+    ]
+}

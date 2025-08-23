@@ -1,3 +1,4 @@
+#include "RecourseManager.hpp"
 #include "SceneManager.hpp"
 #include "Renderer.hpp"
 #include "InputHandler.hpp"
@@ -8,6 +9,7 @@
 
 namespace Engine{
     struct GameEngine{    
+        EngineRecourse::RecourseManager recourseManager;
         SceneManager sceneManager;
         ActionManager actionManager;
         EngineInput::InputHandler inputHandler;

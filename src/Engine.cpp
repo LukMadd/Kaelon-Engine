@@ -1,18 +1,32 @@
 #include "Engine.hpp"
 #include "Input.hpp"
 #include "RendererGlobals.hpp"
+#include "ObjectRegistry.hpp"
 
 #include <chrono>
 
+using namespace EngineObject;
+
 namespace Engine{
-    GameEngine::GameEngine() : renderer(), camera(){
+    GameEngine::GameEngine() : renderer(), camera(), sceneManager(){
         window = renderer.window;
     };
 
     void GameEngine::init(){
-        scene.initScene();
-        renderer.init(scene.objects);
-        renderer.initObjects(scene.objects);
+        sceneManager.init();
+
+        size_t totalObjects = 0;
+        for (auto &scene : sceneManager.getScenes()) {
+            totalObjects += scene.objects.size();
+        }
+        totalObjects = std::max(totalObjects, size_t(1));
+        
+        renderer.init(totalObjects, sceneManager.getCurrentScene().objects);
+    
+        for(auto &scene : sceneManager.getScenes()){
+            renderer.initObjects(scene);
+        }
+
         Input::get().init(window);
         Input::get().setCallBacks();
         actionManager.setupBindings();
@@ -28,7 +42,7 @@ namespace Engine{
             float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastTime).count();
             lastTime = currentTime;
 
-            inputHandler.update(window, actionManager);
+            inputHandler.update(window, actionManager, sceneManager);
 
             camera.updateCameraPosition(deltaTime, actionManager);
 
@@ -37,14 +51,17 @@ namespace Engine{
 
             renderer.updateUniformBuffers(ubo);
 
-            renderer.drawFrame(scene.objects);
+            renderer.drawFrame(sceneManager.getCurrentScene().objects);
         }
         vkDeviceWaitIdle(EngineRenderer::device);
     }
 
     void GameEngine::cleanup(){
         vkDeviceWaitIdle(device);
-        scene.cleanupObjects();
+        sceneManager.saveScenes();
+        for(auto &scene :  sceneManager.getScenes()){
+            scene.cleanupObjects();
+        }
         renderer.cleanup();
     }
 }

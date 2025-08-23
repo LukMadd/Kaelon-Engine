@@ -67,10 +67,10 @@ namespace EngineCamera{
     void Camera::updateCameraPosition(float deltaTime, ActionManager &actionManager){
         velocity = speed * deltaTime;
 
-        if(actionManager.isActionActive(Action::PLAYER_MOVE_UP) || actionManager.isActionActive(Action::PLAYER_JUMP)){
+        if(actionManager.isActionActive(Action::PLAYER_JUMP)){
             moveUp(velocity);
         }
-        if(actionManager.isActionActive(Action::PLAYER_MOVE_DOWN) || actionManager.isActionActive(Action::PLAYER_CROUCH)){
+        if(actionManager.isActionActive(Action::PLAYER_CROUCH)){
             moveDown(velocity);
         }
         if(actionManager.isActionActive(Action::PLAYER_MOVE_FORWARD)){

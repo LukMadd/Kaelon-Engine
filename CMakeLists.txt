@@ -124,6 +124,7 @@ add_dependencies(Vulkan-Renderer Shaders)
 #-----------------------------------------Include directories and libraries-----------------------------------------#
 target_include_directories(Vulkan-Renderer PRIVATE
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/Core
     ${CMAKE_SOURCE_DIR}/include/Renderer
     ${CMAKE_SOURCE_DIR}/include/Input
     ${CMAKE_SOURCE_DIR}/include/Camera

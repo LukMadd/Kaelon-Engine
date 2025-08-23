@@ -2,6 +2,7 @@
 #define _OBJECT_HPP
 
 #include "Vertex.hpp"
+#include "nlohmann/json.hpp"
 #include <vulkan/vulkan.hpp>
 #include <glm/glm.hpp>
 
@@ -18,8 +19,8 @@ namespace EngineScene{
     };
 
     struct Shader{
-        const char* vertShader = ("shaders/base_vert_shader.spv");
-        const char* fragShader = ("shaders/base_frag_shader.spv");
+        std::string vertShader = ("shaders/base_vert_shader.spv");
+        std::string fragShader = ("shaders/base_frag_shader.spv");
     };
 
     struct Texture{
@@ -37,6 +38,10 @@ namespace EngineScene{
             virtual ~Object() = default;
             virtual void draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout) = 0;
             virtual void initVulkanRecourses() = 0;
+            virtual void deserialize(const nlohmann::json& jsonData) = 0;
+            virtual void cleanup(VkDevice device) = 0;
+            std::string type;
+
             glm::mat4 modelMatrix{1.0f};
             glm::vec3 position;
             VkDescriptorSetLayout descriptorSetLayout;
@@ -45,19 +50,6 @@ namespace EngineScene{
             Mesh mesh;
             Shader shader;
             Texture texture;
-    };
-
-
-   //Sample Class Quad 
-    class Quad : public Object{
-        public:
-            Quad(glm::vec3 position, std::string textureImagePath = "");
-            ~Quad() override;
-            void draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout) override;
-            void initVulkanRecourses() override;
-
-            std::vector<Vertex> vertices;
-            std::vector<uint32_t> indices;
     };
 }
 

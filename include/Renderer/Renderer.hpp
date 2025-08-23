@@ -11,12 +11,13 @@
 #include "UniformBuffer.hpp"
 #include "Utility.hpp"
 #include "Object.hpp"
+#include "Scene.hpp"
 
 using namespace EngineScene;
 namespace EngineRenderer {
     class Renderer{
         private:
-            void initVulkan(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
+            void initVulkan(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects);
             void mainLoop(std::vector<std::unique_ptr<Object>> &objects);
             void createSyncObjects();
 
@@ -68,8 +69,8 @@ namespace EngineRenderer {
                 GLFWwindow* window;
                 bool framebuffersrResized = false;
 
-                void init(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
-                void initObjects(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
+                void init(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects);
+                void initObjects(Scene &scene);
                 void initSceneDescriptors(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
                 void cleanup();
                 void drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects);

@@ -9,12 +9,12 @@ namespace EngineRenderer{
         appSwapChain.initSwapChain(window);
     }
 
-    void Renderer::init(std::vector<std::unique_ptr<EngineScene::Object>>& objects){
-        initVulkan(objects);
+    void Renderer::init(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects){
+        initVulkan(objectCount, objects);
         glfwSetWindowUserPointer(window, this);
     }
 
-    void Renderer::initVulkan(std::vector<std::unique_ptr<EngineScene::Object>>& objects){
+    void Renderer::initVulkan(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects){
         glfwSetWindowUserPointer(appWindow.getWindow(), this);
         appInstance.createInstance(instance);
         appWindow.createSurface(instance, window,surface);
@@ -37,15 +37,18 @@ namespace EngineRenderer{
         depthBuffer.createDepthResources(appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
         appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView, multiSampler.colorImageView);
         uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, uniformBuffers, uniformBuffersMemory, uniformBuffersMapped);
-        uniformBufferCommand.createDescriptorPool(objects.size(), MAX_FRAMES_IN_FLIGHT, descriptorPool);
+        uniformBufferCommand.createDescriptorPool(objectCount, MAX_FRAMES_IN_FLIGHT, descriptorPool);
         appCommand.createCommandBuffers(commandbuffers, MAX_FRAMES_IN_FLIGHT);
         createSyncObjects();
     }
 
-    void Renderer::initObjects(std::vector<std::unique_ptr<EngineScene::Object>>& objects){
-        for(auto &obj : objects){
+    void Renderer::initObjects(Scene &scene){
+        for(auto &obj : scene.objects){
             obj->initVulkanRecourses();
 
+            auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout,obj->texture);
+            obj->descriptorSetLayout = layout;
+            descriptorLayouts.push_back(layout);
             std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
             obj->descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
             
@@ -58,13 +61,10 @@ namespace EngineRenderer{
             if (vkAllocateDescriptorSets(device, &allocInfo, obj->descriptorSets.data()) != VK_SUCCESS) {
                 throw std::runtime_error("Failed to allocate descriptor sets for object");
             }
-            
-            
-            auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout,obj->texture);
-            obj->descriptorSetLayout = layout;
-            descriptorLayouts.push_back(layout);
-            uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, descriptorSetLayout, descriptorPool, obj->descriptorSets, obj->texture);
+
+            uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, layout, descriptorPool, obj->descriptorSets, obj->texture);
         }
+        scene.isInitialized = true;
     }
 
     void Renderer::createSyncObjects(){

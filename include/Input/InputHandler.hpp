@@ -3,13 +3,14 @@
 
 #include "Input.hpp"
 #include "Action.hpp"
+#include "SceneManager.hpp"
 
 namespace EngineInput{
     class InputHandler{
         public:
             bool isPressed(Key key);
 
-            void update(GLFWwindow* window, ActionManager &actionManager);
+            void update(GLFWwindow* window, ActionManager &actionManager, EngineScene::SceneManager &sceneManager);
     };
 }
 

@@ -15,7 +15,9 @@ namespace Engine{
         PLAYER_CROUCH,
         USER_ESCAPE_PROGRAM,
         USER_FULL_SCREEN,
-        USER_HIDE_CURSOR
+        USER_HIDE_CURSOR,
+        DEVELOPER_CHANGE_SCENE_PLUS,
+        DEVELOPER_CHANGE_SCENE_MINUS
     };
 }
 

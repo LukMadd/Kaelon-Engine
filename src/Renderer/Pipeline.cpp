@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <vulkan/vulkan.hpp>
+#include "ObjectRegistry.hpp"
 
 #include "Vertex.hpp"
 #include "DepthBuffer.hpp"

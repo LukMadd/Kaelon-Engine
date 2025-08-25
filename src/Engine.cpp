@@ -2,6 +2,7 @@
 #include "Input.hpp"
 #include "RendererGlobals.hpp"
 #include "ObjectRegistry.hpp"
+#include "ObjectGlobals.hpp"
 
 #include <chrono>
 
@@ -13,7 +14,13 @@ namespace Engine{
     };
 
     void GameEngine::init(){
+        renderer.initVulkan();
+
         sceneManager.init(recourseManager);
+
+        for(auto &scene : sceneManager.getScenes()){
+            scene.update();
+        }
 
         size_t totalObjects = 0;
         for (auto &scene : sceneManager.getScenes()) {
@@ -21,7 +28,7 @@ namespace Engine{
         }
         totalObjects = std::max(totalObjects, size_t(1));
         
-        renderer.init(totalObjects, sceneManager.getCurrentScene().objects);
+        renderer.initObjectRecourses(totalObjects, sceneManager.getCurrentScene().objects);
     
         for(auto &scene : sceneManager.getScenes()){
             renderer.initObjects(scene, recourseManager);
@@ -46,6 +53,8 @@ namespace Engine{
 
             camera.updateCameraPosition(deltaTime, actionManager);
 
+            sceneManager.getCurrentScene().update();
+
             EngineRenderer::UniformBufferObject ubo{};
             ubo.view = camera.getViewMatrix();
 
@@ -62,6 +71,7 @@ namespace Engine{
         for(auto &scene :  sceneManager.getScenes()){
             scene.cleanupObjects();
         }
+        EngineObject::defaultResources.cleanupDefault();
         renderer.cleanup();
     }
 }

@@ -15,7 +15,6 @@ namespace EngineScene{
 
     void SceneManager::addScene(){
         Scene scene = Scene::createScene();
-        scene.initScene(false, *recourseManager);
         scenes.push_back(std::move(scene));
     }
 
@@ -38,11 +37,17 @@ namespace EngineScene{
             if (std::filesystem::is_regular_file(entry.path()) && entry.path().extension() == ".json")
                 files.push_back(entry.path());
 
+        std::sort(files.begin(), files.end());
+
         if(files.empty()){
-            addScene();
+            Scene newScene = Scene::createScene();
+            newScene.initScene(true, *recourseManager);
+            scenes.push_back(std::move(newScene));
         }
 
-        std::sort(files.begin(), files.end());
+            Scene newScene = Scene::createScene();
+            newScene.initScene(false, *recourseManager);
+            scenes.push_back(std::move(newScene));
 
         for(auto &file : files){
             deserializeScene(file.string());
@@ -51,8 +56,12 @@ namespace EngineScene{
 
     json SceneManager::serializeObject(const Object &object){
         json jsonData;
+        if(!object.name.empty()){
+            jsonData["name"] = object.name;
+        } else{
+            jsonData["name"] = "Generic";
+        }
         jsonData["type"] = object.type;
-        jsonData["position"] = {object.position.x, object.position.y, object.position.z};
         jsonData["mesh"] = object.mesh->meshPath;
         jsonData["texture"] = object.texture->texturePath;
         jsonData["shader"] = {
@@ -61,6 +70,30 @@ namespace EngineScene{
         };
 
         return jsonData; 
+    }
+
+    json SceneManager::serializeNode(SceneNode* node){
+        json jsonData;
+        Object *object = node->object;
+
+        if(object){
+            jsonData = serializeObject(*object);
+        }
+
+        jsonData["transform"] = {
+            {"position", {node->transform.position.x, node->transform.position.y, node->transform.position.z}},
+            {"rotation", {node->transform.rotation.x, node->transform.rotation.y, node->transform.rotation.z, node->transform.rotation.w}},
+            {"scale", {node->transform.scale.x, node->transform.scale.y, node->transform.scale.z}}
+        };
+
+        if(!node->children.empty()){
+            jsonData["children"] = json::array();
+            for(auto &child : node->children){
+                jsonData["children"].push_back(serializeNode(child));
+            }
+        }
+
+        return jsonData;
     }
     
     Object* SceneManager::deserializeObject(const nlohmann::json& jsonData){
@@ -73,8 +106,8 @@ namespace EngineScene{
         json sceneData;
         sceneData["objects"] = json::array();
 
-        for(auto &obj : scene.objects){
-            sceneData["objects"].push_back(serializeObject(*obj));
+        for(auto &node : scene.root.children){
+            sceneData["objects"].push_back(serializeNode(node));
         }
 
         std::filesystem::create_directories(("../scenes"));
@@ -87,6 +120,35 @@ namespace EngineScene{
         file.close();
     }
 
+    SceneNode* SceneManager::deserializeNode(const json& jsonNode){
+        SceneNode *node = new SceneNode();
+        Object *object;
+        if(jsonNode.contains("type")) {
+            object = deserializeObject(jsonNode);
+            auto objectPtr = std::unique_ptr<Object>(object);
+            tempObjects.push_back(std::move(objectPtr));
+            node->object = object;
+        } else {
+            object = nullptr;
+        };
+
+        if(jsonNode.contains("transform")){
+            auto transform = jsonNode["transform"];
+            node->transform.position = glm::vec3(transform["position"][0], transform["position"][1], transform["position"][2]);
+            node->transform.rotation = glm::quat(transform["rotation"][3], transform["rotation"][0], transform["rotation"][1], transform["rotation"][2]);
+            node->transform.scale = glm::vec3(transform["scale"][0], transform["scale"][1], transform["scale"][2]);
+        }
+
+        if(jsonNode.contains("children")){
+            for(auto& childJson : jsonNode["children"]){
+                SceneNode* childNode = deserializeNode(childJson);
+                node->addChild(childNode);
+            }
+        }
+
+        return node;
+    }
+
     void SceneManager::deserializeScene(const std::string& filename){
         std::ifstream file(filename);
         if(!file.is_open()) throw std::runtime_error("Failed to open file " + filename + " for deseralization");
@@ -96,9 +158,15 @@ namespace EngineScene{
 
         Scene scene = Scene::createScene();
 
+        tempObjects.clear();
+
         for(auto &jsonObj : sceneData["objects"]){
-            Object* object = deserializeObject(jsonObj);
-            scene.objects.push_back(std::unique_ptr<Object>(object));
+            SceneNode* node = deserializeNode(jsonObj);
+            scene.root.addChild(node);
+        }
+
+        for(auto& objPtr : tempObjects){
+            scene.objects.push_back(std::move(objPtr));
         }
 
         scenes.push_back(std::move(scene));

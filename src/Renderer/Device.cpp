@@ -106,9 +106,9 @@ namespace EngineRenderer {
         createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
         createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
-        if(enableValidationLaye){
-            createInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLaye.validationLaye.size());
-            createInfo.ppEnabledLayerNames = m_ValidationLaye.validationLaye.data();
+        if(enableValidationLayers){
+            createInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLayers.validationLayers.size());
+            createInfo.ppEnabledLayerNames = m_ValidationLayers.validationLayers.data();
         } else{
             createInfo.enabledLayerCount = 0;
         }
@@ -117,7 +117,8 @@ namespace EngineRenderer {
         if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to create logicial device error code: " + std::to_string(result) + "!");
         }
-        
+        setObjectName(device, (uint64_t)device, VK_OBJECT_TYPE_DEVICE, "Main_Device");
+
         return device;
     }
 }

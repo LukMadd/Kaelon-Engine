@@ -1,6 +1,5 @@
 #include "Instance.hpp"
-#include <GLFW/glfw3.h>
-#include <vulkan/vulkan_macos.h> 
+#include <GLFW/glfw3.h> 
 #include <cstdint>
 #include <stdexcept>
 
@@ -13,10 +12,10 @@ namespace EngineRenderer {
         #ifdef NDEBUG
             enableValidationLaye = false;
         #else
-            enableValidationLaye = true;
+            enableValidationLayers = true;
         #endif
             
-        if(enableValidationLaye && !m_ValidationLaye.CheckValidationSupport()){
+        if(enableValidationLayers && !m_ValidationLayers.CheckValidationSupport()){
             throw std::runtime_error("Validation laye requested but not available");
         } 
 
@@ -40,6 +39,7 @@ namespace EngineRenderer {
         }
 
        requiredExtensions.emplace_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+       requiredExtensions.emplace_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
         VkInstanceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -48,9 +48,9 @@ namespace EngineRenderer {
         createInfo.enabledExtensionCount = (uint32_t)requiredExtensions.size();
         createInfo.ppEnabledExtensionNames = requiredExtensions.data();
 
-        if(enableValidationLaye){
-            createInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLaye.validationLaye.size());
-            createInfo.ppEnabledLayerNames = m_ValidationLaye.validationLaye.data();
+        if(enableValidationLayers){
+            createInfo.enabledLayerCount = static_cast<uint32_t>(m_ValidationLayers.validationLayers.size());
+            createInfo.ppEnabledLayerNames = m_ValidationLayers.validationLayers.data();
         } else{
             createInfo.enabledLayerCount = 0;
         }
@@ -59,5 +59,6 @@ namespace EngineRenderer {
         if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to create instance error code: " + std::to_string(result) + "!");
         }
+        m_ValidationLayers.createDebugMessenger(instance);
     }
 }

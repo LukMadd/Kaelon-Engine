@@ -12,9 +12,7 @@ namespace EngineRenderer{
     inline VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
     inline VkCommandPool commandPool = VK_NULL_HANDLE;
-
-    const std::string MODEL_PATH = "models/viking_room.obj";
-
+    
     inline VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 
     inline ModelLoader modelLoader;

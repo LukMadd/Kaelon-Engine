@@ -4,6 +4,7 @@
 #include "MultiSampling.hpp"
 #include "Utility.hpp"
 #include "RendererGlobals.hpp"
+#include "ValidationLayers.hpp"
 
 namespace EngineRenderer {
     SwapChainSupportDetails SwapChainSupportDetails::querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface){
@@ -122,6 +123,7 @@ namespace EngineRenderer {
         if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to create swap chain error code: " + std::to_string(result) + "!");
         }
+        setObjectName(device, (uint64_t)m_swapChain, VK_OBJECT_TYPE_SWAPCHAIN_KHR, "Main_Swap_Chain");
 
         vkGetSwapchainImagesKHR(device,m_swapChain, &imageCount, nullptr);
         swapChainImages.resize(imageCount);
@@ -154,6 +156,7 @@ namespace EngineRenderer {
             if(result != VK_SUCCESS){
                 throw std::runtime_error("Failed to create framebuffersr at index " + std::to_string(i) + " error code: " + std::to_string(result) + "!");
             }
+            setObjectName(device, (uint64_t)swapChainFramebuffers[i], VK_OBJECT_TYPE_FRAMEBUFFER, "Frame_Buffer");
         }
     }
 

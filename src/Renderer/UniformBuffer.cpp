@@ -1,6 +1,7 @@
 #include "UniformBuffer.hpp"
 #include "Utility.hpp"
 #include "RendererGlobals.hpp"
+#include "ValidationLayers.hpp"
 #include <array>
 #include <cstdint>
 
@@ -53,6 +54,7 @@ namespace EngineRenderer{
         if(vkCreateSampler(device, &samplerInfo, nullptr, &texture->textureSampler) != VK_SUCCESS){
             throw std::runtime_error("Failed to create dummy sampler!");
         }
+        setObjectName(device, (uint64_t)texture->textureSampler, VK_OBJECT_TYPE_SAMPLER, "Default_Resource_Sampler");
 
         vkDestroyBuffer(device, stagingBuffer, nullptr);
         vkFreeMemory(device, stagingMemory, nullptr);
@@ -119,6 +121,7 @@ namespace EngineRenderer{
         if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to create descriptor pool erorr code: " + std::to_string(result) + "!");
         }    
+        setObjectName(device, (uint64_t)descriptorPool, VK_OBJECT_TYPE_DESCRIPTOR_POOL, "Main_Descriptor_Pool");
     }
 
     void UniformBuffer::createDescriptorSets(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, VkDescriptorSetLayout descriptorSetLayout, VkDescriptorPool &descriptorPool, std::vector<VkDescriptorSet> &descriptorSets, std::shared_ptr<Texture> texture){

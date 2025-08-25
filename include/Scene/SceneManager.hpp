@@ -22,8 +22,11 @@ namespace EngineScene{
             std::vector<Scene> &getScenes();
             Scene &getCurrentScene();
 
+            std::vector<std::unique_ptr<Object>> tempObjects;
             json serializeObject(const Object &object);
+            json serializeNode(SceneNode* node);
             Object* deserializeObject(const nlohmann::json& jsonData);
+            SceneNode* deserializeNode(const json& jsonNode);
             void serializeScene(Scene &scene, uint32_t sceneIndex);
             void deserializeScene(const std::string& filename);
 

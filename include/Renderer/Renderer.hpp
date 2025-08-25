@@ -17,7 +17,6 @@ using namespace EngineScene;
 namespace EngineRenderer {
     class Renderer{
         private:
-            void initVulkan(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects);
             void mainLoop(std::vector<std::unique_ptr<Object>> &objects);
             void createSyncObjects();
 
@@ -69,7 +68,8 @@ namespace EngineRenderer {
                 GLFWwindow* window;
                 bool framebuffersrResized = false;
 
-                void init(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects);
+                void initVulkan();
+                void initObjectRecourses(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects);
                 void initObjects(Scene &scene, EngineRecourse::RecourseManager &recourseManage);
                 void initSceneDescriptors(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
                 void cleanup();

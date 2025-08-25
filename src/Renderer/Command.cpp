@@ -1,5 +1,6 @@
 #include "Command.hpp"
 #include "RendererGlobals.hpp"
+#include "ValidationLayers.hpp"
 #include <cstdint>
 
 namespace EngineRenderer{
@@ -13,6 +14,7 @@ namespace EngineRenderer{
         if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to create command pool error code: " + std::to_string(result) + "!");
         }
+        setObjectName(device, (uint64_t)commandPool, VK_OBJECT_TYPE_COMMAND_POOL, "Main_Command_Pool");
     }
 
     void Command::cleanup(){

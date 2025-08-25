@@ -21,13 +21,13 @@ namespace EngineRenderer {
         private:
             bool m_extensionSupport;
 
-            ValidationLayers m_ValidationLaye;
+            ValidationLayers m_ValidationLayers;
 
             const std::vector<const char*> m_DeviceFeatures = {
                 VK_KHR_SWAPCHAIN_EXTENSION_NAME
             };
 
-            bool enableValidationLaye = false;
+            bool enableValidationLayers = false;
 
             bool isDeviceSuitable(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, QueueFamilyIndices indices);
             bool checkDeviceExtensionSupport(VkPhysicalDevice physDevice);

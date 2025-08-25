@@ -1,4 +1,5 @@
 #include "Renderer.hpp"
+#include "Instance.hpp"
 #include "RecourseManager.hpp"
 #include "ObjectGlobals.hpp"
 #include "RendererGlobals.hpp"
@@ -12,12 +13,7 @@ namespace EngineRenderer{
         appSwapChain.initSwapChain(window);
     }
 
-    void Renderer::init(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects){
-        initVulkan(objectCount, objects);
-        glfwSetWindowUserPointer(window, this);
-    }
-
-    void Renderer::initVulkan(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects){
+    void Renderer::initVulkan(){
         glfwSetWindowUserPointer(appWindow.getWindow(), this);
         appInstance.createInstance(instance);
         appWindow.createSurface(instance, window,surface);
@@ -32,6 +28,9 @@ namespace EngineRenderer{
         renderFinishedSemaphores.resize(appSwapChain.swapChainImages.size());        
         appPipeline.createRenderPass(appSwapChain.swapChainImageFormat);
         appCommand.createCommandPool(surface, queueFamilyIndices);
+    }
+    
+    void Renderer::initObjectRecourses(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects){
         dummyRecourses.createDummyRecourses();
         auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout, dummyRecourses.texture);
         descriptorLayouts.push_back(layout);
@@ -207,6 +206,11 @@ namespace EngineRenderer{
         vkDestroyDevice(device, nullptr);
 
         vkDestroySurfaceKHR(instance, surface, nullptr);
+
+        auto destroyFunc = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+        if(destroyFunc){
+            destroyFunc(instance, debugMessenger, nullptr);
+        }
 
         vkDestroyInstance(instance, nullptr);
 

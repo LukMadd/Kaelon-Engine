@@ -25,6 +25,7 @@ namespace EngineScene{
             virtual void deserialize(const nlohmann::json& jsonData) = 0;
             virtual void cleanup(VkDevice device) = 0;
             std::string type;
+            std::string name;
 
             glm::mat4 modelMatrix{1.0f};
             glm::vec3 position;

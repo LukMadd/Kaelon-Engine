@@ -1,5 +1,6 @@
 #include "Utility.hpp"
 #include "RendererGlobals.hpp"
+#include "ValidationLayers.hpp"
 #include <cstdint>
 
 namespace EngineRenderer{

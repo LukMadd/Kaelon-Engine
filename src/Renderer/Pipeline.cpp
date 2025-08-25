@@ -8,6 +8,7 @@
 #include "Vertex.hpp"
 #include "DepthBuffer.hpp"
 #include "RendererGlobals.hpp"
+#include "ValidationLayers.hpp"
 
 static std::vector<char> readFile(const std::string& filePath){
     std::ifstream inFile(filePath, std::ios::ate | std::ios::binary);
@@ -178,6 +179,7 @@ namespace EngineRenderer {
         if(pipelineLayoutCreateResult != VK_SUCCESS){
             throw std::runtime_error("Failed to create pipeline layout error code " + std::to_string(pipelineLayoutCreateResult) + "!");
         } 
+        setObjectName(device,(uint64_t)pipelineLayout, VK_OBJECT_TYPE_PIPELINE_LAYOUT, "Main_Pipeline_Layout");
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -203,6 +205,7 @@ namespace EngineRenderer {
         if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to create graphics pipeline error code " + std::to_string(result) + "!");
         }
+        setObjectName(device, (uint64_t)graphicsPipeline, VK_OBJECT_TYPE_PIPELINE, "Main_Pipeline");
     }
 
     void Pipeline::createRenderPass(VkFormat swapChainImageFormat){
@@ -279,6 +282,7 @@ namespace EngineRenderer {
         if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to create render pass error code: " + std::to_string(result) + "!");
         }
+        setObjectName(device, (uint64_t)renderPass, VK_OBJECT_TYPE_RENDER_PASS, "Main_Render_Pass");
     }
 
     void Pipeline::cleanupPipeline(){

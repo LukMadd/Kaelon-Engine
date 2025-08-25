@@ -15,12 +15,10 @@ namespace EngineObject{
     }();
 
     void MeshObject::deserialize(const nlohmann::json& jsonData){
-    position = glm::vec3(jsonData["position"][0],
-                         jsonData["position"][1],
-                         jsonData["position"][2]);
-
     pendingMeshPath = jsonData["mesh"];
     pendingTexturePath = jsonData["texture"];
+
+    name = jsonData["name"];
 
     shader.vertShader = jsonData["shader"]["vert"];
     shader.fragShader = jsonData["shader"]["frag"];
@@ -30,6 +28,7 @@ namespace EngineObject{
     }
 
     MeshObject::MeshObject(glm::vec3 position, std::shared_ptr<Mesh> mesh, std::shared_ptr<Texture> texture){
+        this->name = "Mesh_Object";
         this->type = "Mesh_Object";
         this->mesh = mesh;
         this->texture = texture;
@@ -54,7 +53,7 @@ namespace EngineObject{
         if(!texture->texturePath.empty()){
             texture = recourseManager.loadTexture(texture->texturePath);
         } else{
-            if(!defaultResources.isInitialized){
+            if(defaultResources.isInitialized){
                 texture = defaultResources.texture;
             }
         }   
@@ -106,9 +105,6 @@ namespace EngineObject{
                 vkFreeMemory(device, texture->textureImageMemory, nullptr);
                 texture->textureImageMemory = VK_NULL_HANDLE;
             }
-        } else{
-            defaultResources.cleanupDefault();
-        }
-        
+        } 
     }
 }

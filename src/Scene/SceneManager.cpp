@@ -43,11 +43,8 @@ namespace EngineScene{
             Scene newScene = Scene::createScene();
             newScene.initScene(true, *recourseManager);
             scenes.push_back(std::move(newScene));
+            return;
         }
-
-            Scene newScene = Scene::createScene();
-            newScene.initScene(false, *recourseManager);
-            scenes.push_back(std::move(newScene));
 
         for(auto &file : files){
             deserializeScene(file.string());

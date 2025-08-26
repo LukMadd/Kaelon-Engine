@@ -6,7 +6,7 @@
 using namespace EngineObject;
 
 namespace EngineScene{
-    Scene::Scene(){
+    Scene::Scene(const std::string &name, int id) : name(name), id(id){
         root = SceneNode();
         root.transform.position = glm::vec3(0.0f);
         root.transform.rotation = glm::quat(1.0f, 0, 0, 0);
@@ -47,13 +47,14 @@ namespace EngineScene{
             auto sphere = std::make_unique<MeshObject>(pos, mesh, texture);
 
             Object* objPtr = sphere.get();
-            objects.push_back(std::move(sphere));
 
             SceneNode* node = new SceneNode();
             node->object = objPtr;
             node->transform.rotation = glm::angleAxis(glm::radians(45.0f), glm::vec3(0,1,0));
             node->transform.scale = glm::vec3(1.0f);
             node->transform.position = glm::vec3(2,1,0);
+            
+            objects.push_back(std::move(sphere));
             root.addChild(node);
         }
 
@@ -69,8 +70,8 @@ namespace EngineScene{
         root.children.clear();
     }
 
-    Scene Scene::createScene(){
-        Scene scene;
+    std::unique_ptr<Scene> Scene::createScene(int id, const std::string &name){
+        std::unique_ptr<Scene> scene = std::make_unique<Scene>(name, id);
         return scene;
     }
 

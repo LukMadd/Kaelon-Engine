@@ -1,4 +1,6 @@
 {
+    "id": 1,
+    "name": "Test",
     "objects": [
         {
             "mesh": "models/Crate1.obj",
@@ -26,7 +28,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "6a28b2c82fd0624c60df3b6aedbe7605"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -54,7 +57,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "14dccdf398fbcf037c01bc136791bdbb"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -82,7 +86,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "049a17ac37b5d263c2949343ecdfedad"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -110,7 +115,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "4e71c6d7ce671f4b16d98d3f6e07124d"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -138,7 +144,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "95e1869f6c3defe81085fc900e6a1b4c"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -166,7 +173,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "e6602c75f087c8608ce3c18c14a9552c"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -194,7 +202,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "e79dde9272a92449b4e9839f061703d5"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -222,7 +231,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "e7e9e0242c114446b6fff04b163c13b4"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -250,7 +260,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "18fa931307375669e18004981fd8a0df"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -278,7 +289,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "ec36d2219f82a659caf26a212c68d1e7"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -306,7 +318,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "f94edc8bc8b87a16abd5b0c85daef37f"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -334,7 +347,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "3e2517f25f93636611a7db71c380bb8d"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -362,7 +376,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "97016167c47f6b1c04ed724192cc3a87"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -390,7 +405,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "36c1da23684af5f45b88cbeeb4387460"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -418,7 +434,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "3a9fac22179561e5f95be3f96c45446b"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -446,7 +463,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "b0d684cb754d48ae61c3943c9e612166"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -474,7 +492,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "241373894647ba0a39d94eb9f9653c28"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -502,7 +521,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "3fbf2cfc5cf03684ca73209c963bc76e"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -530,7 +550,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "2b0661b04a979c4946d49f01b73a1801"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -558,7 +579,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "f2c0566bd507c3491671c40b942b7394"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -586,7 +608,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "192fad920cc8055b69de474c07c0e248"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -614,7 +637,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "8228df989e86147b94c414ca5a24d68e"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -642,7 +666,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "01910ebaf0117d999cd85dcfd6acc4b5"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -670,7 +695,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "08ca5c7eb01941b57713c3e60d8273f6"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -698,7 +724,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "c71c183574f39ffc1b2f3eb57929748d"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -726,7 +753,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "31acdf9df5d52f611cea9434cee9d50e"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -754,7 +782,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "608b30dadde83c363756ae0428e72d3f"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -782,7 +811,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "22e114084e1d74039f41ec6d79f9a109"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -810,7 +840,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "e4868915bcb03f3f26ec61a59c677303"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -838,7 +869,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "9ec2295c988af5dee1af92af4dd7fdae"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -866,7 +898,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "c825ab22d6c67eb65e68bfd0cb5bd442"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -894,7 +927,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "4b0fd17dfe4f062423ef682914a95596"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -922,7 +956,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "76f0fe535c5100359ee9505b4e516c69"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -950,7 +985,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "211b860b886c43854e4a714cfc1092a5"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -978,7 +1014,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "efd3262f44faef0ae107d609227082b6"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1006,7 +1043,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "aa8c2803b882a0f5591d52b1ef3562f4"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1034,7 +1072,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "184a17b4e21e4b429566c1a394bb6458"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1062,7 +1101,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "f23553c37d53c0c356542cb1640f48ed"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1090,7 +1130,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "bbf2abb2c434e7f249b1d75fbe525dda"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1118,7 +1159,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "454d045b697d06a8267691f846af11a8"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1146,7 +1188,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "65bc5ccd1cc1e36c8edf41dd6b97f0a8"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1174,7 +1217,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "e1c8f0aca23b48b353f15b6d5006bbc6"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1202,7 +1246,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "011059f8367e9ac27d2e33685bf2cc80"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1230,7 +1275,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "18487d56a35288e7eaaa493edd3b30cc"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1258,7 +1304,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "a3cf55b2be2cdf6d1528a8a7bdcc626f"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1286,7 +1333,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "68d59a707780ac34c414257bb3f9687a"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1314,7 +1362,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "fe8da06a63864fc6026f33d0ac771b4d"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1342,7 +1391,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "8eba9866cd4d16332b4c90e91c28a12a"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1370,7 +1420,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "cd6444bc1639778a3df7cb207078104e"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1398,7 +1449,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "6af11b734796916e77f8de0872255e85"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1426,7 +1478,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "898c5ca8db5d747e9dbdc1b8abbabe9d"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1454,7 +1507,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "782000fc2543e66511bede593f23ebba"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1482,7 +1536,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "c73f1fa3b57372ccb6f8cbf490924c0d"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1510,7 +1565,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "b52f51402dee2bc3f9f638f641f5aa1c"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1538,7 +1594,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "4dea03d19c8ae22424bae79d125a4c58"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1566,7 +1623,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "150a2cba53d30a872774179ccd1f6299"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1594,7 +1652,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "d9636f3e937c81ef8c89807a0a5e7fbb"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1622,7 +1681,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "902e8877b262859940ae48d3ec4ae72d"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1650,7 +1710,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "adaf29ec9247098d1f64db87a7e245fb"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1678,7 +1739,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "5250fdb11c907315c111fbe3b5b25d9c"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1706,7 +1768,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "29d6f5b7f380ccba776b67b98be7e1f8"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1734,7 +1797,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "37541f1110f410e730a0da585143d73f"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1762,7 +1826,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "cb9c14bdc29f9cfa4a5b3020ee7e90b1"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1790,7 +1855,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "aa7c78c13e71e5203a98f84a644ed6e9"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1818,7 +1884,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "1a1b92328309dbb0d561b4cf3cb7286f"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1846,7 +1913,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "93d20b634f8c24c974259c6a9dbff7fd"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1874,7 +1942,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "05d5f84a67fea46c204c50a82c527629"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1902,7 +1971,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "ee6e7cc0fafbe25d5dd1583974a3812c"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1930,7 +2000,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "2a028636da97c8f7de9d318222572746"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1958,7 +2029,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "ab4026ba80d03696ef3a9db0ce89ae1c"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -1986,7 +2058,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "fbc3983d27c74ef1daa4970be8c609a1"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2014,7 +2087,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "cbeb4fbe647257b9e0f01580a74cc51a"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2042,7 +2116,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "de8999554eac1d533a590c39c31cd090"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2070,7 +2145,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "a973da1d4c6b168b0b90c5f0ccd7a7cf"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2098,7 +2174,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "5c53b0fc26e4bc584d4272099b67cfa0"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2126,7 +2203,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "c5bc631840c095f1a0f24e63fcd26641"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2154,7 +2232,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "97dd87c14bd63cdf8199704a962f2168"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2182,7 +2261,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "8231c8e35012d1370dca928156f4e269"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2210,7 +2290,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "87ce62dbb071b4a330f4ad0ccfa8cb8b"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2238,7 +2319,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "2c40ebefcd5bfadc21f2a1266d4ecd8f"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2266,7 +2348,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "7db46f507f6ab4514da9e8a225748ddc"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2294,7 +2377,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "3348fb147e1b80ae01069b38e5d615e3"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2322,7 +2406,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "125e39777def67c9e7469c668fa432bb"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2350,7 +2435,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "d31792214bd55b0c8d98c02da96c9fa1"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2378,7 +2464,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "7a59d4e972e460f24a054a72cb7af116"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2406,7 +2493,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "f5ac61f4f2ab5243381f6b4cdae37f5e"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2434,7 +2522,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "c7c5d43b85dd87677737be949ad543e1"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2462,7 +2551,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "804c2e5e9bf051377fd71526e7c84e64"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2490,7 +2580,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "e29365335d0a2fac4ae45843dce4c676"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2518,7 +2609,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "5dc09a307870d9d61e1976236171c092"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2546,7 +2638,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "b897e4f0442f940453ed2dcc8d70cc8c"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2574,7 +2667,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "7eb9bac1d0c8715a070ae7d7104b5269"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2602,7 +2696,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "ca0125c37d79cfd411febd7063618fbb"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2630,7 +2725,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "7b96e49aac9b4fcfc73f511d7808d58a"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2658,7 +2754,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "45a2e6591e4297df9142202aef8ae255"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2686,7 +2783,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "e81e61272e0e7547455d65e66db825e6"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2714,7 +2812,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "25eb8a44fa62d472c02611bb32a7e9c3"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2742,7 +2841,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "c755c5b062f3c3e0111b0df1168ca645"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2770,7 +2870,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "df035551204b7fe112b38db9174ff001"
         },
         {
             "mesh": "models/Crate1.obj",
@@ -2798,7 +2899,8 @@
                     0.5
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "4a562899e954ff70eb44d52c61e4dfb5"
         }
     ]
 }

@@ -19,19 +19,19 @@ namespace Engine{
         sceneManager.init(recourseManager);
 
         for(auto &scene : sceneManager.getScenes()){
-            scene.update();
+            scene->update();
         }
 
         size_t totalObjects = 0;
         for (auto &scene : sceneManager.getScenes()) {
-            totalObjects += scene.objects.size();
+            totalObjects += scene->objects.size();
         }
         totalObjects = std::max(totalObjects, size_t(1));
-        
-        renderer.initObjectRecourses(totalObjects, sceneManager.getCurrentScene().objects);
+
+        renderer.initObjectRecourses(totalObjects, sceneManager.getCurrentScene()->objects);
     
         for(auto &scene : sceneManager.getScenes()){
-            renderer.initObjects(scene, recourseManager);
+            renderer.initObjects(*scene, recourseManager);
         }
 
         Input::get().init(window);
@@ -53,14 +53,14 @@ namespace Engine{
 
             camera.updateCameraPosition(deltaTime, actionManager);
 
-            sceneManager.getCurrentScene().update();
+            sceneManager.getCurrentScene()->update();
 
             EngineRenderer::UniformBufferObject ubo{};
             ubo.view = camera.getViewMatrix();
 
             renderer.updateUniformBuffers(ubo);
 
-            renderer.drawFrame(sceneManager.getCurrentScene().objects);
+            renderer.drawFrame(sceneManager.getCurrentScene()->objects);
         }
         vkDeviceWaitIdle(EngineRenderer::device);
     }
@@ -69,7 +69,7 @@ namespace Engine{
         vkDeviceWaitIdle(device);
         sceneManager.saveScenes();
         for(auto &scene :  sceneManager.getScenes()){
-            scene.cleanupObjects();
+            scene->cleanupObjects();
         }
         EngineObject::defaultResources.cleanupDefault();
         renderer.cleanup();

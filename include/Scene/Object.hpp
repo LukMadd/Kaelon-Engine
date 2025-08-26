@@ -4,6 +4,7 @@
 #include "Mesh.hpp"
 #include "nlohmann/json.hpp"
 #include "RecourseManager.hpp"
+#include "UUID.hpp"
 
 #include <vulkan/vulkan.hpp>
 #include <glm/glm.hpp>
@@ -19,6 +20,7 @@ namespace EngineScene{
 
     class Object{
         public:
+            Object() : uuid(generateUUID()){};
             virtual ~Object() = default;
             virtual void draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout) = 0;
             virtual void initVulkanRecourses(EngineRecourse::RecourseManager &recourseManager) = 0;
@@ -27,6 +29,7 @@ namespace EngineScene{
             std::string type;
             std::string name;
 
+            std::string uuid;
             glm::mat4 modelMatrix{1.0f};
             glm::vec3 position;
             VkDescriptorSetLayout descriptorSetLayout;

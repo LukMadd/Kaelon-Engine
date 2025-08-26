@@ -1,4 +1,6 @@
 {
+    "id": 0,
+    "name": "Base Scene",
     "objects": [
         {
             "mesh": "models/sphere.obj",
@@ -26,7 +28,8 @@
                     1.0
                 ]
             },
-            "type": "Mesh_Object"
+            "type": "Mesh_Object",
+            "uuid": "cdda37f67682f288c51d191392f8dc72"
         }
     ]
 }

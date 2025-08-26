@@ -8,14 +8,21 @@
 namespace EngineScene{
     class Scene{
         public:
-            Scene();
+            Scene(const std::string &name, int id);
+            ~Scene() = default;
+
+            std::string name;
+            int id;
             std::vector<std::unique_ptr<Object>> objects; 
             SceneNode root;
 
             bool isInitialized = false;;
 
-            static Scene createScene();
+            static std::unique_ptr<Scene> createScene(int id, const std::string &name);
             void initScene(bool whichScene, EngineRecourse::RecourseManager &recourseManagerRef);
+
+            int getId() const {return id;}
+            std::string getName() const {return name;}
 
             void update();
 

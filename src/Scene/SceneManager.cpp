@@ -11,22 +11,30 @@
 using namespace EngineObject;
 
 namespace EngineScene{
-    SceneManager::SceneManager(){};
+    SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), recourseManager(nullptr){};
 
-    void SceneManager::addScene(){
-        Scene scene = Scene::createScene();
-        scenes.push_back(std::move(scene));
+    void SceneManager::addScene(const std::string &name, int id){
+        auto scene = Scene::createScene(id, name);
+        scene->initScene(true, *recourseManager);
+        scenes[id] = std::move(scene);
+        sceneOrder.push_back(id);
+
+        currentID++;
     }
 
     void SceneManager::changeScenes(int indexChange){
-        if(currentSceneIndex + indexChange >= scenes.size() || currentSceneIndex + indexChange < 0){
-            return;
-        }
-        if(scenes[currentSceneIndex + indexChange].isInitialized == false){
-            scenes[currentSceneIndex + indexChange].initScene(false, *recourseManager);
+        int newIndex = currentSceneIndex + indexChange;
+        if(newIndex >= sceneOrder.size() || newIndex < 0) return;
+
+        int newSceneID = sceneOrder[newIndex];
+        auto &scenePtr = scenes.at(newSceneID);
+
+        if(!scenePtr->isInitialized){
+            scenePtr->initScene(false, *recourseManager);
         }
 
-        currentSceneIndex+=indexChange;
+        currentSceneIndex = newIndex;
+        currentSceneID = newSceneID;
     }
 
     void SceneManager::init(EngineRecourse::RecourseManager &recourseManagerRef){
@@ -37,18 +45,17 @@ namespace EngineScene{
             if (std::filesystem::is_regular_file(entry.path()) && entry.path().extension() == ".json")
                 files.push_back(entry.path());
 
-        std::sort(files.begin(), files.end());
+        std::sort(files.begin(), files.end());        
 
         if(files.empty()){
-            Scene newScene = Scene::createScene();
-            newScene.initScene(true, *recourseManager);
-            scenes.push_back(std::move(newScene));
-            return;
+            addScene("Base Scene", currentID);
+        } else{
+            for(auto &file : files){
+                deserializeScene(file.string());
+            }
         }
 
-        for(auto &file : files){
-            deserializeScene(file.string());
-        }
+        if(!sceneOrder.empty()) currentSceneIndex = 0; 
     }
 
     json SceneManager::serializeObject(const Object &object){
@@ -58,6 +65,7 @@ namespace EngineScene{
         } else{
             jsonData["name"] = "Generic";
         }
+        jsonData["uuid"] = object.uuid;
         jsonData["type"] = object.type;
         jsonData["mesh"] = object.mesh->meshPath;
         jsonData["texture"] = object.texture->texturePath;
@@ -95,12 +103,15 @@ namespace EngineScene{
     
     Object* SceneManager::deserializeObject(const nlohmann::json& jsonData){
         Object* obj = ObjectRegistry::get().create(jsonData["type"], jsonData);
+        obj->uuid = jsonData["uuid"];
 
         return obj;
     }
 
     void SceneManager::serializeScene(Scene &scene, uint32_t sceneIndex){
         json sceneData;
+        sceneData["name"] = scene.name;
+        sceneData["id"] = scene.id;
         sceneData["objects"] = json::array();
 
         for(auto &node : scene.root.children){
@@ -117,13 +128,13 @@ namespace EngineScene{
         file.close();
     }
 
-    SceneNode* SceneManager::deserializeNode(const json& jsonNode){
+    SceneNode* SceneManager::deserializeNode(Scene &scene, const json& jsonNode){
         SceneNode *node = new SceneNode();
         Object *object;
         if(jsonNode.contains("type")) {
             object = deserializeObject(jsonNode);
             auto objectPtr = std::unique_ptr<Object>(object);
-            tempObjects.push_back(std::move(objectPtr));
+            scene.objects.push_back(std::move(objectPtr));
             node->object = object;
         } else {
             object = nullptr;
@@ -138,7 +149,7 @@ namespace EngineScene{
 
         if(jsonNode.contains("children")){
             for(auto& childJson : jsonNode["children"]){
-                SceneNode* childNode = deserializeNode(childJson);
+                SceneNode* childNode = deserializeNode(scene, childJson);
                 node->addChild(childNode);
             }
         }
@@ -153,33 +164,43 @@ namespace EngineScene{
         json sceneData;
         file >> sceneData;
 
-        Scene scene = Scene::createScene();
+        std::unique_ptr<Scene> scene = Scene::createScene(sceneData["id"], sceneData["name"]);
 
-        tempObjects.clear();
+        scene->objects.clear();
 
         for(auto &jsonObj : sceneData["objects"]){
-            SceneNode* node = deserializeNode(jsonObj);
-            scene.root.addChild(node);
+            SceneNode* node = deserializeNode(*scene, jsonObj);
+            scene->root.addChild(node);
         }
 
-        for(auto& objPtr : tempObjects){
-            scene.objects.push_back(std::move(objPtr));
-        }
+        sceneOrder.push_back(scene->id);
 
-        scenes.push_back(std::move(scene));
+        scenes[scene->id] = (std::move(scene));
     }
 
     void SceneManager::saveScenes(){
-        for(int i = 0; i < scenes.size(); i++){
-            serializeScene(scenes[i], i);
+        for(auto& [id, scene] : scenes){
+            serializeScene(*scene, id);
         }
     }
 
-    std::vector<Scene> &SceneManager::getScenes(){
-        return scenes;
+     std::vector<Scene*> SceneManager::getScenes(){
+        std::vector<Scene*> scenesVector;
+
+        for(auto &scene : scenes){
+            scenesVector.push_back(scene.second.get());
+        }
+
+        return scenesVector;
     }
 
-    Scene &SceneManager::getCurrentScene(){
-        return scenes[currentSceneIndex];
+    Scene* SceneManager::getCurrentScene(){
+        return scenes.at(sceneOrder[currentSceneIndex]).get();
+    }
+
+    Scene* SceneManager::getScene(int id){
+        auto it = scenes.find(id);
+        if(it != scenes.end()) return it->second.get();
+        return nullptr;
     }
 }

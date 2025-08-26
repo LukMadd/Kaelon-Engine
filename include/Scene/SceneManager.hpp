@@ -16,29 +16,36 @@ namespace EngineScene{
 
             void init(EngineRecourse::RecourseManager &recourseManager);
 
-            void addScene();
+            void addScene(const std::string &name, int id);
             void changeScenes(int indexChange);
 
-            std::vector<Scene> &getScenes();
-            Scene &getCurrentScene();
+            std::vector<Scene*> getScenes();
+            Scene* getCurrentScene();
 
-            std::vector<std::unique_ptr<Object>> tempObjects;
             json serializeObject(const Object &object);
             json serializeNode(SceneNode* node);
             Object* deserializeObject(const nlohmann::json& jsonData);
-            SceneNode* deserializeNode(const json& jsonNode);
+            SceneNode* deserializeNode(Scene &scene, const json& jsonNode);
             void serializeScene(Scene &scene, uint32_t sceneIndex);
             void deserializeScene(const std::string& filename);
+
+            Scene* getScene(int id);
 
             void saveScenes();
             void cleanup();
 
-            uint32_t currentSceneIndex = 0;
-
         private:
             EngineRecourse::RecourseManager *recourseManager;
 
-            std::vector<Scene> scenes;
+            std::unordered_map<int, std::unique_ptr<Scene>> scenes;
+
+            std::vector<int> sceneOrder;
+
+            int currentSceneIndex = 0;
+
+            int currentSceneID = 0;
+
+            int currentID = 0;
     };
 }
 

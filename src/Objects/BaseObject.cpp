@@ -36,22 +36,22 @@ namespace EngineObject{
         modelMatrix = glm::translate(glm::mat4(1.0f), position);
     }
 
-    void MeshObject::initVulkanRecourses(EngineRecourse::RecourseManager &recourseManager){
+    void MeshObject::initVulkanresources(EngineResource::ResourceManager &resourceManager){
         if(!pendingMeshPath.empty()){
-            mesh = recourseManager.loadMesh(pendingMeshPath);
+            mesh = resourceManager.load<Mesh>(pendingMeshPath);
         }
         if(!pendingTexturePath.empty()){
-            texture = recourseManager.loadTexture(pendingTexturePath);
+            texture = resourceManager.load<Texture>(pendingTexturePath);
         }
 
         if(!mesh->meshPath.empty()){
-            mesh = recourseManager.loadMesh(mesh->meshPath);;
+            mesh = resourceManager.load<Mesh>(mesh->meshPath);;
         } else{
-            mesh = recourseManager.loadMesh(mesh->meshPath);;
+            mesh = resourceManager.load<Mesh>(mesh->meshPath);;
         }
 
         if(!texture->texturePath.empty()){
-            texture = recourseManager.loadTexture(texture->texturePath);
+            texture = resourceManager.load<Texture>(texture->texturePath);
         } else{
             if(defaultResources.isInitialized){
                 texture = defaultResources.texture;

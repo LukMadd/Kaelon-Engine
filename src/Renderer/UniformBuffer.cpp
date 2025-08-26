@@ -12,7 +12,7 @@
 #include <chrono>
 
 namespace EngineRenderer{
-    void DummyRecources::createDummyRecourses(){
+    void DummyRecources::createDummyresources(){
         texture = std::make_shared<Texture>();
         
         uint32_t whitePixel = 0xFFFFFFFF;

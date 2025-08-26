@@ -52,6 +52,7 @@ CMake
 .cache
 .clangd
 .VSCodeCounter
+.tokeignore
 dependencies
 
 #Executable file

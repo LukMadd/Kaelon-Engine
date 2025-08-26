@@ -4,7 +4,7 @@
 
 namespace EngineObject{
     struct DefaultResources{
-        std::shared_ptr<Texture> init(EngineRecourse::RecourseManager &recourseManager);
+        std::shared_ptr<Texture> init(EngineResource::ResourceManager &resourceManager);
 
         std::shared_ptr<Texture> texture;
 

@@ -30,9 +30,9 @@ namespace EngineRenderer{
         appCommand.createCommandPool(surface, queueFamilyIndices);
     }
     
-    void Renderer::initObjectRecourses(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects){
-        dummyRecourses.createDummyRecourses();
-        auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout, dummyRecourses.texture);
+    void Renderer::initObjectresources(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects){
+        dummyresources.createDummyresources();
+        auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout, dummyresources.texture);
         descriptorLayouts.push_back(layout);
         appPipeline.createGraphicsPipeline(appSwapChain.swapChainExtent, descriptorSetLayout);
         multiSampler.createColorResources(appSwapChain.swapChainImageFormat, appSwapChain.swapChainExtent);
@@ -44,10 +44,10 @@ namespace EngineRenderer{
         createSyncObjects();
     }
 
-    void Renderer::initObjects(Scene &scene, EngineRecourse::RecourseManager &recourseManager){
+    void Renderer::initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager){
         for(auto &obj : scene.objects){
-            obj->initVulkanRecourses(recourseManager);
-            defaultResources.init(recourseManager);
+            obj->initVulkanresources(resourceManager);
+            defaultResources.init(resourceManager);
 
             auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout,obj->texture);
             obj->descriptorSetLayout = layout;
@@ -198,10 +198,10 @@ namespace EngineRenderer{
             vkDestroyDescriptorSetLayout(device, layout, nullptr);
         }
 
-        vkDestroyImageView(device, dummyRecourses.texture->textureImageView, nullptr);
-        vkDestroyImage(device, dummyRecourses.texture->textureImage, nullptr);
-        vkFreeMemory(device, dummyRecourses.texture->textureImageMemory, nullptr);
-        vkDestroySampler(device, dummyRecourses.texture->textureSampler, nullptr);
+        vkDestroyImageView(device, dummyresources.texture->textureImageView, nullptr);
+        vkDestroyImage(device, dummyresources.texture->textureImage, nullptr);
+        vkFreeMemory(device, dummyresources.texture->textureImageMemory, nullptr);
+        vkDestroySampler(device, dummyresources.texture->textureSampler, nullptr);
 
         vkDestroyDevice(device, nullptr);
 

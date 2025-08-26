@@ -16,7 +16,7 @@ namespace Engine{
     void GameEngine::init(){
         renderer.initVulkan();
 
-        sceneManager.init(recourseManager);
+        sceneManager.init(resourceManager);
 
         for(auto &scene : sceneManager.getScenes()){
             scene->update();
@@ -28,10 +28,10 @@ namespace Engine{
         }
         totalObjects = std::max(totalObjects, size_t(1));
 
-        renderer.initObjectRecourses(totalObjects, sceneManager.getCurrentScene()->objects);
+        renderer.initObjectresources(totalObjects, sceneManager.getCurrentScene()->objects);
     
         for(auto &scene : sceneManager.getScenes()){
-            renderer.initObjects(*scene, recourseManager);
+            renderer.initObjects(*scene, resourceManager);
         }
 
         Input::get().init(window);

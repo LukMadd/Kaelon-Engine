@@ -9,7 +9,7 @@
 
 namespace Engine{
     struct GameEngine{    
-        EngineRecourse::RecourseManager recourseManager;
+        EngineResource::ResourceManager resourceManager;
         SceneManager sceneManager;
         ActionManager actionManager;
         EngineInput::InputHandler inputHandler;

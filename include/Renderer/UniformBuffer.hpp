@@ -9,7 +9,7 @@ using namespace EngineObject;
 namespace EngineRenderer{
     struct DummyRecources{
         std::shared_ptr<Texture> texture;
-        void createDummyRecourses();
+        void createDummyresources();
     };
 
     struct UniformBufferObject{
@@ -19,7 +19,7 @@ namespace EngineRenderer{
     };
 
     struct UniformBuffer{
-        DummyRecources dummyRecourses;
+        DummyRecources dummyresources;
         VkDescriptorSetLayout createDescriptorSetLayout(VkDescriptorSetLayout &descriptorSetLayout, std::shared_ptr<Texture> texture);
         void createUniformBuffers(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, std::vector<VkDeviceMemory> &uniformBuffersMemory, std::vector<void*> &uniformBuffersMapped);
         void createDescriptorPool(uint32_t objectCount, int MAX_FRAMES_IN_FLIGHT, VkDescriptorPool &descriptorPool);

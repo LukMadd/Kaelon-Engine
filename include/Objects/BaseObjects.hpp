@@ -10,7 +10,7 @@ namespace EngineObject{
             MeshObject(glm::vec3 position = {0.0f, 0.0f, 0.0f}, std::shared_ptr<Mesh> mesh = nullptr, std::shared_ptr<Texture> texture = nullptr);
 
             bool usingDefault = false;
-            void initVulkanRecourses(EngineRecourse::RecourseManager &recourseManager) override;
+            void initVulkanresources(EngineResource::ResourceManager &resourceManager) override;
             void draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout) override;
             void deserialize(const nlohmann::json& jsonData) override;
             void cleanup(VkDevice device) override;

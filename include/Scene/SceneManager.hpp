@@ -14,7 +14,7 @@ namespace EngineScene{
         public:
             SceneManager();
 
-            void init(EngineRecourse::RecourseManager &recourseManager);
+            void init(EngineResource::ResourceManager &resourceManager);
 
             void addScene(const std::string &name, int id);
             void changeScenes(int indexChange);
@@ -35,7 +35,7 @@ namespace EngineScene{
             void cleanup();
 
         private:
-            EngineRecourse::RecourseManager *recourseManager;
+            EngineResource::ResourceManager *resourceManager;
 
             std::unordered_map<int, std::unique_ptr<Scene>> scenes;
 

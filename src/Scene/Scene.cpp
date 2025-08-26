@@ -16,13 +16,15 @@ namespace EngineScene{
     }
 
     //Will probably be removed later, right now just used because there is nothing to add scenes
-    void Scene::initScene(bool whichScene, EngineRecourse::RecourseManager &recourseManager){
+    void Scene::initScene(bool whichScene, EngineResource::ResourceManager &resourceManager){
         glm::vec3 pos = glm::vec3(0.0, 0.0, 0.0);
         if(whichScene){
             for(int i = 0; i < 10; i++){
                 for(int j = 0; j < 10; j++){
-                    auto mesh = recourseManager.loadMesh("models/Crate1.obj");
-                    auto texture = recourseManager.loadTexture("textures/crate_1.jpg");
+                    //This is supposed to happen in initVulkan, but logic is not there yet so just gotta deal with it
+                    //I will be so happy when this is gone
+                    auto mesh = resourceManager.load<Mesh>("models/Crate1.obj");
+                    auto texture = resourceManager.load<Texture>("textures/crate_1.jpg");
                     auto cube = std::make_unique<MeshObject>(pos, mesh, texture);
                     cube->modelMatrix = glm::scale(cube->modelMatrix, glm::vec3(0.5f));
 
@@ -42,8 +44,8 @@ namespace EngineScene{
                 pos.y+=1.5;
         }
         } else{
-            auto mesh = recourseManager.loadMesh("models/sphere.obj");
-            auto texture = recourseManager.loadTexture("textures/viking_room.png");
+            auto mesh = resourceManager.load<Mesh>("models/sphere.obj");
+            auto texture = resourceManager.load<Texture>("textures/viking_room.png");
             auto sphere = std::make_unique<MeshObject>(pos, mesh, texture);
 
             Object* objPtr = sphere.get();

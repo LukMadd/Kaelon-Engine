@@ -19,7 +19,7 @@ namespace EngineScene{
             bool isInitialized = false;;
 
             static std::unique_ptr<Scene> createScene(int id, const std::string &name);
-            void initScene(bool whichScene, EngineRecourse::RecourseManager &recourseManagerRef);
+            void initScene(bool whichScene, EngineResource::ResourceManager &resourceManagerRef);
 
             int getId() const {return id;}
             std::string getName() const {return name;}

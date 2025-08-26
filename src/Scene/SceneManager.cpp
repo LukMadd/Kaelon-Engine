@@ -11,13 +11,13 @@
 using namespace EngineObject;
 
 namespace EngineScene{
-    SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), recourseManager(nullptr){};
+    SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), resourceManager(nullptr){};
 
     void SceneManager::addScene(const std::string &name, int id){
         auto scene = Scene::createScene(id, name);
-        scene->initScene(true, *recourseManager);
-        scenes[id] = std::move(scene);
+        scene->initScene(true, *resourceManager);
         sceneOrder.push_back(id);
+        scenes[id] = std::move(scene);
 
         currentID++;
     }
@@ -30,23 +30,23 @@ namespace EngineScene{
         auto &scenePtr = scenes.at(newSceneID);
 
         if(!scenePtr->isInitialized){
-            scenePtr->initScene(false, *recourseManager);
+            scenePtr->initScene(false, *resourceManager);
         }
 
         currentSceneIndex = newIndex;
         currentSceneID = newSceneID;
     }
 
-    void SceneManager::init(EngineRecourse::RecourseManager &recourseManagerRef){
-        recourseManager = &recourseManagerRef;
+    void SceneManager::init(EngineResource::ResourceManager &resourceManagerRef){
+        resourceManager = &resourceManagerRef;
 
         std::vector<std::filesystem::path> files;
         for (auto& entry : std::filesystem::directory_iterator("../scenes"))
             if (std::filesystem::is_regular_file(entry.path()) && entry.path().extension() == ".json")
                 files.push_back(entry.path());
 
-        std::sort(files.begin(), files.end());        
-
+        std::sort(files.begin(), files.end());     
+        
         if(files.empty()){
             addScene("Base Scene", currentID);
         } else{
@@ -176,6 +176,8 @@ namespace EngineScene{
         sceneOrder.push_back(scene->id);
 
         scenes[scene->id] = (std::move(scene));
+
+        currentID++;
     }
 
     void SceneManager::saveScenes(){

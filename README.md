@@ -15,6 +15,7 @@
 ----------Required Libraries----------
 1. Vulkan SDK(1.2+)
 2. GLFW(3.3+)
+3. GLM
 3. stb(included in repo)
 
 ----------Notes----------

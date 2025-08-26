@@ -60,7 +60,7 @@ namespace EngineRenderer {
 
             uint32_t currentFrame = 0;
 
-            DummyRecources dummyRecourses;
+            DummyRecources dummyresources;
 
             public: 
                 Renderer();
@@ -69,8 +69,8 @@ namespace EngineRenderer {
                 bool framebuffersrResized = false;
 
                 void initVulkan();
-                void initObjectRecourses(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects);
-                void initObjects(Scene &scene, EngineRecourse::RecourseManager &recourseManage);
+                void initObjectresources(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects);
+                void initObjects(Scene &scene, EngineResource::ResourceManager &resourceManage);
                 void initSceneDescriptors(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
                 void cleanup();
                 void drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects);

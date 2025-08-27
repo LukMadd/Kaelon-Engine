@@ -21,11 +21,7 @@ namespace EngineScene{
         if(whichScene){
             for(int i = 0; i < 10; i++){
                 for(int j = 0; j < 10; j++){
-                    //This is supposed to happen in initVulkan, but logic is not there yet so just gotta deal with it
-                    //I will be so happy when this is gone
-                    auto mesh = resourceManager.load<Mesh>("models/Crate1.obj");
-                    auto texture = resourceManager.load<Texture>("textures/crate_1.jpg");
-                    auto cube = std::make_unique<MeshObject>(pos, mesh, texture);
+                    auto cube = std::make_unique<MeshObject>(pos, "models/Crate1.obj", "textures/crate_1.jpg");
                     cube->modelMatrix = glm::scale(cube->modelMatrix, glm::vec3(0.5f));
 
                     SceneNode* node = new SceneNode();
@@ -44,9 +40,7 @@ namespace EngineScene{
                 pos.y+=1.5;
         }
         } else{
-            auto mesh = resourceManager.load<Mesh>("models/sphere.obj");
-            auto texture = resourceManager.load<Texture>("textures/viking_room.png");
-            auto sphere = std::make_unique<MeshObject>(pos, mesh, texture);
+            auto sphere = std::make_unique<MeshObject>(pos, "models/sphere.obj", "textures/viking_room.png");
 
             Object* objPtr = sphere.get();
 

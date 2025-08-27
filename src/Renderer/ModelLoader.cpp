@@ -66,6 +66,5 @@ namespace EngineRenderer{
         mesh.indexBuffer.createIndexBuffer(indices, mesh.indexBuffer.buffer, mesh.indexBuffer.bufferMemory);
 
         return mesh;
-
     }
 }

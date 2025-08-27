@@ -43,8 +43,6 @@ namespace EngineScene{
 
             int currentSceneIndex = 0;
 
-            int currentSceneID = 0;
-
             int currentID = 0;
     };
 }

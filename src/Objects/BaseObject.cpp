@@ -27,40 +27,37 @@ namespace EngineObject{
     modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f));
     }
 
-    MeshObject::MeshObject(glm::vec3 position, std::shared_ptr<Mesh> mesh, std::shared_ptr<Texture> texture){
+    MeshObject::MeshObject(glm::vec3 position, const std::string &meshPathRef, const std::string &texturePathRef){
+        this->mesh = std::make_shared<Mesh>();
+        this->texture = std::make_shared<Texture>();
+
         this->name = "Mesh_Object";
         this->type = "Mesh_Object";
-        this->mesh = mesh;
-        this->texture = texture;
+        this->mesh->meshPath = meshPathRef;
+        this->texture->texturePath = texturePathRef;
         this->position = position;
         modelMatrix = glm::translate(glm::mat4(1.0f), position);
     }
 
-    void MeshObject::initVulkanresources(EngineResource::ResourceManager &resourceManager){
+    void MeshObject::initVulkanResources(EngineResource::ResourceManager &resourceManager){
         if(!pendingMeshPath.empty()){
             mesh = resourceManager.load<Mesh>(pendingMeshPath);
+        } else if(mesh && !mesh->meshPath.empty()){
+            mesh = resourceManager.load<Mesh>(mesh->meshPath);
         }
+
         if(!pendingTexturePath.empty()){
             texture = resourceManager.load<Texture>(pendingTexturePath);
-        }
-
-        if(!mesh->meshPath.empty()){
-            mesh = resourceManager.load<Mesh>(mesh->meshPath);;
-        } else{
-            mesh = resourceManager.load<Mesh>(mesh->meshPath);;
-        }
-
-        if(!texture->texturePath.empty()){
+        } else if(texture && !texture->texturePath.empty()){
             texture = resourceManager.load<Texture>(texture->texturePath);
-        } else{
-            if(defaultResources.isInitialized){
-                texture = defaultResources.texture;
-            }
-        }   
+        }else{
+            texture = defaultResources.texture;
+        }
     }
 
     void MeshObject::draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout){
         VkDeviceSize offsets[] = {0};
+
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, &mesh->vertexBuffer.buffer, offsets);
         vkCmdBindIndexBuffer(commandBuffer, mesh->indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
         

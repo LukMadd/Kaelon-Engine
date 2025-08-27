@@ -15,7 +15,7 @@ namespace EngineScene{
 
     void SceneManager::addScene(const std::string &name, int id){
         auto scene = Scene::createScene(id, name);
-        scene->initScene(true, *resourceManager);
+        scene->initScene(false, *resourceManager);
         sceneOrder.push_back(id);
         scenes[id] = std::move(scene);
 
@@ -34,7 +34,6 @@ namespace EngineScene{
         }
 
         currentSceneIndex = newIndex;
-        currentSceneID = newSceneID;
     }
 
     void SceneManager::init(EngineResource::ResourceManager &resourceManagerRef){

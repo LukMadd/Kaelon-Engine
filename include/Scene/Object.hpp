@@ -23,7 +23,7 @@ namespace EngineScene{
             Object() : uuid(generateUUID()){};
             virtual ~Object() = default;
             virtual void draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout) = 0;
-            virtual void initVulkanresources(EngineResource::ResourceManager &resourceManager) = 0;
+            virtual void initVulkanResources(EngineResource::ResourceManager &resourceManager) = 0;
             virtual void deserialize(const nlohmann::json& jsonData) = 0;
             virtual void cleanup(VkDevice device) = 0;
             std::string type;

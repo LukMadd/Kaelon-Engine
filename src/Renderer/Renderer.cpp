@@ -45,9 +45,9 @@ namespace EngineRenderer{
     }
 
     void Renderer::initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager){
+        defaultResources.init(resourceManager);
         for(auto &obj : scene.objects){
-            obj->initVulkanresources(resourceManager);
-            defaultResources.init(resourceManager);
+            obj->initVulkanResources(resourceManager);
 
             auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout,obj->texture);
             obj->descriptorSetLayout = layout;

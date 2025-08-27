@@ -20,7 +20,7 @@ namespace EngineRenderer{
 
     class VertexBuffer{      
         public:  
-            VkBuffer buffer;
+            VkBuffer buffer = VK_NULL_HANDLE;
             VkDeviceMemory bufferMemory;
             std::vector<Vertex> vertices;
 
@@ -32,7 +32,7 @@ namespace EngineRenderer{
 
     class IndexBuffer{
         public:
-            VkBuffer buffer;
+            VkBuffer buffer = VK_NULL_HANDLE;
             VkDeviceMemory bufferMemory;
             std::vector<uint32_t> indices;
 

@@ -31,7 +31,7 @@ namespace EngineResource{
                 if constexpr(std::is_same_v<resourceType, Mesh>){
                     resource = std::make_shared<resourceType>(ModelLoader::loadMesh(filePath));
                 } else if constexpr(std::is_same_v<resourceType, Texture>){
-                    resource = std::make_shared<resourceType>(TextureLoader::createTexture(filePath));
+                    resource = TextureLoader::createTexture(filePath);
                 } else{
                     static_assert(always_false<resourceType>, "Unsupported resource type!");
                 }
@@ -39,6 +39,57 @@ namespace EngineResource{
                 cache[filePath] = resource;
                 return resource;
             } 
+
+            void cleanup(VkDevice device) {
+                for(auto& [path, anyRes] : cache){
+                    if(anyRes.type() == typeid(std::shared_ptr<Texture>)){
+                        auto tex = std::any_cast<std::shared_ptr<Texture>>(anyRes);
+                        if(!tex) continue;
+
+                        if(tex->textureSampler != VK_NULL_HANDLE){
+                            vkDestroySampler(device, tex->textureSampler, nullptr);
+                            tex->textureSampler = VK_NULL_HANDLE;
+                        }
+                        if(tex->textureImageView != VK_NULL_HANDLE){
+                            vkDestroyImageView(device, tex->textureImageView, nullptr);
+                            tex->textureImageView = VK_NULL_HANDLE;
+                        }
+                        if(tex->textureImage != VK_NULL_HANDLE){
+                            vkDestroyImage(device, tex->textureImage, nullptr);
+                            tex->textureImage = VK_NULL_HANDLE;
+                        }
+                        if(tex->textureImageMemory != VK_NULL_HANDLE){
+                            vkFreeMemory(device, tex->textureImageMemory, nullptr);
+                            tex->textureImageMemory = VK_NULL_HANDLE;
+                        }
+                    } 
+                    else if(anyRes.type() == typeid(std::shared_ptr<Mesh>)){
+                        auto mesh = std::any_cast<std::shared_ptr<Mesh>>(anyRes);
+                        if(!mesh) continue;
+
+                        if(mesh->vertexBuffer.buffer != VK_NULL_HANDLE){
+                            vkDestroyBuffer(device, mesh->vertexBuffer.buffer, nullptr);
+                            mesh->vertexBuffer.buffer = VK_NULL_HANDLE;
+                        }
+                        if(mesh->vertexBuffer.bufferMemory != VK_NULL_HANDLE){
+                            vkFreeMemory(device, mesh->vertexBuffer.bufferMemory, nullptr);
+                            mesh->vertexBuffer.bufferMemory = VK_NULL_HANDLE;
+                        }
+                        if(mesh->indexBuffer.buffer != VK_NULL_HANDLE){
+                            vkDestroyBuffer(device, mesh->indexBuffer.buffer, nullptr);
+                            mesh->indexBuffer.buffer = VK_NULL_HANDLE;
+                        }
+                        if(mesh->indexBuffer.bufferMemory != VK_NULL_HANDLE){
+                            vkFreeMemory(device, mesh->indexBuffer.bufferMemory, nullptr);
+                            mesh->indexBuffer.bufferMemory = VK_NULL_HANDLE;
+                        }
+                    }
+                }
+
+                cache.clear();
+            }
+
+
     };
 }
 

@@ -1,3 +1,6 @@
+#ifndef _VALIDATION_LAYERS_HPP
+#define _VALIDATION_LAYERS_HPP
+
 #include <vector>
 #include <vulkan/vulkan.hpp>
 
@@ -17,3 +20,5 @@ namespace EngineRenderer {
             };
     };
 }
+
+#endif

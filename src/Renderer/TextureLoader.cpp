@@ -10,12 +10,13 @@
 #include "RendererGlobals.hpp"
 
 namespace EngineRenderer{
-    Texture TextureLoader::createTexture(const std::string &filePath){
-        Texture texture;
-        texture.texturePath = filePath;
-        createTextureImage(filePath, texture.textureImage, texture.textureImageMemory);
-        createTextureImageView(texture.textureImage, texture.textureImageView);
-        createTextureSampler(texture.textureSampler, filePath);
+    std::shared_ptr<Texture> TextureLoader::createTexture(const std::string &filePath){
+        auto texture = std::make_shared<Texture>();
+        
+        texture->texturePath = filePath;
+        createTextureImage(filePath, texture->textureImage, texture->textureImageMemory);
+        createTextureImageView(texture->textureImage, texture->textureImageView);
+        createTextureSampler(texture->textureSampler, filePath);
 
         return texture;
     }

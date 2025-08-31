@@ -30,9 +30,10 @@ namespace EngineRenderer{
         appCommand.createCommandPool(surface, queueFamilyIndices);
     }
     
-    void Renderer::initObjectresources(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects){
+    void Renderer::initObjectResources(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects, EngineResource::ResourceManager &resourceManager){
+        defaultResources.init(resourceManager);
         dummyresources.createDummyresources();
-        auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout, dummyresources.texture);
+        auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
         descriptorLayouts.push_back(layout);
         appPipeline.createGraphicsPipeline(appSwapChain.swapChainExtent, descriptorSetLayout);
         multiSampler.createColorResources(appSwapChain.swapChainImageFormat, appSwapChain.swapChainExtent);
@@ -45,11 +46,10 @@ namespace EngineRenderer{
     }
 
     void Renderer::initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager){
-        defaultResources.init(resourceManager);
         for(auto &obj : scene.objects){
             obj->initVulkanResources(resourceManager);
 
-            auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout,obj->texture);
+            auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
             obj->descriptorSetLayout = layout;
             descriptorLayouts.push_back(layout);
             std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
@@ -65,7 +65,7 @@ namespace EngineRenderer{
                 throw std::runtime_error("Failed to allocate descriptor sets for object");
             }
 
-            uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, layout, descriptorPool, obj->descriptorSets, obj->texture);
+            uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, layout, descriptorPool, obj->descriptorSets, obj->material->getTextures());
         }
         scene.isInitialized = true;
     }
@@ -202,7 +202,7 @@ namespace EngineRenderer{
         vkDestroyImage(device, dummyresources.texture->textureImage, nullptr);
         vkFreeMemory(device, dummyresources.texture->textureImageMemory, nullptr);
         vkDestroySampler(device, dummyresources.texture->textureSampler, nullptr);
-
+       
         vkDestroyDevice(device, nullptr);
 
         vkDestroySurfaceKHR(instance, surface, nullptr);

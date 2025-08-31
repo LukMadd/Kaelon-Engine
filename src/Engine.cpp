@@ -28,7 +28,7 @@ namespace Engine{
         }
         totalObjects = std::max(totalObjects, size_t(1));
 
-        renderer.initObjectresources(totalObjects, sceneManager.getCurrentScene()->objects);
+        renderer.initObjectResources(totalObjects, sceneManager.getCurrentScene()->objects, resourceManager);
     
         for(auto &scene : sceneManager.getScenes()){
             renderer.initObjects(*scene, resourceManager);
@@ -71,6 +71,7 @@ namespace Engine{
         for(auto &scene :  sceneManager.getScenes()){
             scene->cleanupObjects();
         }
+        resourceManager.cleanup(device);
         EngineObject::defaultResources.cleanupDefault();
         renderer.cleanup();
     }

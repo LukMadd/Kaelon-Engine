@@ -15,28 +15,39 @@ namespace EngineObject{
     }();
 
     void MeshObject::deserialize(const nlohmann::json& jsonData){
-    pendingMeshPath = jsonData["mesh"];
-    pendingTexturePath = jsonData["texture"];
+        pendingMeshPath = jsonData["mesh"];
+        pendingTexturePaths.clear();
 
-    name = jsonData["name"];
+        for (const auto& texturePath : jsonData["textures"]){
+            pendingTexturePaths.push_back(texturePath);
+        }
+        Shader shader = Shader();
 
-    shader.vertShader = jsonData["shader"]["vert"];
-    shader.fragShader = jsonData["shader"]["frag"];
+        name = jsonData["name"];
 
-    modelMatrix = glm::translate(glm::mat4(1.0f), position);
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f));
+        shader.vertShader = jsonData["shader"]["vert"];
+        shader.fragShader = jsonData["shader"]["frag"];
+
+        modelMatrix = glm::translate(glm::mat4(1.0f), position);
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f));
+
+        material->setShader(shader);
     }
 
     MeshObject::MeshObject(glm::vec3 position, const std::string &meshPathRef, const std::string &texturePathRef){
         this->mesh = std::make_shared<Mesh>();
-        this->texture = std::make_shared<Texture>();
+        this->material = std::make_shared<Material>();
+
+        Texture texture = Texture();
 
         this->name = "Mesh_Object";
         this->type = "Mesh_Object";
         this->mesh->meshPath = meshPathRef;
-        this->texture->texturePath = texturePathRef;
+        texture.texturePath = texturePathRef;
         this->position = position;
         modelMatrix = glm::translate(glm::mat4(1.0f), position);
+
+        this->material->addTexture(std::make_shared<Texture>(texture));
     }
 
     void MeshObject::initVulkanResources(EngineResource::ResourceManager &resourceManager){
@@ -46,12 +57,22 @@ namespace EngineObject{
             mesh = resourceManager.load<Mesh>(mesh->meshPath);
         }
 
-        if(!pendingTexturePath.empty()){
-            texture = resourceManager.load<Texture>(pendingTexturePath);
-        } else if(texture && !texture->texturePath.empty()){
-            texture = resourceManager.load<Texture>(texture->texturePath);
-        }else{
-            texture = defaultResources.texture;
+        if(!pendingTexturePaths.empty()){
+            material->getTextures().clear();
+            for(const auto &texturePath : pendingTexturePaths) {
+                if(!texturePath.empty()){
+                    auto texture = resourceManager.load<Texture>(texturePath);
+                    material->addTexture(texture);
+                } else{
+                    material->addTexture(defaultResources.texture);
+                }
+            }
+        } else{
+            for(auto &texture : material->getTextures()){
+                if(!texture->textureSampler || !texture->textureImage){
+                    texture = resourceManager.load<Texture>(texture->texturePath);
+                }
+            }
         }
     }
 
@@ -67,41 +88,7 @@ namespace EngineObject{
     }
 
     void MeshObject::cleanup(VkDevice device){
-        if(mesh->vertexBuffer.buffer){
-            vkDestroyBuffer(device, mesh->vertexBuffer.buffer, nullptr);
-            mesh->vertexBuffer.buffer = VK_NULL_HANDLE;
-        }
-        if(mesh->vertexBuffer.bufferMemory){
-            vkFreeMemory(device, mesh->vertexBuffer.bufferMemory, nullptr);
-            mesh->vertexBuffer.bufferMemory = VK_NULL_HANDLE;
-        }
-
-        if(mesh->indexBuffer.buffer){
-            vkDestroyBuffer(device, mesh->indexBuffer.buffer, nullptr);
-            mesh->indexBuffer.buffer = VK_NULL_HANDLE;
-        }
-        if(mesh->indexBuffer.bufferMemory){
-            vkFreeMemory(device, mesh->indexBuffer.bufferMemory, nullptr);
-            mesh->indexBuffer.bufferMemory = VK_NULL_HANDLE;
-        }
-        
-        if(!usingDefault){
-            if(texture->textureSampler){
-                vkDestroySampler(device, texture->textureSampler, nullptr);
-                texture->textureSampler = VK_NULL_HANDLE;
-            }
-            if(texture->textureImageView){
-                vkDestroyImageView(device, texture->textureImageView, nullptr);
-                texture->textureImageView = VK_NULL_HANDLE;
-            }
-            if(texture->textureImage){
-                vkDestroyImage(device, texture->textureImage, nullptr);
-                texture->textureImage = VK_NULL_HANDLE;
-            }
-            if(texture->textureImageMemory){
-                vkFreeMemory(device, texture->textureImageMemory, nullptr);
-                texture->textureImageMemory = VK_NULL_HANDLE;
-            }
-        } 
+        mesh.reset();
+        material->getTextures().clear();
     }
 }

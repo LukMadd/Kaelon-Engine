@@ -1,3 +1,6 @@
+#ifndef _RENDERER_GLOBALS_HPP
+#define _RENDERER_GLOBALS_HPP
+
 #include <vulkan/vulkan.hpp>
 
 #include "ModelLoader.hpp"
@@ -23,3 +26,5 @@ namespace EngineRenderer{
 
     inline MultiSampler multiSampler;
 }
+
+#endif

@@ -1,6 +1,5 @@
 #include "ModelLoader.hpp"
 #include "Vertex.hpp"
-#include "RendererGlobals.hpp"
 
 #include <cstdint>
 #include <stdexcept>

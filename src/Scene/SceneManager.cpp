@@ -5,7 +5,6 @@
 
 #include "ObjectRegistry.hpp"
 #include "RecourseManager.hpp"
-#include "RendererGlobals.hpp"
 #include "nlohmann/json.hpp"
 
 using namespace EngineObject;
@@ -15,7 +14,7 @@ namespace EngineScene{
 
     void SceneManager::addScene(const std::string &name, int id){
         auto scene = Scene::createScene(id, name);
-        scene->initScene(false, *resourceManager);
+        scene->initScene(true, *resourceManager);
         sceneOrder.push_back(id);
         scenes[id] = std::move(scene);
 
@@ -67,10 +66,13 @@ namespace EngineScene{
         jsonData["uuid"] = object.uuid;
         jsonData["type"] = object.type;
         jsonData["mesh"] = object.mesh->meshPath;
-        jsonData["texture"] = object.texture->texturePath;
+        jsonData["textures"] = json::array();
+        for(const auto &texture : object.material->getTextures()){
+            jsonData["textures"].push_back(texture->texturePath);
+        }
         jsonData["shader"] = {
-            {"vert", object.shader.vertShader},
-            {"frag", object.shader.fragShader}
+            {"vert", object.material->getShader().vertShader},
+            {"frag", object.material->getShader().fragShader}
         };
 
         return jsonData; 

@@ -2,6 +2,7 @@
 #define _OBJECT_HPP
 
 #include "Mesh.hpp"
+#include "Material.hpp"
 #include "nlohmann/json.hpp"
 #include "RecourseManager.hpp"
 #include "UUID.hpp"
@@ -13,11 +14,6 @@ using namespace EngineRenderer;
 using namespace EngineObject;
 
 namespace EngineScene{
-    struct Shader{
-        std::string vertShader = ("shaders/base_vert_shader.spv");
-        std::string fragShader = ("shaders/base_frag_shader.spv");
-    };
-
     class Object{
         public:
             Object() : uuid(generateUUID()){};
@@ -36,8 +32,7 @@ namespace EngineScene{
             std::vector<VkDescriptorSet> descriptorSets;
 
             std::shared_ptr<Mesh> mesh;
-            Shader shader;
-            std::shared_ptr<Texture> texture;
+            std::shared_ptr<Material> material;
     };
 }
 

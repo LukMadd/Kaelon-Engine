@@ -60,7 +60,7 @@ namespace EngineRenderer{
         vkFreeMemory(device, stagingMemory, nullptr);
     }
 
-     VkDescriptorSetLayout UniformBuffer::createDescriptorSetLayout(VkDescriptorSetLayout &descriptorSetLayout, std::shared_ptr<Texture> texture){
+     VkDescriptorSetLayout UniformBuffer::createDescriptorSetLayout(VkDescriptorSetLayout &descriptorSetLayout){
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = 0;
         uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -124,33 +124,41 @@ namespace EngineRenderer{
         setObjectName(device, (uint64_t)descriptorPool, VK_OBJECT_TYPE_DESCRIPTOR_POOL, "Main_Descriptor_Pool");
     }
 
-    void UniformBuffer::createDescriptorSets(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, VkDescriptorSetLayout descriptorSetLayout, VkDescriptorPool &descriptorPool, std::vector<VkDescriptorSet> &descriptorSets, std::shared_ptr<Texture> texture){
-        for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
+    void UniformBuffer::createDescriptorSets(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, VkDescriptorSetLayout descriptorSetLayout, VkDescriptorPool &descriptorPool, std::vector<VkDescriptorSet> &descriptorSets, const std::vector<std::shared_ptr<Texture>> &textures){
+        for(size_t frame = 0; frame < MAX_FRAMES_IN_FLIGHT; frame++){
             VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = uniformBuffers[i];
+            bufferInfo.buffer = uniformBuffers[frame];
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
 
-            VkDescriptorImageInfo imageInfo{};
-            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = texture->textureImageView;
-            imageInfo.sampler = texture->textureSampler;
+            std::vector<VkDescriptorImageInfo> imageInfos(textures.size());
+            for(size_t i = 0; i < textures.size(); i++){
+                imageInfos[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                imageInfos[i].imageView = textures[i]->textureImageView;
+                imageInfos[i].sampler = textures[i]->textureSampler;
+            }
 
-            std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+            std::vector<VkWriteDescriptorSet> descriptorWrites;
 
-            descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[0].dstSet = descriptorSets[i];
-            descriptorWrites[0].dstBinding = 0;
-            descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-            descriptorWrites[0].descriptorCount = 1;
-            descriptorWrites[0].pBufferInfo = &bufferInfo;
+            VkWriteDescriptorSet uboWrite{};
+            uboWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            uboWrite.dstSet = descriptorSets[frame];
+            uboWrite.dstBinding = 0;
+            uboWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            uboWrite.descriptorCount = 1;
+            uboWrite.pBufferInfo = &bufferInfo;
+            descriptorWrites.push_back(uboWrite);
 
-            descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[1].dstSet = descriptorSets[i];
-            descriptorWrites[1].dstBinding = 1;
-            descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-            descriptorWrites[1].descriptorCount = 1;
-            descriptorWrites[1].pImageInfo = &imageInfo;
+            for(size_t i = 0; i < textures.size(); i++){
+                VkWriteDescriptorSet textureWrite{};
+                textureWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                textureWrite.dstSet = descriptorSets[frame];
+                textureWrite.dstBinding = static_cast<uint32_t>(i + 1);
+                textureWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+                textureWrite.descriptorCount = 1;
+                textureWrite.pImageInfo = &imageInfos[i];
+                descriptorWrites.push_back(textureWrite);
+            }
 
             vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
         }

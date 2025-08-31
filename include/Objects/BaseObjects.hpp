@@ -16,6 +16,6 @@ namespace EngineObject{
             void cleanup(VkDevice device) override;
 
             std::string pendingMeshPath = "";
-            std::string pendingTexturePath = "";
+            std::vector<std::string> pendingTexturePaths;
     };
 }

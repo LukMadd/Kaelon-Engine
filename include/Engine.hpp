@@ -3,6 +3,7 @@
 #include "Renderer.hpp"
 #include "InputHandler.hpp"
 #include "Camera.hpp"
+#include "Lighting.hpp"
 
 
 #include <GLFW/glfw3.h>
@@ -26,6 +27,7 @@ namespace Engine{
         private:
             GLFWwindow *window = nullptr;
             EngineRenderer::Renderer renderer;
+            EngineRenderer::Lighting lights;
 
             uint32_t currentSceneIndex = 0;
     };

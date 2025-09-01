@@ -10,11 +10,12 @@
 namespace EngineRenderer{
     struct Vertex{
         glm::vec3 pos;
+        glm::vec3 normal;
         glm::vec3 color;
         glm::vec2 texCoord;
 
         bool operator==(const Vertex &other) const{
-            return pos == other.pos && color == other.color && texCoord == other.texCoord;
+            return pos == other.pos && normal == other.normal && color == other.color && texCoord == other.texCoord;
         }
     }; 
 
@@ -25,7 +26,7 @@ namespace EngineRenderer{
             std::vector<Vertex> vertices;
 
             static VkVertexInputBindingDescription getBindingDescription();
-            static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions();
+            static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescriptions();
 
             void createVertexBuffer(std::vector<Vertex> &vertices, VkBuffer &buffer, VkDeviceMemory &bufferMemory);
     };
@@ -47,7 +48,8 @@ namespace std {
     template<> struct hash<EngineRenderer::Vertex> {
         size_t operator()(EngineRenderer::Vertex const& vertex) const {
             return ((hash<glm::vec3>()(vertex.pos) ^
-                   (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
+                   (hash<glm::vec3>()(vertex.normal) << 1)) >> 1) ^
+                   ((hash<glm::vec3>()(vertex.color) << 1) >> 1) ^
                    (hash<glm::vec2>()(vertex.texCoord) << 1);
         }
     };

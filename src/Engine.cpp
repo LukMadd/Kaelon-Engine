@@ -34,6 +34,12 @@ namespace Engine{
             renderer.initObjects(*scene, resourceManager);
         }
 
+        EngineRenderer::DirectionalLight sun;
+        sun.direction = glm::normalize(glm::vec3(0.3f, -1.0f, 0.5f));
+        sun.color = glm::vec3(1.0f, 0.5f, 0.2f);
+        sun.intensity = 0.2f;
+        lights.addDirectionalLight(sun);
+
         Input::get().init(window);
         Input::get().setCallBacks();
         actionManager.setupBindings();
@@ -57,6 +63,15 @@ namespace Engine{
 
             EngineRenderer::UniformBufferObject ubo{};
             ubo.view = camera.getViewMatrix();
+
+
+            if(!lights.getDirectionalLights().empty()){
+                const auto& directionalLight = lights.getDirectionalLights()[0];
+                ubo.lightDir = glm::vec4(glm::normalize(directionalLight.direction), 0.0f);
+                ubo.lightColorIntensity = glm::vec4(directionalLight.color, directionalLight.intensity);
+            }
+
+            ubo.cameraPos = glm::vec4(camera.position, 0.0f);
 
             renderer.updateUniformBuffers(ubo);
 

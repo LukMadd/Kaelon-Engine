@@ -7,9 +7,9 @@ namespace EngineCamera{
     class Camera{
         public:
             Camera();
+            glm::vec3 position;
 
         private:
-            glm::vec3 position;
             glm::vec3 front;
             glm::vec3 up;
             float speed = 10.0f;

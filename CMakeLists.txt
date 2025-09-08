@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 3.28.0)
 project(Vulkan-Renderer)
 
 set(CMAKE_CXX_STANDARD 20)
+cmake_policy(SET CMP0169 OLD)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
@@ -122,19 +123,29 @@ add_custom_target(
 add_dependencies(Vulkan-Renderer Shaders)
 
 #-----------------------------------------Include directories and libraries-----------------------------------------#
+FetchContent_Declare(
+    imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    GIT_TAG master
+)
+FetchContent_GetProperties(imgui)
+if(NOT imgui_POPULATED)
+    FetchContent_Populate(imgui)
+endif()
+
 set(IMGUI_SOURCES
-    ${CMAKE_SOURCE_DIR}/external/imgui/imgui.cpp
-    ${CMAKE_SOURCE_DIR}/external/imgui/imgui_draw.cpp
-    ${CMAKE_SOURCE_DIR}/external/imgui/imgui_tables.cpp
-    ${CMAKE_SOURCE_DIR}/external/imgui/imgui_widgets.cpp
-    ${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_vulkan.cpp
-    ${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_glfw.cpp
+    ${imgui_SOURCE_DIR}/imgui.cpp
+    ${imgui_SOURCE_DIR}/imgui_draw.cpp
+    ${imgui_SOURCE_DIR}/imgui_tables.cpp
+    ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
 )
 
 add_library(imgui STATIC ${IMGUI_SOURCES})
-target_include_directories(imgui PUBLIC 
-    ${CMAKE_SOURCE_DIR}/external/imgui
-    ${CMAKE_SOURCE_DIR}/external/imgui/backends
+target_include_directories(imgui PUBLIC
+    ${imgui_SOURCE_DIR}
+    ${imgui_SOURCE_DIR}/backends
 )
 target_link_libraries(imgui PUBLIC Vulkan::Vulkan glfw glm::glm)
 

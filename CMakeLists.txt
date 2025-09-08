@@ -122,6 +122,22 @@ add_custom_target(
 add_dependencies(Vulkan-Renderer Shaders)
 
 #-----------------------------------------Include directories and libraries-----------------------------------------#
+set(IMGUI_SOURCES
+    ${CMAKE_SOURCE_DIR}/external/imgui/imgui.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/imgui_draw.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/imgui_tables.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/imgui_widgets.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_vulkan.cpp
+    ${CMAKE_SOURCE_DIR}/external/imgui/backends/imgui_impl_glfw.cpp
+)
+
+add_library(imgui STATIC ${IMGUI_SOURCES})
+target_include_directories(imgui PUBLIC 
+    ${CMAKE_SOURCE_DIR}/external/imgui
+    ${CMAKE_SOURCE_DIR}/external/imgui/backends
+)
+target_link_libraries(imgui PUBLIC Vulkan::Vulkan glfw glm::glm)
+
 target_include_directories(Vulkan-Renderer PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/include/Core
@@ -130,6 +146,7 @@ target_include_directories(Vulkan-Renderer PRIVATE
     ${CMAKE_SOURCE_DIR}/include/Camera
     ${CMAKE_SOURCE_DIR}/include/Scene
     ${CMAKE_SOURCE_DIR}/include/Objects
+    ${CMAKE_SOURCE_DIR}/include/UI
     ${Vulkan_INCLUDE_DIRS}
     ${GLFW_INCLUDE_DIRS}
     ${tinyobjloader_SOURCE_DIR}
@@ -141,6 +158,7 @@ target_link_libraries(Vulkan-Renderer PRIVATE
     glm::glm
     "${Vulkan_LIB_DIR}/libvulkan.dylib"
     stb_image
+    imgui
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")

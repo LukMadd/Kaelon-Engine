@@ -22,13 +22,13 @@ void main() {
     vec3 norm = normalize(fragNormal);
     vec3 lightDir = normalize(-ubo.lightDir.xyz);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * ubo.lightColorIntensity.rgb * ubo.lightColorIntensity.w * 0.5;
+    vec3 diffuse = diff * ubo.lightColorIntensity.rgb * ubo.lightColorIntensity.w * 0.75;
     vec3 viewDir = normalize(ubo.cameraPos.xyz - fragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 16.0);
-    vec3 specular = 0.5 * spec * ubo.lightColorIntensity.rgb * 0.2 * ubo.lightColorIntensity.w;
+    vec3 specular = 0.75 * spec * ubo.lightColorIntensity.rgb * ubo.lightColorIntensity.w;
     vec3 texColor = texture(texSampler, fragTexCoord).rgb;
-    vec3 ambient = 0.4 * texColor;
+    vec3 ambient = 0.5 * texColor;
     
     vec3 linearColor = ambient + diffuse + specular;
     vec3 finalColor = min(linearColor, vec3(1.0));

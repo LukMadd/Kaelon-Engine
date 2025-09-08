@@ -9,7 +9,7 @@
 #include "Command.hpp"
 #include "Vertex.hpp"
 #include "UniformBuffer.hpp"
-#include "Utility.hpp"
+#include "RendererUtilities.hpp"
 #include "Object.hpp"
 #include "Scene.hpp"
 
@@ -17,7 +17,6 @@ using namespace EngineScene;
 namespace EngineRenderer {
     class Renderer{
         private:
-            void mainLoop(std::vector<std::unique_ptr<Object>> &objects);
             void createSyncObjects();
 
             Window appWindow;
@@ -28,7 +27,6 @@ namespace EngineRenderer {
             Instance appInstance{instance};
 
             Queue appQueue;
-            QueueFamilyIndices queueFamilyIndices;
 
             SwapChain appSwapChain;
             VkSwapchainKHR swapChain;
@@ -73,11 +71,16 @@ namespace EngineRenderer {
                 void initObjects(Scene &scene, EngineResource::ResourceManager &resourceManage);
                 void initSceneDescriptors(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
                 void cleanup();
-                void drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
+                void drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects, float fps);
 
                 void updateUniformBuffers(UniformBufferObject &ubo){
                     uniformBufferCommand.updateUniformBuffers(ubo, currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);
                 }
+
+                VkInstance& getInstance(){return instance;}
+                VkDescriptorPool& getDescriptorPool(){return descriptorPool;}
+                VkRenderPass& getRenderPass(){return appPipeline.renderPass;}
+                VkCommandBuffer& getCurrentCommandBuffer(){return commandbuffers[currentFrame];}
 
     };
 }

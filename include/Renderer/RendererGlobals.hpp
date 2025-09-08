@@ -7,12 +7,16 @@
 #include "DepthBuffer.hpp"
 #include "MipMap.hpp"
 #include "MultiSampling.hpp"
+#include "Queue.hpp"
 
 namespace EngineRenderer{
     inline VkQueue graphicsQueue;
     inline VkQueue presentQueue;
+    inline QueueFamilyIndices queueFamilyIndices;
     inline VkDevice device;
     inline VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+
+    inline uint32_t imageCount;
 
     inline VkCommandPool commandPool = VK_NULL_HANDLE;
     

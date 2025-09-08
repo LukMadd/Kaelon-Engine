@@ -38,6 +38,7 @@ namespace EngineRenderer {
         window = glfwCreateWindow(WIDTH, HEIGHT, name.c_str(), nullptr, nullptr);
         glfwSetFramebufferSizeCallback(window, framebuffersrResizeCallback);
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSwapInterval(0);
     }
 
     void Window::createSurface(VkInstance instance, GLFWwindow *window, VkSurfaceKHR &surface){

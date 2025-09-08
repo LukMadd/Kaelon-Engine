@@ -2,7 +2,7 @@
 #include <limits>
 #include "SwapChain.hpp"
 #include "MultiSampling.hpp"
-#include "Utility.hpp"
+#include "RendererUtilities.hpp"
 #include "RendererGlobals.hpp"
 #include "ValidationLayers.hpp"
 
@@ -84,7 +84,7 @@ namespace EngineRenderer {
         VkPresentModeKHR presentMode = chooseSwapChainPresentMode(swapChainSupport.presentModes);
         VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
 
-        uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+        imageCount = swapChainSupport.capabilities.minImageCount + 1;
 
         if(swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount){
             imageCount = swapChainSupport.capabilities.maxImageCount;

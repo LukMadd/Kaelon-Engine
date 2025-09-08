@@ -1,7 +1,10 @@
 #include "Command.hpp"
 #include "RendererGlobals.hpp"
 #include "ValidationLayers.hpp"
+#include "imgui.h"
+#include "backends/imgui_impl_vulkan.h"
 #include <cstdint>
+
 
 namespace EngineRenderer{
     void Command::createCommandPool(VkSurfaceKHR surface, QueueFamilyIndices queueFamilyIndices){
@@ -39,7 +42,7 @@ namespace EngineRenderer{
         }
     }
 
-    void Command::recordCommandBuffers(std::vector<std::unique_ptr<Object>> &objects, VkCommandBuffer commandBuffer, uint32_t imageIndex, VkRenderPass renderPass, SwapChain swapChain, VkPipeline &graphicsPipeline, VkPipelineLayout &pipelineLayout, uint32_t currentFrame, VkBuffer &vertexBuffer, VkBuffer &indexBuffer){
+    void Command::recordCommandBuffers(std::vector<std::unique_ptr<Object>> &objects, VkCommandBuffer commandBuffer, uint32_t imageIndex, VkRenderPass renderPass, SwapChain swapChain, VkPipeline &graphicsPipeline, VkPipelineLayout &pipelineLayout, uint32_t currentFrame, VkBuffer &vertexBuffer, VkBuffer &indexBuffer, float fps){
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         beginInfo.flags = 0;
@@ -67,6 +70,10 @@ namespace EngineRenderer{
 
         vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
+        if(graphicsPipeline == VK_NULL_HANDLE){
+            throw std::runtime_error("graphicsPipeline is null! Did pipeline creation fail?");
+        }
+
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
         VkViewport viewport{};
@@ -87,6 +94,11 @@ namespace EngineRenderer{
             vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &obj->descriptorSets[currentFrame], 0, nullptr);
 
             obj->draw(commandBuffer, pipelineLayout);
+        }
+
+        ImDrawData* imguiDrawData = ImGui::GetDrawData();
+        if (imguiDrawData && imguiDrawData->CmdListsCount > 0) {
+            ImGui_ImplVulkan_RenderDrawData(imguiDrawData, commandBuffer);
         }
         
         vkCmdEndRenderPass(commandBuffer);

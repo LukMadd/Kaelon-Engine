@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h> 
 #include <cstdint>
 #include <stdexcept>
+#include "imgui_impl_vulkan.h"
 
 namespace EngineRenderer {
     Instance::Instance(VkInstance& instance){
@@ -59,6 +60,14 @@ namespace EngineRenderer {
         if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to create instance error code: " + std::to_string(result) + "!");
         }
+
+        ImGui_ImplVulkan_LoadFunctions(    VK_API_VERSION_1_4,
+[](const char* name, void* user_data) -> PFN_vkVoidFunction {
+            VkInstance instance = static_cast<VkInstance>(user_data);
+            return vkGetInstanceProcAddr(instance, name);
+            },
+            &instance );
+            
         m_ValidationLayers.createDebugMessenger(instance);
     }
 }

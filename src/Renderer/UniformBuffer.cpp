@@ -1,5 +1,5 @@
 #include "UniformBuffer.hpp"
-#include "Utility.hpp"
+#include "RendererUtilities.hpp"
 #include "RendererGlobals.hpp"
 #include "ValidationLayers.hpp"
 #include <array>

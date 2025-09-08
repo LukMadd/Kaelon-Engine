@@ -1,5 +1,5 @@
 #include "Vertex.hpp"
-#include "Utility.hpp"
+#include "RendererUtilities.hpp"
 #include "RendererGlobals.hpp"
 #include <cstdint>
 

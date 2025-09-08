@@ -37,8 +37,11 @@ namespace Engine{
         EngineRenderer::DirectionalLight sun;
         sun.direction = glm::normalize(glm::vec3(0.3f, -1.0f, 0.5f));
         sun.color = glm::vec3(1.0f, 0.5f, 0.2f);
-        sun.intensity = 0.2f;
+        sun.intensity = 0.4f;
         lights.addDirectionalLight(sun);
+
+        imguiPool = uiManager.createImGuiDescriptorPool();
+        uiManager.initImGui(window, renderer.getInstance(), VK_NULL_HANDLE, imguiPool, renderer.getRenderPass());
 
         Input::get().init(window);
         Input::get().setCallBacks();
@@ -61,9 +64,10 @@ namespace Engine{
 
             sceneManager.getCurrentScene()->update();
 
+            float fps = fpsManager.updateFPS(deltaTime);
+
             EngineRenderer::UniformBufferObject ubo{};
             ubo.view = camera.getViewMatrix();
-
 
             if(!lights.getDirectionalLights().empty()){
                 const auto& directionalLight = lights.getDirectionalLights()[0];
@@ -71,11 +75,13 @@ namespace Engine{
                 ubo.lightColorIntensity = glm::vec4(directionalLight.color, directionalLight.intensity);
             }
 
+            uiManager.beginFrame(window, fps);
+
             ubo.cameraPos = glm::vec4(camera.position, 0.0f);
 
             renderer.updateUniformBuffers(ubo);
 
-            renderer.drawFrame(sceneManager.getCurrentScene()->objects);
+            renderer.drawFrame(sceneManager.getCurrentScene()->objects, fps);
         }
         vkDeviceWaitIdle(EngineRenderer::device);
     }
@@ -88,6 +94,7 @@ namespace Engine{
         }
         resourceManager.cleanup(device);
         EngineObject::defaultResources.cleanupDefault();
+        uiManager.shutDownImGui(imguiPool);
         renderer.cleanup();
     }
 }

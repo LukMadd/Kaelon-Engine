@@ -5,7 +5,7 @@
 
 #include "TextureLoader.hpp"
 #include "Vertex.hpp"
-#include "Utility.hpp"
+#include "RendererUtilities.hpp"
 #include "Renderer.hpp"
 #include "RendererGlobals.hpp"
 

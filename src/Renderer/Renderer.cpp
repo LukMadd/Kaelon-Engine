@@ -95,7 +95,7 @@ namespace EngineRenderer{
         }
     }
     
-    void Renderer::drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects){
+    void Renderer::drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects, float fps){
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex;
@@ -113,7 +113,7 @@ namespace EngineRenderer{
 
         vkResetCommandBuffer(commandbuffers[currentFrame], 0);
 
-        appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipeline, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer);
+        appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipeline, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, fps);
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -160,14 +160,6 @@ namespace EngineRenderer{
         }
 
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-    }
-
-    void Renderer::mainLoop(std::vector<std::unique_ptr<Object>> &objects){
-        while(!glfwWindowShouldClose(window)){
-            glfwPollEvents();
-            drawFrame(objects);
-        }
-        vkDeviceWaitIdle(device);
     }
 
     void Renderer::cleanup(){

@@ -1,6 +1,6 @@
 #include "MultiSampling.hpp"
 #include "RendererGlobals.hpp"
-#include "Utility.hpp"
+#include "RendererUtilities.hpp"
 
 namespace EngineRenderer{
     void MultiSampler::createColorResources(VkFormat swapChainImageFormat, VkExtent2D swapChainExtent){

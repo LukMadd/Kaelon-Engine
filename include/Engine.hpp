@@ -2,7 +2,6 @@
 #include "SceneManager.hpp"
 #include "Renderer.hpp"
 #include "InputHandler.hpp"
-#include "CameraManager.hpp"
 #include "Lighting.hpp"
 #include "UIManager.hpp"
 #include "FPSManager.hpp"
@@ -16,7 +15,6 @@ namespace Engine{
         SceneManager sceneManager;
         ActionManager actionManager;
         EngineInput::InputHandler inputHandler;
-        EngineCamera::CameraManager cameraManager;
         EngineUI::UIManager uiManager;
         EngineUI::FPSManager fpsManager; //Might just become debug manager in the future
 

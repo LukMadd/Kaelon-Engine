@@ -1,4 +1,32 @@
 {
+    "cameras": [
+        {
+            "fov": 35.0,
+            "front": [
+                0.0469946451485157,
+                -0.15441110730171204,
+                0.9868884682655334
+            ],
+            "is_initialized": true,
+            "name": "Generic_Camera",
+            "position": [
+                5.0,
+                12.5,
+                -30.0
+            ],
+            "rotation": {
+                "pitch": -8.882643699645996,
+                "yaw": 87.27368927001953
+            },
+            "sensitivity": 0.10000000149011612,
+            "speed": 10.0,
+            "up": [
+                0.0,
+                1.0,
+                0.0
+            ]
+        }
+    ],
     "id": 1,
     "name": "Bonus Scene",
     "objects": [
@@ -14,12 +42,12 @@
                     "textures/viking_room.png"
                 ],
                 "type": "Mesh_Object",
-                "uuid": "03265a0faca0e26be64885eed427c1e4"
+                "uuid": "fb76f9db6f370d1efc5c09c9fb0b0ce1"
             },
             "transform": {
                 "position": [
+                    2.0,
                     1.0,
-                    4.0,
                     0.0
                 ],
                 "rotation": [

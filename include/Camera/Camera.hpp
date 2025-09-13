@@ -21,13 +21,14 @@ namespace EngineCamera{
 
             std::string name;
 
-            void setName(const std::string &nameRef) {name = nameRef;}
-
             float& getFov(){return fov;}
             float& getSpeed(){return speed;}
             float& getYaw(){return yaw;}
             float& getPitch(){return pitch;}
             float& getSensitivity(){return sensitivity;}
+
+            glm::vec3& getFront(){return front;}
+            glm::vec3& getUp(){return up;}
 
         private:
             glm::vec3 front;

@@ -1,13 +1,12 @@
 #include "Scene.hpp"
 #include "Object.hpp"
-#include "CameraManager.hpp"
 
 namespace EngineUI{
     class EngineUI{
         public:
             void drawMainLayout();
 
-            void drawSceneHierarchy(EngineScene::Scene *scene, EngineCamera::CameraManager *cameraManager);
+            void drawSceneHierarchy(EngineScene::Scene *scene);
 
             void drawObjectInspector();
 

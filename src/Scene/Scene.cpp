@@ -18,6 +18,7 @@ namespace EngineScene{
 
     //Will probably be removed later, right now just used because there is nothing to add scenes
     void Scene::initScene(bool whichScene, EngineResource::ResourceManager &resourceManager){
+        cameraManager.checkIfCamerasEmpty();
         glm::vec3 pos = glm::vec3(0.0, 0.0, 0.0);
         if(whichScene){
             for(int i = 0; i < 10; i++){

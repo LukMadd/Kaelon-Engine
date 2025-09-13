@@ -2,6 +2,7 @@
 
 namespace EngineCamera{
     std::shared_ptr<Camera> CameraManager::getCurrentCamera(){
+        checkIfCamerasEmpty();
         return cameras[currentCameraIndex];
     }
 
@@ -18,6 +19,14 @@ namespace EngineCamera{
         if(cameraIndex >= cameras.size() || cameraIndex < 0) return;
 
         currentCameraIndex = cameraIndex;
+    }
+
+    //Prevents putting the same code in multiple different places
+    void CameraManager::checkIfCamerasEmpty(){
+        if(getCameras().empty()){
+            EngineCamera::Camera camera;
+            pushCamera(std::make_shared<EngineCamera::Camera>(camera));
+        }
     }
 
 

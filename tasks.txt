@@ -1,0 +1,2 @@
+1. Move serialization code to a separate folder
+2. Add render stats

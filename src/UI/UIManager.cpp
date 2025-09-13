@@ -103,7 +103,7 @@ namespace EngineUI{
         ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags);
         
         engineUI.drawMainLayout();
-        engineUI.drawSceneHierarchy(uiInfo.sceneManager->getCurrentScene(), uiInfo.cameraManager);
+        engineUI.drawSceneHierarchy(uiInfo.sceneManager->getCurrentScene());
         engineUI.drawObjectInspector();
         engineUI.drawCamera();
 

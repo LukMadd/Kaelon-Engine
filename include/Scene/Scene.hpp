@@ -1,6 +1,7 @@
 #ifndef _SCENE_HPP
 #define _SCENE_HPP
 
+#include "CameraManager.hpp"
 #include "Object.hpp"
 #include "RecourseManager.hpp"
 
@@ -9,6 +10,8 @@ namespace EngineScene{
         public:
             Scene(const std::string &name, int id);
             ~Scene() = default;
+
+            EngineCamera::CameraManager cameraManager;
 
             std::string name;
             int id;

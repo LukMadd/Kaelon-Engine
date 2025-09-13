@@ -16,6 +16,8 @@ namespace EngineCamera{
 
             void changeCamera(uint32_t cameraIndex);
 
+            void checkIfCamerasEmpty();
+
             int currentID = 0;
 
         private:

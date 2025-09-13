@@ -15,7 +15,7 @@ namespace EngineUI{
         }
     }
 
-    void EngineUI::drawSceneHierarchy(EngineScene::Scene *scene, EngineCamera::CameraManager *cameraManager){
+    void EngineUI::drawSceneHierarchy(EngineScene::Scene *scene){
         if(m_showSceneHierarchyWindow){
             ImGui::Begin("Scene Hierarchy");
             const char* object_preview_text = selectedObject ? selectedObject->name.c_str() : "Select an object";
@@ -43,7 +43,7 @@ namespace EngineUI{
                 uint32_t cameraIndex = 0;
                 const char* camera_preview_text = selectedCamera ? selectedCamera->name.c_str() : "Select an camera";
                 if(ImGui::BeginCombo("Cameras", camera_preview_text)){
-                    for(auto &camera : cameraManager->getCameras()){
+                    for(auto &camera : scene->cameraManager.getCameras()){
                         ImGui::PushID(camera.get());
                         bool is_camera_selected = (selectedCamera == camera.get());
                         if(ImGui::Selectable(camera->name.c_str(), is_camera_selected)){
@@ -51,7 +51,7 @@ namespace EngineUI{
                             selectedCamera = camera.get();
                             selectedCamera->selected = true;
 
-                            cameraManager->changeCamera(cameraIndex);
+                            scene->cameraManager.changeCamera(cameraIndex);
 
                             if(!m_showCameraWindow){
                                 m_showCameraWindow = true;

@@ -3,9 +3,11 @@
 #define _SCENE_MANAGER_HPP
 
 #include <cstdint>
+#include "Camera.hpp"
 #include "Scene.hpp"
 #include "nlohmann/json.hpp"
 #include "RecourseManager.hpp"
+
 
 using namespace nlohmann;
 
@@ -23,10 +25,12 @@ namespace EngineScene{
             Scene* getCurrentScene();
 
             json serializeObject(const Object &object);
-            json serializeNode(SceneNode* node);
+            json serializeNode(SceneNode *node);
+            json serialzeCamera(std::shared_ptr<EngineCamera::Camera> Camera);
+            void serializeScene(Scene &scene, uint32_t sceneIndex);
             Object* deserializeObject(const nlohmann::json& jsonData);
             SceneNode* deserializeNode(Scene &scene, const json& jsonNode);
-            void serializeScene(Scene &scene, uint32_t sceneIndex);
+            EngineCamera::Camera* deserializeCamera(const nlohmann::json& jsonData);
             void deserializeScene(const std::string& filename);
 
             Scene* getScene(int id);

@@ -11,7 +11,7 @@ namespace EngineCamera{
         up = glm::vec3(0.0f, 1.0f, 0.0f);
 
         glm::vec3 target = glm::vec3((6.75f));
-        glm::vec direction = glm::normalize(target - position);
+        glm::vec3 direction = glm::normalize(target - position);
 
         yaw = glm::degrees(atan2(direction.z, direction.x ));
         pitch = glm::degrees(asin(direction.y));

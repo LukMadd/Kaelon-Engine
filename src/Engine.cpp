@@ -40,9 +40,6 @@ namespace Engine{
         sun.intensity = 0.4f;
         lights.addDirectionalLight(sun);
 
-        EngineCamera::Camera baseCamera;
-        cameraManager.pushCamera(std::make_shared<EngineCamera::Camera>(baseCamera));
-
         imguiPool = uiManager.createImGuiDescriptorPool();
         
         EngineUI::UIInfo uiInfo{};
@@ -52,7 +49,7 @@ namespace Engine{
         uiInfo.pipelineCache = nullptr;
         uiInfo.renderPass = renderer.getRenderPass();
         uiInfo.sceneManager = &sceneManager;
-        uiInfo.cameraManager = &cameraManager;
+        uiInfo.cameraManager = &sceneManager.getScenes()[0]->cameraManager;
 
         uiManager.initImGui(uiInfo);
 
@@ -73,14 +70,14 @@ namespace Engine{
 
             inputHandler.update(window, actionManager, sceneManager);
 
-            cameraManager.getCurrentCamera()->updateCameraPosition(deltaTime, actionManager, inputHandler.isSceneImmersed());
+            sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->updateCameraPosition(deltaTime, actionManager, inputHandler.isSceneImmersed());
 
             sceneManager.getCurrentScene()->update(); //Updates the current frame's children with it's matrix and so forth
 
             float fps = fpsManager.updateFPS(deltaTime);
 
             EngineRenderer::UniformBufferObject ubo{};
-            ubo.view = cameraManager.getCurrentCamera()->getViewMatrix();
+            ubo.view = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getViewMatrix();
 
             //Adds the one light to the uniform buffer object, will be expanded to handle multiple at once
             if(!lights.getDirectionalLights().empty()){
@@ -91,9 +88,9 @@ namespace Engine{
 
             uiManager.renderUI(fps);
 
-            ubo.cameraPos = glm::vec4(cameraManager.getCurrentCamera()->position, 0.0f); //Updates the camera positio
+            ubo.cameraPos = glm::vec4(sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->position, 0.0f); //Updates the camera positio
 
-            renderer.updateUniformBuffers(ubo, cameraManager.getCurrentCamera()->getFov()); //Sends the uniform buffer object down to the uniform buffer manager for it to be processed
+            renderer.updateUniformBuffers(ubo, sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getFov()); //Sends the uniform buffer object down to the uniform buffer manager for it to be processed
 
             renderer.drawFrame(sceneManager.getCurrentScene()->objects, fps);
         }

@@ -3,11 +3,11 @@
 
 ----------How to Build----------
 1. Create a build and bin directory
-    - mkdir build && mkdir bin
+    - mkdir build
 2. Navigate to build and build project
     - cd build
     - cmake ..
-    - make
+    - make ("make -j" recommended for speed)
 3. Navigate to bin and run the executable(./Vulkan-Renderer)
     - cd .. && cd bin
     - ./Vulkan-Renderer    
@@ -16,7 +16,9 @@
 1. Vulkan SDK(1.2+)
 2. GLFW(3.3+)
 3. GLM
-3. stb(included in repo)
+4. ImGui(included in repo)
+5. stb(included in repo)
+6. tinyobjLoader(included in repo)
 
 ----------Notes----------
 1. The only way to currently customize this renderer is through editing the source code
@@ -29,6 +31,7 @@
 3. F10 for full screen
 4. Shift for hiding cursor
 5. Esc for showing cursor and exiting full screen
+6. "." to lock camera
 
 
 (These are all editable in Input.hpp(for linking custom keys to GLFW keys), Action.hpp(For creating unique actions), and Action.cpp(for linking keys to the actions))

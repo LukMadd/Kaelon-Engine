@@ -10,7 +10,15 @@ namespace EngineInput{
         public:
             bool isPressed(Key key);
 
-            void update(GLFWwindow* window, ActionManager &actionManager, EngineScene::SceneManager &sceneManager);
+            void update(GLFWwindow* window, 
+                        ActionManager &actionManager, 
+                        EngineScene::SceneManager &sceneManager);
+
+            bool isSceneImmersed(){return is_scene_immersed;}
+
+        private:
+            bool is_scene_immersed = true;
+            bool was_immersed_action_active = false; //Used to help with preventing multiple scene immersion flips in one frame
     };
 }
 

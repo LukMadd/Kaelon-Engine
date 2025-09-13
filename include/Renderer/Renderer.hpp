@@ -73,8 +73,8 @@ namespace EngineRenderer {
                 void cleanup();
                 void drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects, float fps);
 
-                void updateUniformBuffers(UniformBufferObject &ubo){
-                    uniformBufferCommand.updateUniformBuffers(ubo, currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);
+                void updateUniformBuffers(UniformBufferObject &ubo, float fov){
+                    uniformBufferCommand.updateUniformBuffers(ubo, fov, currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);
                 }
 
                 VkInstance& getInstance(){return instance;}

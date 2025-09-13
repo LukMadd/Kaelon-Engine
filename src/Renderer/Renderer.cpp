@@ -8,13 +8,13 @@
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
 namespace EngineRenderer{
-    Renderer::Renderer() : appWindow(){
-        window = appWindow.getWindow();
-        appSwapChain.initSwapChain(window);
-    }
+    Renderer::Renderer() : appWindow(){}
 
     void Renderer::initVulkan(){
+        appWindow.initWindow(1000, 800, "My_Vulkan_Engine");
+        window = appWindow.getWindow();
         glfwSetWindowUserPointer(appWindow.getWindow(), this);
+        appSwapChain.initSwapChain(window);
         appInstance.createInstance(instance);
         appWindow.createSurface(instance, window,surface);
         appInstance.pickPhysicalDevice(instance, surface);

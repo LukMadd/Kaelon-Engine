@@ -9,9 +9,7 @@
 using namespace EngineObject;
 
 namespace Engine{
-    GameEngine::GameEngine() : renderer(), camera(), sceneManager(){
-        window = renderer.window;
-    };
+    GameEngine::GameEngine() : renderer(), sceneManager(){};
 
     void GameEngine::init(){
         renderer.initVulkan();
@@ -34,14 +32,29 @@ namespace Engine{
             renderer.initObjects(*scene, resourceManager);
         }
 
+        window = renderer.window;
+
         EngineRenderer::DirectionalLight sun;
         sun.direction = glm::normalize(glm::vec3(0.3f, -1.0f, 0.5f));
         sun.color = glm::vec3(1.0f, 0.5f, 0.2f);
         sun.intensity = 0.4f;
         lights.addDirectionalLight(sun);
 
+        EngineCamera::Camera baseCamera;
+        cameraManager.pushCamera(std::make_shared<EngineCamera::Camera>(baseCamera));
+
         imguiPool = uiManager.createImGuiDescriptorPool();
-        uiManager.initImGui(window, renderer.getInstance(), VK_NULL_HANDLE, imguiPool, renderer.getRenderPass());
+        
+        EngineUI::UIInfo uiInfo{};
+        uiInfo.imGuiDescriptorPool = imguiPool;
+        uiInfo.window = window;
+        uiInfo.instance = renderer.getInstance();
+        uiInfo.pipelineCache = nullptr;
+        uiInfo.renderPass = renderer.getRenderPass();
+        uiInfo.sceneManager = &sceneManager;
+        uiInfo.cameraManager = &cameraManager;
+
+        uiManager.initImGui(uiInfo);
 
         Input::get().init(window);
         Input::get().setCallBacks();
@@ -60,26 +73,27 @@ namespace Engine{
 
             inputHandler.update(window, actionManager, sceneManager);
 
-            camera.updateCameraPosition(deltaTime, actionManager);
+            cameraManager.getCurrentCamera()->updateCameraPosition(deltaTime, actionManager, inputHandler.isSceneImmersed());
 
-            sceneManager.getCurrentScene()->update();
+            sceneManager.getCurrentScene()->update(); //Updates the current frame's children with it's matrix and so forth
 
             float fps = fpsManager.updateFPS(deltaTime);
 
             EngineRenderer::UniformBufferObject ubo{};
-            ubo.view = camera.getViewMatrix();
+            ubo.view = cameraManager.getCurrentCamera()->getViewMatrix();
 
+            //Adds the one light to the uniform buffer object, will be expanded to handle multiple at once
             if(!lights.getDirectionalLights().empty()){
                 const auto& directionalLight = lights.getDirectionalLights()[0];
                 ubo.lightDir = glm::vec4(glm::normalize(directionalLight.direction), 0.0f);
                 ubo.lightColorIntensity = glm::vec4(directionalLight.color, directionalLight.intensity);
             }
 
-            uiManager.beginFrame(window, fps);
+            uiManager.renderUI(fps);
 
-            ubo.cameraPos = glm::vec4(camera.position, 0.0f);
+            ubo.cameraPos = glm::vec4(cameraManager.getCurrentCamera()->position, 0.0f); //Updates the camera positio
 
-            renderer.updateUniformBuffers(ubo);
+            renderer.updateUniformBuffers(ubo, cameraManager.getCurrentCamera()->getFov()); //Sends the uniform buffer object down to the uniform buffer manager for it to be processed
 
             renderer.drawFrame(sceneManager.getCurrentScene()->objects, fps);
         }
@@ -88,12 +102,12 @@ namespace Engine{
 
     void GameEngine::cleanup(){
         vkDeviceWaitIdle(device);
-        sceneManager.saveScenes();
+        sceneManager.saveScenes(); //Serializes all the scenes loaded
         for(auto &scene :  sceneManager.getScenes()){
             scene->cleanupObjects();
         }
         resourceManager.cleanup(device);
-        EngineObject::defaultResources.cleanupDefault();
+        EngineObject::defaultResources.cleanupDefault(); //Destroys the default recourses
         uiManager.shutDownImGui(imguiPool);
         renderer.cleanup();
     }

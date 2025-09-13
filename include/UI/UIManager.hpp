@@ -1,21 +1,36 @@
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.hpp>
 
+#include "EngineUI.hpp"
+#include "SceneManager.hpp"
+#include "CameraManager.hpp"
+
 namespace EngineUI{
+    struct UIInfo{
+        GLFWwindow* window;
+        VkInstance instance;
+        VkPipelineCache pipelineCache;
+        VkDescriptorPool imGuiDescriptorPool;
+        VkRenderPass renderPass;
+        EngineScene::SceneManager *sceneManager;
+        EngineCamera::CameraManager *cameraManager;
+    };
+
     class UIManager{
         public:
-            void initImGui(
-            GLFWwindow* window, 
-            VkInstance instance, 
-            VkPipelineCache pipelineCache, 
-            VkDescriptorPool imGuiDescriptorPool, 
-            VkRenderPass renderPass);
+            void initImGui(UIInfo &uiInfoRef);
 
-            void beginFrame(GLFWwindow* window, float fps);
+            void beginFrame(float fps);
+            void renderUI(float fps);
 
             VkDescriptorPool createImGuiDescriptorPool();
 
             void shutDownImGui(VkDescriptorPool &imGuiDescriptorPool);
+
+            private:
+                EngineUI engineUI;
+
+                UIInfo uiInfo;
     };
 }
 

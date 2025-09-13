@@ -6,7 +6,7 @@
 using namespace EngineInput;
 
 namespace EngineCamera{
-    Camera::Camera(){
+    void Camera::init(){
         position = glm::vec3(5.0f, 12.5f, -30.0f);
         up = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -17,6 +17,9 @@ namespace EngineCamera{
         pitch = glm::degrees(asin(direction.y));
 
         front = direction;
+
+        name = "Generic_Camera";
+        is_initialized = true;
     }
 
     void Camera::moveUp(float velocity){
@@ -64,7 +67,7 @@ namespace EngineCamera{
         input.yOffset = 0.0;
     }
 
-    void Camera::updateCameraPosition(float deltaTime, ActionManager &actionManager){
+    void Camera::updateCameraPosition(float deltaTime, ActionManager &actionManager, bool is_scene_immersed){
         velocity = speed * deltaTime;
 
         if(actionManager.isActionActive(Action::PLAYER_JUMP)){
@@ -86,7 +89,9 @@ namespace EngineCamera{
             moveRight(velocity);
         }
 
-        updateYawAndPitch();
+        if(is_scene_immersed){
+            updateYawAndPitch();
+        }
     }
 
     glm::mat4 Camera::getViewMatrix(){

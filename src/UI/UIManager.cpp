@@ -1,36 +1,39 @@
 #include "UIManager.hpp"
+
 #include "imgui.h"
 #include "backends/imgui_impl_vulkan.h"
 #include "backends/imgui_impl_glfw.h"
 
 #include "RendererGlobals.hpp"
 #include "RendererUtilities.hpp"
+#include <cassert>
 #include <iostream>
 
 namespace EngineUI{
-    void UIManager::initImGui(
-        GLFWwindow* window, 
-        VkInstance instance, 
-        VkPipelineCache pipelineCache, 
-        VkDescriptorPool imGuiDescriptorPool, 
-        VkRenderPass renderPass){
+    //Initializes ImGui
+    void UIManager::initImGui(UIInfo &uiInfoRef){
+        uiInfo = uiInfoRef;
+        if(!uiInfo.sceneManager){
+            throw std::runtime_error("INVALID SCENE MANAGER");
+        }
 
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-        ImGui_ImplGlfw_InitForVulkan(window, true);
+        ImGui_ImplGlfw_InitForVulkan(uiInfo.window, true);
         ImGui_ImplVulkan_InitInfo init_info{};
-        init_info.Instance = instance;
+        init_info.Instance = uiInfo.instance;
         init_info.PhysicalDevice = physicalDevice;
         init_info.Device = device;
         init_info.QueueFamily = queueFamilyIndices.graphicsFamily.value();
         init_info.Queue = graphicsQueue;
-        init_info.PipelineCache = pipelineCache;
-        init_info.RenderPass = renderPass;
+        init_info.PipelineCache = uiInfo.pipelineCache;
+        init_info.RenderPass = uiInfo.renderPass;
         init_info.MSAASamples = msaaSamples;
-        init_info.DescriptorPool = imGuiDescriptorPool;
+        init_info.DescriptorPool = uiInfo.imGuiDescriptorPool;
         init_info.MinImageCount = imageCount;
         init_info.ImageCount = imageCount;
         init_info.CheckVkResultFn = [](VkResult err) { 
@@ -39,6 +42,7 @@ namespace EngineUI{
         ImGui_ImplVulkan_Init(&init_info);
     }
 
+    //Creates a descriptor pool specifically for imgui
     VkDescriptorPool UIManager::createImGuiDescriptorPool(){
         VkDescriptorPoolSize poolSizes[] =
         {
@@ -68,25 +72,52 @@ namespace EngineUI{
         return imguiDescriptorPool;
     }
 
-    void UIManager::beginFrame(GLFWwindow* window, float fps){
+    void UIManager::beginFrame(float fps){
         int width, height;
-        glfwGetFramebufferSize(window, &width, &height);
+        glfwGetFramebufferSize(uiInfo.window, &width, &height);
         ImGuiIO &io = ImGui::GetIO();
-        io.DisplaySize = ImVec2((float)width, (float)height);
-        io.FontGlobalScale = 1.5f; 
+        io.FontGlobalScale = 1.5f;
 
         ImGui_ImplVulkan_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::SetNextWindowSize(ImVec2(75, 75), ImGuiCond_Once);
-        ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
-        ImGui::Begin("FPS");
-        ImGui::Text("%.1f", fps);
+        //Create a dock space
+        ImGui::SetNextWindowPos(ImVec2(0,0));
+        ImGui::SetNextWindowSize(io.DisplaySize);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar |
+                                ImGuiWindowFlags_NoMove |
+                                ImGuiWindowFlags_NoBringToFrontOnFocus |
+                                ImGuiWindowFlags_NoNavFocus |
+                                ImGuiWindowFlags_NoBackground |
+                                ImGuiWindowFlags_MenuBar;
+
+        ImGui::Begin("Dock_Space_Window", nullptr, window_flags);
+
+        ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+        
+        ImGuiID dockspaceID = ImGui::GetID("Dock_Space");
+        ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags);
+        
+        engineUI.drawMainLayout();
+        engineUI.drawSceneHierarchy(uiInfo.sceneManager->getCurrentScene(), uiInfo.cameraManager);
+        engineUI.drawObjectInspector();
+        engineUI.drawCamera();
+
         ImGui::End();
+        ImGui::PopStyleVar(2);
+    }
+
+    void UIManager::renderUI(float fps){
+        beginFrame(fps);
 
         ImGui::Render();
+        //ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData()); happens in recordCommandBuffers() in command.cpp
     }
+
 
     void UIManager::shutDownImGui(VkDescriptorPool &imGuiDescriptorPool){
         ImGui_ImplVulkan_Shutdown();

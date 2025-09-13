@@ -3,6 +3,7 @@
 
 #include "Mesh.hpp"
 #include "Material.hpp"
+#include "SceneNode.hpp"
 #include "nlohmann/json.hpp"
 #include "RecourseManager.hpp"
 #include "UUID.hpp"
@@ -24,10 +25,12 @@ namespace EngineScene{
             virtual void cleanup(VkDevice device) = 0;
             std::string type;
             std::string name;
+            
+            bool selected = false; 
+            SceneNode* node = nullptr;
 
             std::string uuid;
             glm::mat4 modelMatrix{1.0f};
-            glm::vec3 position;
             VkDescriptorSetLayout descriptorSetLayout;
             std::vector<VkDescriptorSet> descriptorSets;
 

@@ -3,15 +3,19 @@
     "name": "Base Scene",
     "objects": [
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "f9ef391ad0cc7f82f8ebacaaaf368cf8"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     0.0,
@@ -29,20 +33,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "5d0ee9457c05bc776a6dd2915c10a4cd"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "3159a9706896e1e4741fa043739655ba"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     1.75,
@@ -60,20 +66,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "2b114e4c6473c44354599815311bc379"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "b9354c911f4a8c21d764d83d04d548b2"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     3.5,
@@ -91,20 +99,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "70e8f65e1aaa5464685d4bda4429938b"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "4dba57ccec82df42956b2df5d6ace1a3"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     5.25,
@@ -122,20 +132,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "773f6050c2a83817e876ba1665da79ad"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "a7d8c4d59fb0e8a39468ad8218b6a41a"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     7.0,
@@ -153,20 +165,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "72d4675b9024d9892a5717f25e2f7107"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "f2d7a9f0253dcbcbdad7043769418315"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     8.75,
@@ -184,20 +198,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "e0866f4eddbcb13a7fcec64389d3ae88"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "187a7b5f4016c301f97d8fed192c4aa8"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     10.5,
@@ -215,20 +231,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "0607b459ff403f199f335718a0a0da99"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "81ef4cf76c1d49e1f1f3d61bab1c9b07"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     12.25,
@@ -246,20 +264,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "dcc86d419a9dab701e7867a8d06a5d46"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "7667d6db33651a0601173686f055d952"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     14.0,
@@ -277,20 +297,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "cf48e2e0a0c8b3afd2987125c70008a1"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "1c12516788d71d616cb22d1fd6f697e5"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     15.75,
@@ -308,20 +330,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "e6af7e88b9fe8f2aa4ee8c8fa9c38be9"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "67ab4e139b18f9fd822e62f76708a90e"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     0.0,
@@ -339,20 +363,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "d9ced46f5ec483c46bca2e07db92a30c"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "681815ccbce4bd3b6a2574de217fe221"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     1.75,
@@ -370,20 +396,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "f05a9610da73ab264138f8512eae07fe"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "40909bb40952badd3a03eb1ce04bd4f2"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     3.5,
@@ -401,20 +429,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "30f2df1ad7b5f3e8c43776bbef50c87b"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "68164e6669954331527859e72de257d7"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     5.25,
@@ -432,20 +462,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "4bb08fd6a040db4c8d2816698916ea4a"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "446c5d550983194f852dcce1b2029d2a"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     7.0,
@@ -463,20 +495,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "718d79710c931872d5e5fab0238ab464"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "c5871e74980e03cd1e4516a722a844e4"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     8.75,
@@ -494,20 +528,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "fefdd9ff03472ec9f78381de67b45844"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "2bc4c22a182671284d265fa61caf4264"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     10.5,
@@ -525,20 +561,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "9f6d4d0879025ede86d5da167f9324d3"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "c027baa764e9e07b32544549b272df33"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     12.25,
@@ -556,20 +594,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "b3c3308de715b5fd70de59d42387a467"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "b95eee81ed636676f373f2bfd7072ede"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     14.0,
@@ -587,20 +627,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "1f503843f76d257375960356a573c1f7"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "e3c25581688e717f55366d3077ae403a"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     15.75,
@@ -618,20 +660,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "1d9de486f0bd25ec831a21ede6520b40"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "f864f51c19bd6da3fe42fb8e1c45484c"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     0.0,
@@ -649,20 +693,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "cefff679973d8fbd59cd423352be961d"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "2b439a7c11ee8d430e013f5d9a569600"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     1.75,
@@ -680,20 +726,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "800c9476dd86ceda104991a42d22151e"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "633ff8d7e61e0b3f0118239fc9580aa6"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     3.5,
@@ -711,20 +759,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "bea901e9d963edad0813fdebabfbcdb5"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "74af1b0537fabe459dc90fa36aca3200"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     5.25,
@@ -742,20 +792,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "7186031a75d35f081b774a3f558d33fe"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "4a674516f2733184a238dc6c819d004a"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     7.0,
@@ -773,20 +825,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "d053ab9783434131885307813fa453ef"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "a530af1d1447548a905e3fc5f55f9da6"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     8.75,
@@ -804,20 +858,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "3e3208244f325c6fb66803e9dbb901e7"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "1607c789007c0c9da21f241a9a4aa4e9"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     10.5,
@@ -835,20 +891,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "06da0dfa7728d06f28c349746177a1b3"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "2f30fdb2cc01911a7f50c7efb3130739"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     12.25,
@@ -866,20 +924,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "115488b7f5767cdc576fd94e8f44d33b"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "851c9cb0951dba9b1813f43a5fb83615"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     14.0,
@@ -897,20 +957,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "9955d00e3f024e784b424cb15b460c25"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "67c1c95d8d224ceeb35429a45da67c00"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     15.75,
@@ -928,20 +990,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "cae349bff5ae69e02f76d32917aa55f6"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "db3031fe95bcb8b1359178a6eb04315f"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     0.0,
@@ -959,20 +1023,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "23f5dfea0064a7ce7687f93473ead84b"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "6b3657ac3b9740f1ccf4e49a79c5fe66"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     1.75,
@@ -990,20 +1056,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "86ef82524c47c2df3acb9d9100bbddb9"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "8cc8aced9c3aea1c138a5087b27d7197"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     3.5,
@@ -1021,20 +1089,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "da5b3943dd36aa691d0ee69cb76abe6e"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "f8ee9bcea65d3ddf6fcc8778291aad68"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     5.25,
@@ -1052,20 +1122,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "0d3d97f06ceba958ae615a08b5257aff"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "c94fe1e136c2883c24ba5ba2c9ecdbf2"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     7.0,
@@ -1083,20 +1155,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "9abeaf42f9a38c824642a82a2a010395"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "40fc79a0d440ef5aa5cf94e1177924a0"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     8.75,
@@ -1114,20 +1188,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "6ed23e5ec4bcd0e32e2db7942c3075f5"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "9e575f77464a216b6120202238ad7d66"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     10.5,
@@ -1145,20 +1221,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "aa0e471b6f5c5c781ca2f0efbe847175"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "98ff6760ea7eadbab912cb387c274524"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     12.25,
@@ -1176,20 +1254,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "6d1543dac9a571fcb35620637e1b337b"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "26b5b517d3119f95b53df3528500c87a"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     14.0,
@@ -1207,20 +1287,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "0757dad3af4669f061e6b74a8c0b3087"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "1a6a7ff4d19f17ffa76d8a565969bf4a"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     15.75,
@@ -1238,20 +1320,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "cc476385c4e20cc454e05a4f36707fb0"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "c0f7b182e90a4e7ae4996357768244c3"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     0.0,
@@ -1269,20 +1353,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "2d4b0c312e51c7dd4a1b1c8cddce81ba"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "c63bf62cc6be9503df42d175dae9746b"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     1.75,
@@ -1300,20 +1386,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "019e97a69a19124b54ce64af2dbf9adf"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "2190d6d93b835739bd1e0f35354e4ea1"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     3.5,
@@ -1331,20 +1419,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "f916a0e23bf3d79c895e6d1a5ca810d2"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "6dd628432d7f4358ad4564c4962c6d78"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     5.25,
@@ -1362,20 +1452,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "32bbe219b5f882299b57378c00b173f0"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "be5c0a4dae120483e777447c31c63b44"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     7.0,
@@ -1393,20 +1485,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "ec0c7c583989e77024ba121fd61d378c"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "cdcba7d592f83878779018f0e8aaf5f3"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     8.75,
@@ -1424,20 +1518,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "2bafba5050d1e26e4285c6d8e32cccf2"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "7c525a7e13cdea3c46710d67f4dc6643"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     10.5,
@@ -1455,20 +1551,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "c8f95827b0f11a9b8716e7fde7d1a0b3"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "739d706e84641391bf9f558e5a917ce2"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     12.25,
@@ -1486,20 +1584,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "049cc91d78922a868686a5ba8a42a4c2"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "a04a2f4b7486d3c671004ad9e17eb074"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     14.0,
@@ -1517,20 +1617,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "924e82f1ec3311bd5b290bfedea2e810"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "35cfb0d04f08def01a807dfb3bbdfc9f"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     15.75,
@@ -1548,20 +1650,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "daf0e8a1f1f1b7111309750d18a5f260"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "79389b97d378b5c9d99fdc0859b9ba6d"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     0.0,
@@ -1579,20 +1683,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "76c6df46528616ffbec233b1e896f254"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "dc319279785d154c507105dc508e1bc8"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     1.75,
@@ -1610,20 +1716,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "a14718dd575619f196e6473eeca113c7"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "90444cfc5d378911c0bd6f1c12c3e31f"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     3.5,
@@ -1641,20 +1749,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "9675d34c95611626dd1c71372a5088a5"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "b6e2b0cb0a74e6a689f6d989c697aebb"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     5.25,
@@ -1672,20 +1782,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "6171cd0f83521ba843b16dd832717ac3"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "30672696bdd1587cb92eb467779e4272"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     7.0,
@@ -1703,20 +1815,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "fd7aa5423030a92e9cc6c19d3ff26bb5"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "a6647ed9337947b50301649d12230790"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     8.75,
@@ -1734,20 +1848,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "0a40fb8ca9003c739470d278ecb34a11"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "9d195aefe3c65e3f26a83b9da0ae1864"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     10.5,
@@ -1765,20 +1881,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "aab088a7622e79f55310e832e000ca39"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "c05756521f23faa4cb502410f3925e7d"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     12.25,
@@ -1796,20 +1914,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "7423e5b0b9d8a9cda4825cccc7466289"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "8ad8e50b7c84546fa033b27d541199b4"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     14.0,
@@ -1827,20 +1947,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "48b04e6b49f5fbc05ced96b04e228dee"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "9545ee24a795519c1f4626a2d6e9cdeb"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     15.75,
@@ -1858,20 +1980,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "ffce532aa39a7fc26b1f1cf81193922b"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "8605cbfbe55e01ed6630e42e1c97b03a"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     0.0,
@@ -1889,20 +2013,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "332a5dfc79694fa29043d8f2a6faab35"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "a53947b089c1791271c81e3d53b202d1"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     1.75,
@@ -1920,20 +2046,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "223e8c686c4778c36e74d5a4e0828b72"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "b4f1ce6de7326e1481a9f0f6c14df546"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     3.5,
@@ -1951,20 +2079,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "5691c426822a9fbc6a05b87e37588ac2"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "35aa2116cc2eea5bde067abee88cc887"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     5.25,
@@ -1982,20 +2112,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "bc2987f7c21aac69e39b1c9b214e68a2"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "d524d5039f61e06b6caa0e64f77c4fcc"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     7.0,
@@ -2013,20 +2145,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "4b8684dc1c973bfa78c5fdcce9c69492"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "c5883dd42302206cda551c43746b8b4b"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     8.75,
@@ -2044,20 +2178,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "b780f650ce858be92c0302eaa652425c"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "a406125cdd0f88dbace1eff509e6828a"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     10.5,
@@ -2075,20 +2211,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "1affedfc7a0c3c5d58cb2544207b3f64"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "8909bdf3215b84ae63ef58020632364c"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     12.25,
@@ -2106,20 +2244,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "aaf9fb641929f81893fe7d7ae84403cd"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "effcac3ab82cd39ab64b0c391b2beacb"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     14.0,
@@ -2137,20 +2277,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "3d8bfd4956cca8ac88c2fb679b33adb5"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "fe57cc2d091be689f6c1fbd385e17d08"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     15.75,
@@ -2168,20 +2310,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "19a914df2e0521c076b4d21ac2ed0de7"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "041c380db770d1789b665c5f830c151a"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     0.0,
@@ -2199,20 +2343,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "bc7b5681816695c5f4ef3b105cdbfa47"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "a750ee937078fe518168d602391f1680"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     1.75,
@@ -2230,20 +2376,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "fb75b4eedaa7346819dedfd6232fcc98"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "be78242a5bf47d8c2082b770c5c56eb2"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     3.5,
@@ -2261,20 +2409,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "8b6c77ea9972d8e627c1f3970a730166"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "7cae046befd314ddd6442bf558ca3e1b"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     5.25,
@@ -2292,20 +2442,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "4397e14241090f350b952aece69222bb"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "8c02cb1b0c2eeba8e7b2b79122db97fb"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     7.0,
@@ -2323,20 +2475,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "f4fec7aa64eb18d5c6a27621bfd1325a"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "3a8c8ed8615be1f86c95ddafc88880b7"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     8.75,
@@ -2354,20 +2508,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "7a34b95d9c9ea1b8c32f1c116da52d62"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "9f1c044191cb2300029ed0149fe68ccc"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     10.5,
@@ -2385,20 +2541,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "8b84d79742069a5787c5914d56e7be99"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "25b4739a431017ffe32973649d8116df"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     12.25,
@@ -2416,20 +2574,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "c524c0fea97555e2152e0c534ee90271"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "8da44e704e8707bde0776448f8c34290"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     14.0,
@@ -2447,20 +2607,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "1e58fcf154efe6d92abcf5957a14d046"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "ce015de0ab32ce4bac166caf2824c78b"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     15.75,
@@ -2478,20 +2640,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "c7d31ece6b55b47ccb2d0bd0c18d49e2"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "d838ec6c2c6bf05932e7204bb1ef0a07"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     0.0,
@@ -2509,20 +2673,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "92bee93522bd54014a506a82fa04d33c"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "c08f67c387a9c87449460c72cb00533e"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     1.75,
@@ -2540,20 +2706,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "7509b5e03e47482f5cb571a53cf83a4d"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "1331b3bf44c82cef8b7b4ff7c4761bb6"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     3.5,
@@ -2571,20 +2739,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "4c9546e6bc7d11cd38ad2a877d77111b"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "547655f1fe0905ff8bc77c66189a0dd0"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     5.25,
@@ -2602,20 +2772,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "5437323e6496a32f94a98d774da5e052"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "9fa178ae4077740e4e18214687971af1"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     7.0,
@@ -2633,20 +2805,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "083516a27dc0d8bfb89d78be1b7aba0b"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "d586d9075fb5e4b99b5a4b1da2b94e39"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     8.75,
@@ -2664,20 +2838,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "50a82a0df4f87f2c135d3737185bcf50"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "41559548f59c1d17315c4c0608adc57a"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     10.5,
@@ -2695,20 +2871,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "23d8deb53b479beb729402648780daac"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "631c6da90832ad38d85a6aef47591c32"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     12.25,
@@ -2726,20 +2904,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "7fc558d9f57037e85f72efadb4c32d6d"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "5851d759cff25d4fdc4494499faa0d61"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     14.0,
@@ -2757,20 +2937,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "da94c84628230e88d087d995c8c3b508"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "ea240e1bcd299efa96c0b460732c3c32"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     15.75,
@@ -2788,20 +2970,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "005feb5c289cdb83a2e26492c300f513"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "5ea87431af464ec3d5c975dea512533b"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     0.0,
@@ -2819,20 +3003,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "b9d9ff5dc98131e5d79481d7a947f668"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "ac6b94420270c06aec9649b418857d3d"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     1.75,
@@ -2850,20 +3036,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "e92217802db1c000972df2296b6ddccf"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "2fd94ee968f17439f1cc6b6a02c708c0"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     3.5,
@@ -2881,20 +3069,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "6c2b958811eac232def5305e5cfaef99"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "8a1b95c5a2cf4847f7fdd9859d744a5d"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     5.25,
@@ -2912,20 +3102,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "fa865454ead9f5ecfc300c615302b95b"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "a14cce6bf3188750c7ef2ed10341fb3d"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     7.0,
@@ -2943,20 +3135,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "3df095461f1c15e2c6724dbcd49958cd"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "1cddc656029d6ee8525949ee8c56916d"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     8.75,
@@ -2974,20 +3168,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "973af51dc5a1296ba537530f2b236c7c"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "d059d92c344c7012f4eeeae5eb9940de"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     10.5,
@@ -3005,20 +3201,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "5ec01f199ba91cb6afaffb5655565019"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "83722ef1f946dd33015c97cbfd9c5659"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     12.25,
@@ -3036,20 +3234,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "64d76c4e1e733b0e4cbe12434c8a67ef"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "adc4edf598a8bc7fbb20f729197661b1"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     14.0,
@@ -3067,20 +3267,22 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "9e90d39c279562a38ed5baac79c45d1f"
+            }
         },
         {
-            "mesh": "models/Crate1.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/Crate1.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/crate_1.jpg"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "db4327feff90201dfa4d2e9e36bf3d39"
             },
-            "textures": [
-                "textures/crate_1.jpg"
-            ],
             "transform": {
                 "position": [
                     15.75,
@@ -3098,9 +3300,7 @@
                     0.5,
                     0.5
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "6356f9adb9c7d0b5e85f1378a34be68d"
+            }
         }
     ]
 }

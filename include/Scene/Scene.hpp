@@ -3,7 +3,6 @@
 
 #include "Object.hpp"
 #include "RecourseManager.hpp"
-#include "SceneNode.hpp"
 
 namespace EngineScene{
     class Scene{

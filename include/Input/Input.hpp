@@ -18,7 +18,8 @@ namespace Engine{
         KEY_SHIFT = GLFW_KEY_LEFT_SHIFT,
         KEY_ESCAPE = GLFW_KEY_ESCAPE,
         KEY_TAB = GLFW_KEY_TAB,
-        KEY_F10 = GLFW_KEY_F10
+        KEY_F10 = GLFW_KEY_F10,
+        KEY_PERIOD = GLFW_KEY_PERIOD
     };
 }
 

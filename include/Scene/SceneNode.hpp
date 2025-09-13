@@ -1,3 +1,6 @@
+#ifndef _SCENE_NODE_HPP
+#define _SCENE_NODE_HPP
+
 #include "Transform.hpp"
 #include <vector>
 
@@ -8,6 +11,8 @@ namespace EngineScene{
     
     class SceneNode{
         public:
+            SceneNode();
+
             Transform transform;
             Object *object;
             SceneNode *parent;
@@ -20,3 +25,5 @@ namespace EngineScene{
 
     };
 }
+
+#endif

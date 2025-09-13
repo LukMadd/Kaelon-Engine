@@ -27,10 +27,6 @@ namespace Engine{
 }
 
 namespace EngineRenderer {
-    Window::Window(){
-        initWindow(1000, 800, "Vulkan");
-    }
-
     void Window::initWindow(int WIDTH, int HEIGHT, std::string name){
         glfwInit();
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);

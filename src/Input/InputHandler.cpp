@@ -34,5 +34,12 @@ namespace EngineInput{
             sceneManager.changeScenes(-1);
         }
 
+        //Logic prevents multiple switching in one press(Disables holding down the key)
+        bool is_immersed_action_active = actionManager.isActionActive(Action::DEVELOPER_SCENE_IMMERSED);
+        if(is_immersed_action_active && !was_immersed_action_active){
+            is_scene_immersed = !is_scene_immersed;
+        }
+
+        was_immersed_action_active = is_immersed_action_active;
     }
 };

@@ -1,6 +1,7 @@
 #include "FPSManager.hpp"
 
 namespace EngineUI{
+    //Smooths FPS counter so that it is readable
     float FPSManager::updateFPS(float deltaTime){
         frameTimeSum += deltaTime;
         frameCount++;

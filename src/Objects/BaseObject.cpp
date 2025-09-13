@@ -28,9 +28,6 @@ namespace EngineObject{
         shader.vertShader = jsonData["shader"]["vert"];
         shader.fragShader = jsonData["shader"]["frag"];
 
-        modelMatrix = glm::translate(glm::mat4(1.0f), position);
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f));
-
         material->setShader(shader);
     }
 
@@ -44,7 +41,7 @@ namespace EngineObject{
         this->type = "Mesh_Object";
         this->mesh->meshPath = meshPathRef;
         texture.texturePath = texturePathRef;
-        this->position = position;
+        this->modelMatrix[3] = glm::vec4(position, 1.0f);
         modelMatrix = glm::translate(glm::mat4(1.0f), position);
 
         this->material->addTexture(std::make_shared<Texture>(texture));

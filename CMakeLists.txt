@@ -126,7 +126,7 @@ add_dependencies(Vulkan-Renderer Shaders)
 FetchContent_Declare(
     imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui.git
-    GIT_TAG master
+    GIT_TAG docking
 )
 FetchContent_GetProperties(imgui)
 if(NOT imgui_POPULATED)
@@ -146,7 +146,10 @@ add_library(imgui STATIC ${IMGUI_SOURCES})
 target_include_directories(imgui PUBLIC
     ${imgui_SOURCE_DIR}
     ${imgui_SOURCE_DIR}/backends
+    ${Vulkan_INCLUDE_DIRS}
+    ${GLFW_INCLUDE_DIRS}
 )
+
 target_link_libraries(imgui PUBLIC Vulkan::Vulkan glfw glm::glm)
 
 target_include_directories(Vulkan-Renderer PRIVATE

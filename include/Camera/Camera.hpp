@@ -1,17 +1,38 @@
+#ifndef _CAMERA_HPP
+#define _CAMERA_HPP
+
 #include <glm/glm.hpp>
 #include "Action.hpp"
+
+#include <string>
 
 using namespace EngineInput;
 
 namespace EngineCamera{
     class Camera{
         public:
-            Camera();
+            void init();
             glm::vec3 position;
+            
+            bool is_initialized = false;
+            bool selected = false;
+
+            int id;
+
+            std::string name;
+
+            void setName(const std::string &nameRef) {name = nameRef;}
+
+            float& getFov(){return fov;}
+            float& getSpeed(){return speed;}
+            float& getYaw(){return yaw;}
+            float& getPitch(){return pitch;}
+            float& getSensitivity(){return sensitivity;}
 
         private:
             glm::vec3 front;
             glm::vec3 up;
+            float fov = 35.0f;
             float speed = 10.0f;
             float velocity;
             float yaw = 0.0f;
@@ -26,11 +47,12 @@ namespace EngineCamera{
             void moveRight(float velocity);
 
         public:
-
-            void updateCameraPosition(float deltaTime, ActionManager &actionManager);
+            void updateCameraPosition(float deltaTime, ActionManager &actionManager, bool is_scene_immersed);
 
             void updateYawAndPitch();
 
             glm::mat4 getViewMatrix();
     };
 }
+
+#endif

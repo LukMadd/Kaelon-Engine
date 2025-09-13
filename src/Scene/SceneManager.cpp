@@ -14,8 +14,8 @@ namespace EngineScene{
 
     void SceneManager::addScene(const std::string &name, int id){
         auto scene = Scene::createScene(id, name);
-        scene->initScene(true, *resourceManager);
-        sceneOrder.push_back(id);
+        scene->initScene(false, *resourceManager);
+        sceneOrder.push_back(id); //Pushes the scenes ID into sceneOrder to be used for current scene tracking
         scenes[id] = std::move(scene);
 
         currentID++;
@@ -52,7 +52,7 @@ namespace EngineScene{
                 deserializeScene(file.string());
             }
         }
-
+        
         if(!sceneOrder.empty()) currentSceneIndex = 0; 
     }
 
@@ -79,18 +79,17 @@ namespace EngineScene{
     }
 
     json SceneManager::serializeNode(SceneNode* node){
-        json jsonData;
-        Object *object = node->object;
-
-        if(object){
-            jsonData = serializeObject(*object);
-        }
+        json jsonData = json::object();
 
         jsonData["transform"] = {
-            {"position", {node->transform.position.x, node->transform.position.y, node->transform.position.z}},
-            {"rotation", {node->transform.rotation.x, node->transform.rotation.y, node->transform.rotation.z, node->transform.rotation.w}},
-            {"scale", {node->transform.scale.x, node->transform.scale.y, node->transform.scale.z}}
+            {"position",{node->transform.position.x, node->transform.position.y, node->transform.position.z }},
+            {"rotation",{node->transform.rotation.x, node->transform.rotation.y, node->transform.rotation.z, node->transform.rotation.w }}, // x,y,z,w
+            {"scale", {node->transform.scale.x,    node->transform.scale.y,    node->transform.scale.z }}
         };
+
+        if(node->object){
+            jsonData["object"] = serializeObject(*node->object);
+        }
 
         if(!node->children.empty()){
             jsonData["children"] = json::array();
@@ -98,13 +97,12 @@ namespace EngineScene{
                 jsonData["children"].push_back(serializeNode(child));
             }
         }
-
         return jsonData;
     }
     
-    Object* SceneManager::deserializeObject(const nlohmann::json& jsonData){
-        Object* obj = ObjectRegistry::get().create(jsonData["type"], jsonData);
-        obj->uuid = jsonData["uuid"];
+    Object* SceneManager::deserializeObject(const nlohmann::json& objectJson){
+        Object* obj = ObjectRegistry::get().create(objectJson["type"], objectJson);
+        obj->uuid = objectJson.value("uuid", obj->uuid);
 
         return obj;
     }
@@ -115,6 +113,7 @@ namespace EngineScene{
         sceneData["id"] = scene.id;
         sceneData["objects"] = json::array();
 
+        //Loops through the scenes children and serializes them
         for(auto &node : scene.root.children){
             sceneData["objects"].push_back(serializeNode(node));
         }
@@ -131,21 +130,24 @@ namespace EngineScene{
 
     SceneNode* SceneManager::deserializeNode(Scene &scene, const json& jsonNode){
         SceneNode *node = new SceneNode();
-        Object *object;
-        if(jsonNode.contains("type")) {
-            object = deserializeObject(jsonNode);
-            auto objectPtr = std::unique_ptr<Object>(object);
-            scene.objects.push_back(std::move(objectPtr));
-            node->object = object;
-        } else {
-            object = nullptr;
-        };
+        node->object = nullptr;
 
         if(jsonNode.contains("transform")){
-            auto transform = jsonNode["transform"];
-            node->transform.position = glm::vec3(transform["position"][0], transform["position"][1], transform["position"][2]);
-            node->transform.rotation = glm::quat(transform["rotation"][3], transform["rotation"][0], transform["rotation"][1], transform["rotation"][2]);
-            node->transform.scale = glm::vec3(transform["scale"][0], transform["scale"][1], transform["scale"][2]);
+            const auto &transform = jsonNode["transform"];
+            if(transform.contains("position") && transform["position"].size() >= 3)
+                node->transform.position = glm::vec3(transform["position"][0], transform["position"][1], transform["position"][2]);
+            if(transform.contains("rotation") && transform["rotation"].size() >= 4)
+                node->transform.rotation = glm::quat(transform["rotation"][3], transform["rotation"][0], transform["rotation"][1], transform["rotation"][2]); // w,x,y,z
+            if(transform.contains("scale") && transform["scale"].size() >= 3)
+                node->transform.scale = glm::vec3(transform["scale"][0], transform["scale"][1], transform["scale"][2]);
+        }
+
+        if(jsonNode.contains("object")){
+            const json &jsonData = jsonNode["object"];
+            Object* object = deserializeObject(jsonData);
+            object->node = node;
+            scene.objects.push_back(std::unique_ptr<Object>(object));
+            node->object = scene.objects.back().get();
         }
 
         if(jsonNode.contains("children")){
@@ -157,6 +159,7 @@ namespace EngineScene{
 
         return node;
     }
+
 
     void SceneManager::deserializeScene(const std::string& filename){
         std::ifstream file(filename);

@@ -3,19 +3,23 @@
     "name": "Bonus Scene",
     "objects": [
         {
-            "mesh": "models/sphere.obj",
-            "name": "Mesh_Object",
-            "shader": {
-                "frag": "shaders/base_frag_shader.spv",
-                "vert": "shaders/base_vert_shader.spv"
+            "object": {
+                "mesh": "models/sphere.obj",
+                "name": "Mesh_Object",
+                "shader": {
+                    "frag": "shaders/base_frag_shader.spv",
+                    "vert": "shaders/base_vert_shader.spv"
+                },
+                "textures": [
+                    "textures/viking_room.png"
+                ],
+                "type": "Mesh_Object",
+                "uuid": "03265a0faca0e26be64885eed427c1e4"
             },
-            "textures": [
-                "textures/viking_room.png"
-            ],
             "transform": {
                 "position": [
-                    2.0,
                     1.0,
+                    4.0,
                     0.0
                 ],
                 "rotation": [
@@ -29,9 +33,7 @@
                     1.0,
                     1.0
                 ]
-            },
-            "type": "Mesh_Object",
-            "uuid": "018864b81ac30969c40ec6d5ec30ff48"
+            }
         }
     ]
 }

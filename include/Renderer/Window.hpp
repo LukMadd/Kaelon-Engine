@@ -17,8 +17,6 @@ namespace Engine{
 namespace EngineRenderer {
     class Window{
         public:
-            Window();
-
             void initWindow(int WIDTH, int HEIGHT, std::string name);
 
             void createSurface(VkInstance instance, GLFWwindow *window, VkSurfaceKHR &surface);

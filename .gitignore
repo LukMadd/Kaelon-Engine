@@ -54,7 +54,6 @@ CMake
 .VSCodeCounter
 .tokeignore
 dependencies
-/scenes/*
 
 #Executable file
 Render-A-Triangle

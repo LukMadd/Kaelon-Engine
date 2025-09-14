@@ -1,2 +1,5 @@
-1. Move serialization code to a separate folder
-2. Add render stats
+1. Add render stats
+
+
+Completed Tasks:
+    -Move serialization code to a separate folder

@@ -8,7 +8,11 @@
 #include "RecourseManager.hpp"
 #include "nlohmann/json.hpp"
 
+#include "Serialization.hpp"
+
 using namespace EngineObject;
+using namespace nlohmann;
+
 
 namespace EngineScene{
     SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), resourceManager(nullptr){};
@@ -58,89 +62,6 @@ namespace EngineScene{
         if(!sceneOrder.empty()) currentSceneIndex = 0; 
     }
 
-    json SceneManager::serializeObject(const Object &object){
-        json jsonData;
-        if(!object.name.empty()){
-            jsonData["name"] = object.name;
-        } else{
-            jsonData["name"] = "Generic";
-        }
-        jsonData["uuid"] = object.uuid;
-        jsonData["type"] = object.type;
-        jsonData["mesh"] = object.mesh->meshPath;
-        jsonData["textures"] = json::array();
-        for(const auto &texture : object.material->getTextures()){
-            jsonData["textures"].push_back(texture->texturePath);
-        }
-        jsonData["shader"] = {
-            {"vert", object.material->getShader().vertShader},
-            {"frag", object.material->getShader().fragShader}
-        };
-
-        return jsonData; 
-    }
-
-    json SceneManager::serializeNode(SceneNode* node){
-        json jsonData = json::object();
-
-        jsonData["transform"] = {
-            {"position",{node->transform.position.x, node->transform.position.y, node->transform.position.z }},
-            {"rotation",{node->transform.rotation.x, node->transform.rotation.y, node->transform.rotation.z, node->transform.rotation.w }}, // x,y,z,w
-            {"scale", {node->transform.scale.x,    node->transform.scale.y,    node->transform.scale.z }}
-        };
-
-        if(node->object){
-            jsonData["object"] = serializeObject(*node->object);
-        }
-
-        if(!node->children.empty()){
-            jsonData["children"] = json::array();
-            for(auto &child : node->children){
-                jsonData["children"].push_back(serializeNode(child));
-            }
-        }
-        return jsonData;
-    }
-
-    json SceneManager::serialzeCamera(std::shared_ptr<EngineCamera::Camera> camera){
-        if(!camera->is_initialized){
-            return nullptr;
-        }
-
-        json cameraData = json::object();
-
-        cameraData["is_initialized"] = camera->is_initialized;
-
-        cameraData["name"] = camera->name;
-
-        cameraData["position"] = {
-            camera->position.x, camera->position.y, camera->position.z
-        };
-
-        glm::vec3 front = camera->getFront();
-        glm::vec3 up = camera->getUp();
-
-        cameraData["front"] = {
-            front.x, front.y, front.z
-        };
-
-        cameraData["up"] = {
-            up.x, up.y, up.z,
-        };
-
-        cameraData["fov"] = camera->getFov();
-        cameraData["speed"] = camera->getSpeed();
-        
-        cameraData["rotation"] = {
-            {"yaw", camera->getYaw()},
-            {"pitch", camera->getPitch()}
-        };
-
-        cameraData["sensitivity"] = camera->getSensitivity();
-
-        return cameraData;
-    }
-
     void SceneManager::serializeScene(Scene &scene, uint32_t sceneIndex){
         json sceneData;
         sceneData["name"] = scene.name;
@@ -167,77 +88,7 @@ namespace EngineScene{
         file.close();
     }
 
-    SceneNode* SceneManager::deserializeNode(Scene &scene, const json& jsonNode){
-        SceneNode *node = new SceneNode();
-        node->object = nullptr;
-
-        if(jsonNode.contains("transform")){
-            const auto &transform = jsonNode["transform"];
-            if(transform.contains("position") && transform["position"].size() >= 3)
-                node->transform.position = glm::vec3(transform["position"][0], transform["position"][1], transform["position"][2]);
-            if(transform.contains("rotation") && transform["rotation"].size() >= 4)
-                node->transform.rotation = glm::quat(transform["rotation"][3], transform["rotation"][0], transform["rotation"][1], transform["rotation"][2]); // w,x,y,z
-            if(transform.contains("scale") && transform["scale"].size() >= 3)
-                node->transform.scale = glm::vec3(transform["scale"][0], transform["scale"][1], transform["scale"][2]);
-        }
-
-        if(jsonNode.contains("object")){
-            const json &jsonData = jsonNode["object"];
-            Object* object = deserializeObject(jsonData);
-            object->node = node;
-            scene.objects.push_back(std::unique_ptr<Object>(object));
-            node->object = scene.objects.back().get();
-        }
-
-        if(jsonNode.contains("children")){
-            for(auto& childJson : jsonNode["children"]){
-                SceneNode* childNode = deserializeNode(scene, childJson);
-                node->addChild(childNode);
-            }
-        }
-
-        return node;
-    }
-    
-    Object* SceneManager::deserializeObject(const nlohmann::json& objectJson){
-        Object* obj = ObjectRegistry::get().create(objectJson["type"], objectJson);
-        obj->uuid = objectJson.value("uuid", obj->uuid);
-
-        return obj;
-    }
-
-    EngineCamera::Camera* SceneManager::deserializeCamera(const nlohmann::json& jsonData){
-        EngineCamera::Camera* camera = new EngineCamera::Camera();
-
-        camera->is_initialized = jsonData["is_initialized"];
-
-        camera->name = jsonData["name"];
-      
-        camera->getFov() = jsonData["fov"];
-        
-        camera->getFront().x = jsonData["front"][0];
-        camera->getFront().y = jsonData["front"][1];
-        camera->getFront().z = jsonData["front"][2];
-
-        camera->getUp().x = jsonData["up"][0];
-        camera->getUp().y = jsonData["up"][1];
-        camera->getUp().z = jsonData["up"][2];
-
-        camera->position.x = jsonData["position"][0];
-        camera->position.y = jsonData["position"][1];
-        camera->position.z = jsonData["position"][2];
-
-        camera->getYaw() = jsonData["rotation"]["yaw"];
-        camera->getPitch() = jsonData["rotation"]["pitch"];
-
-        camera->getSensitivity() = jsonData["sensitivity"];
-
-        camera->getSpeed() = jsonData["speed"];
-
-        return camera;
-    }
-
-    void SceneManager::deserializeScene(const std::string& filename){
+        void SceneManager::deserializeScene(const std::string& filename){
         std::ifstream file(filename);
         if(!file.is_open()) throw std::runtime_error("Failed to open file " + filename + " for deseralization");
 
@@ -264,6 +115,8 @@ namespace EngineScene{
 
         currentID++;
     }
+
+
 
     void SceneManager::saveScenes(){
         for(auto& [id, scene] : scenes){

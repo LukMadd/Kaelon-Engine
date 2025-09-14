@@ -161,6 +161,7 @@ target_include_directories(Vulkan-Renderer PRIVATE
     ${CMAKE_SOURCE_DIR}/include/Scene
     ${CMAKE_SOURCE_DIR}/include/Objects
     ${CMAKE_SOURCE_DIR}/include/UI
+    ${CMAKE_SOURCE_DIR}/include/Serialization
     ${Vulkan_INCLUDE_DIRS}
     ${GLFW_INCLUDE_DIRS}
     ${tinyobjloader_SOURCE_DIR}

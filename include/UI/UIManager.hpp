@@ -4,6 +4,7 @@
 #include "EngineUI.hpp"
 #include "SceneManager.hpp"
 #include "CameraManager.hpp"
+#include "RecourseManager.hpp"
 
 namespace EngineUI{
     struct UIInfo{
@@ -14,6 +15,7 @@ namespace EngineUI{
         VkRenderPass renderPass;
         EngineScene::SceneManager *sceneManager;
         EngineCamera::CameraManager *cameraManager;
+        EngineResource::ResourceManager *recourseManager;
     };
 
     class UIManager{

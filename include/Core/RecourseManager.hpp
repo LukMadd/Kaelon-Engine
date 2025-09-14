@@ -40,6 +40,8 @@ namespace EngineResource{
                 return resource;
             } 
 
+            std::unordered_map<std::string, std::any> getCache() {return cache;}
+
             void cleanup(VkDevice device) {
                 for(auto& [path, anyRes] : cache){
                     if(anyRes.type() == typeid(std::shared_ptr<Texture>)){

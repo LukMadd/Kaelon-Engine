@@ -1,3 +1,4 @@
+#include "RecourseManager.hpp"
 #include "Scene.hpp"
 #include "Object.hpp"
 
@@ -11,6 +12,8 @@ namespace EngineUI{
             void drawObjectInspector();
 
             void drawCamera();
+
+            void drawRecourses(EngineResource::ResourceManager *recourseManager);
         
         private:
             bool m_showSceneHierarchyWindow = false;

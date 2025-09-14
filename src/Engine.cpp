@@ -50,6 +50,7 @@ namespace Engine{
         uiInfo.renderPass = renderer.getRenderPass();
         uiInfo.sceneManager = &sceneManager;
         uiInfo.cameraManager = &sceneManager.getScenes()[0]->cameraManager;
+        uiInfo.recourseManager = &resourceManager;
 
         uiManager.initImGui(uiInfo);
 

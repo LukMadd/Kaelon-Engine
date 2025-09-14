@@ -131,5 +131,44 @@ namespace EngineUI{
         }
     }
 
+    void EngineUI::drawRecourses(EngineResource::ResourceManager *recourseManager){
+        if(m_showResourceWindow){
+            ImGui::Begin("Recourses");
+
+            //Can optimize this by finding textures and models by pushing into the vectors if the cache type name is the same 
+            //as the desired(recourse.second.type().name() ==) though it will require refactoring if there is a change of stored type 
+            std::vector<std::string> recourseTextures;
+            std::vector<std::string> recourseModels;
+
+            //Get the textures from recource manager and put them in the vectors above
+            for(auto &recourse : recourseManager->getCache()){
+               
+                if(recourse.first.find("textures/") != std::string::npos){
+                    recourseTextures.push_back(recourse.first);
+                }
+
+                if(recourse.first.find("models/") != std::string::npos){
+                    recourseModels.push_back(recourse.first);
+                }
+            }
+
+            //Put the textures/models in a tree node for the UI
+            if(ImGui::TreeNode("Textures")){
+                for(int i = 0; i < recourseTextures.size(); i++){
+                    ImGui::Text("%s", recourseTextures[i].c_str());
+                }
+                ImGui::TreePop();
+            }
+
+            if(ImGui::TreeNode("Models")){
+                for(int i = 0; i < recourseModels.size(); i++){
+                    ImGui::Text("%s", recourseModels[i].c_str());
+                }
+                ImGui::TreePop();
+            }
+
+            ImGui::End();
+        }
+    }
 
 }

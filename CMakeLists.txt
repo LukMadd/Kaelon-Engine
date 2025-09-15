@@ -3,7 +3,7 @@ include(FetchContent)
 
 cmake_minimum_required(VERSION 3.28.0)
 
-project(Vulkan-Renderer)
+project(Vulkan-Engine)
 
 set(CMAKE_CXX_STANDARD 20)
 cmake_policy(SET CMP0169 OLD)
@@ -80,7 +80,7 @@ find_package(glm REQUIRED)
 #-----------------------------------------Set source files-----------------------------------------#
 file(GLOB_RECURSE SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
-add_executable(Vulkan-Renderer ${SOURCES})
+add_executable(Vulkan-Engine ${SOURCES})
 
 #-----------------------------------------Find glslang-----------------------------------------#
 find_program(GLSLANG_VALIDATOR glslangValidator)
@@ -120,7 +120,7 @@ add_custom_target(
     DEPENDS ${SPIRV_SHADERS}
 )
 
-add_dependencies(Vulkan-Renderer Shaders)
+add_dependencies(Vulkan-Engine Shaders)
 
 #-----------------------------------------Include directories and libraries-----------------------------------------#
 FetchContent_Declare(
@@ -152,7 +152,7 @@ target_include_directories(imgui PUBLIC
 
 target_link_libraries(imgui PUBLIC Vulkan::Vulkan glfw glm::glm)
 
-target_include_directories(Vulkan-Renderer PRIVATE
+target_include_directories(Vulkan-Engine PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/include/Core
     ${CMAKE_SOURCE_DIR}/include/Renderer
@@ -168,7 +168,7 @@ target_include_directories(Vulkan-Renderer PRIVATE
 )
 
 message(STATUS "GLFW LIB PATH: ${GLFW_LIB_DIR}")
-target_link_libraries(Vulkan-Renderer PRIVATE
+target_link_libraries(Vulkan-Engine PRIVATE
     glfw
     glm::glm
     "${Vulkan_LIB_DIR}/libvulkan.dylib"
@@ -178,7 +178,7 @@ target_link_libraries(Vulkan-Renderer PRIVATE
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
-target_link_libraries(Vulkan-Renderer PRIVATE
+target_link_libraries(Vulkan-Engine PRIVATE
     "${Vulkan_LIB_DIR}/libMoltenVK.dylib"
     "-framework QuartzCore"
     "-framework CoreFoundation"

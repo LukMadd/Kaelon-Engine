@@ -8,9 +8,9 @@
     - cd build
     - cmake ..
     - make ("make -j" recommended for speed)
-3. Navigate to bin and run the executable(./Vulkan-Renderer)
+3. Navigate to bin and run the executable(./Vulkan-Engine)
     - cd .. && cd bin
-    - ./Vulkan-Renderer    
+    - ./Vulkan-Engine   
 
 ----------Required Libraries----------
 1. Vulkan SDK(1.2+)

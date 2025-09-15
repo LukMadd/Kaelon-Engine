@@ -8,9 +8,9 @@
     - cd build
     - cmake ..
     - make ("make -j" recommended for speed)
-3. Navigate to bin and run the executable(./Vulkan-Engine)
+3. Navigate to bin and run the executable(./Kaelon-Engine)
     - cd .. && cd bin
-    - ./Vulkan-Engine   
+    - ./Kaelon-Engine   
 
 ----------Required Libraries----------
 1. Vulkan SDK(1.2+)

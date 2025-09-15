@@ -1,5 +1,6 @@
 #include "EngineUI.hpp"
 #include "Object.hpp"
+#include "RendererGlobals.hpp"
 #include "Scene.hpp"
 #include "imgui.h"
 
@@ -167,6 +168,25 @@ namespace EngineUI{
                 ImGui::TreePop();
             }
 
+            ImGui::End();
+        }
+    }
+
+    void EngineUI::drawRenderStats(EngineScene::Scene *scene, float fps){
+        if(m_showRenderStats){
+            int triangleCount = 0;
+            for(auto &object : scene->objects){
+                if(object->mesh){
+                    triangleCount+=object->mesh->indexCount / 3;
+                }
+            }
+
+            ImGui::Begin("Render Stats");
+            ImGui::Text("FPS: %.1f", fps);
+            ImGui::Text("Frame Time: %.2fms", 1000.f / fps);
+            ImGui::Text("Draw Calls: %d", drawCallCountLastFrame);
+            ImGui::Text("Triangle Count: %d", triangleCount);
+            ImGui::Checkbox("Wireframe Mode", &wireFrameModeEnabled);
             ImGui::End();
         }
     }

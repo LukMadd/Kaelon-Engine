@@ -1,5 +1,7 @@
-1. Add render stats
+Ongoing tasks:
+    EMPTY
 
 
 Completed Tasks:
     -Move serialization code to a separate folder
+    -Add render stats

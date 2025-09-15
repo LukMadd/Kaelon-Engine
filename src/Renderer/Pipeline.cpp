@@ -42,8 +42,12 @@ VkShaderModule createShaderModule(const std::vector<char>& code, VkDevice device
 
     return shaderModule;
 }
+
+
+
+
 namespace EngineRenderer {
-    void Pipeline::createGraphicsPipeline(VkExtent2D swapChainExtent, VkDescriptorSetLayout descriptorSetLayout){
+    void PipelineManager::createGraphicsPipeline(VkPipeline &pipeline, PipelineInfo pipelineInfo, std::string name, VkExtent2D swapChainExtent, VkDescriptorSetLayout descriptorSetLayout){
         std::vector<char> vertShaderCode = readFile("shaders/base_vert_shader.spv");
         std::vector<char> fragShaderCode = readFile("shaders/base_frag_shader.spv");
 
@@ -112,7 +116,11 @@ namespace EngineRenderer {
         rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
         rasterizer.depthClampEnable = VK_FALSE;
         rasterizer.rasterizerDiscardEnable = VK_FALSE;
-        rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
+        if(!pipelineInfo.wireFrameMode){
+            rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
+        } else{
+            rasterizer.polygonMode = VK_POLYGON_MODE_LINE;
+        }
         rasterizer.lineWidth = 1.0f;
         rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
         rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
@@ -163,6 +171,40 @@ namespace EngineRenderer {
         depthStencil.front = {};
         depthStencil.back = {};
 
+        VkGraphicsPipelineCreateInfo pipelineCreateInfo{};
+        pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+        pipelineCreateInfo.stageCount = 2;
+        pipelineCreateInfo.pStages = shadetages;
+        pipelineCreateInfo.pVertexInputState = &vertexInputStateCreateInfo;
+        pipelineCreateInfo.pInputAssemblyState = &inputAssemblyStateCreateInfo;
+        pipelineCreateInfo.pViewportState = &viewportStateCreateInfo;
+        pipelineCreateInfo.pRasterizationState = &rasterizer;
+        pipelineCreateInfo.pMultisampleState = &multisampling;
+        pipelineCreateInfo.pDepthStencilState = &depthStencil;
+        pipelineCreateInfo.pColorBlendState = &colorBlending;
+        pipelineCreateInfo.pDynamicState = &dynamicStateCreationInfo;
+
+        pipelineCreateInfo.layout = pipelineLayout;
+        pipelineCreateInfo.renderPass = renderPass;
+        pipelineCreateInfo.subpass = 0;
+
+        pipelineCreateInfo.basePipelineHandle = VK_NULL_HANDLE;
+        pipelineCreateInfo.basePipelineIndex = -1;
+
+        VkResult result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineCreateInfo,nullptr, &pipeline);
+        if(result != VK_SUCCESS){
+            throw std::runtime_error("Failed to create graphics pipeline error code " + std::to_string(result) + "!");
+        }
+        setObjectName(device, (uint64_t)pipeline, VK_OBJECT_TYPE_PIPELINE, name + "_Pipeline");
+
+        vkDestroyShaderModule(device, vertShaderModule, nullptr);
+        vkDestroyShaderModule(device, fragShaderModule, nullptr);
+    }
+
+
+
+
+    void PipelineManager::createPipelines(VkExtent2D swapChainExtent, VkDescriptorSetLayout descriptorSetLayout){
         VkPushConstantRange pushConstantRange{};
         pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
         pushConstantRange.offset = 0;
@@ -181,34 +223,20 @@ namespace EngineRenderer {
         } 
         setObjectName(device,(uint64_t)pipelineLayout, VK_OBJECT_TYPE_PIPELINE_LAYOUT, "Main_Pipeline_Layout");
 
-        VkGraphicsPipelineCreateInfo pipelineInfo{};
-        pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-        pipelineInfo.stageCount = 2;
-        pipelineInfo.pStages = shadetages;
-        pipelineInfo.pVertexInputState = &vertexInputStateCreateInfo;
-        pipelineInfo.pInputAssemblyState = &inputAssemblyStateCreateInfo;
-        pipelineInfo.pViewportState = &viewportStateCreateInfo;
-        pipelineInfo.pRasterizationState = &rasterizer;
-        pipelineInfo.pMultisampleState = &multisampling;
-        pipelineInfo.pDepthStencilState = &depthStencil;
-        pipelineInfo.pColorBlendState = &colorBlending;
-        pipelineInfo.pDynamicState = &dynamicStateCreationInfo;
+        PipelineInfo pipelineInfo{};
+        pipelineInfo.wireFrameMode = false;
+        createGraphicsPipeline(graphicsPipelineFill, pipelineInfo, "Main", swapChainExtent, descriptorSetLayout);
+        pipelineInfo.wireFrameMode = true;
+        createGraphicsPipeline(graphicsPipelineWireFrame, pipelineInfo,"Wireframe", swapChainExtent, descriptorSetLayout);
 
-        pipelineInfo.layout = pipelineLayout;
-        pipelineInfo.renderPass = renderPass;
-        pipelineInfo.subpass = 0;
-
-        pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
-        pipelineInfo.basePipelineIndex = -1;
-
-        VkResult result = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo,nullptr, &graphicsPipeline);
-        if(result != VK_SUCCESS){
-            throw std::runtime_error("Failed to create graphics pipeline error code " + std::to_string(result) + "!");
-        }
-        setObjectName(device, (uint64_t)graphicsPipeline, VK_OBJECT_TYPE_PIPELINE, "Main_Pipeline");
+        pushPipeline(graphicsPipelineFill);
+        pushPipeline(graphicsPipelineWireFrame);
     }
 
-    void Pipeline::createRenderPass(VkFormat swapChainImageFormat){
+
+
+
+    void PipelineManager::createRenderPass(VkFormat swapChainImageFormat){
         VkAttachmentDescription colorAttachment{};
         colorAttachment.format = swapChainImageFormat;
         colorAttachment.samples = msaaSamples;
@@ -285,12 +313,14 @@ namespace EngineRenderer {
         setObjectName(device, (uint64_t)renderPass, VK_OBJECT_TYPE_RENDER_PASS, "Main_Render_Pass");
     }
 
-    void Pipeline::cleanupPipeline(){
-        vkDestroyPipeline(device, graphicsPipeline, nullptr);
+
+
+
+    void PipelineManager::cleanupPipelines(){
+        for(int i = 0; i < pipelines.size(); i++){
+            vkDestroyPipeline(device, *pipelines[i], nullptr);
+        }
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
         vkDestroyRenderPass(device, renderPass, nullptr);
-
-        vkDestroyShaderModule(device, vertShaderModule, nullptr);
-        vkDestroyShaderModule(device, fragShaderModule, nullptr);
     }
 };

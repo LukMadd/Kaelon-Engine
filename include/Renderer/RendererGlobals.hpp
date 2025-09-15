@@ -16,6 +16,11 @@ namespace EngineRenderer{
     inline VkDevice device;
     inline VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
+    inline int drawCallCount = 0;
+    inline int drawCallCountLastFrame = 0;
+
+    inline bool wireFrameModeEnabled = false;
+
     inline uint32_t imageCount;
 
     inline VkCommandPool commandPool = VK_NULL_HANDLE;

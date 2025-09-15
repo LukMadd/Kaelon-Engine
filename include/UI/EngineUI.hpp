@@ -14,6 +14,8 @@ namespace EngineUI{
             void drawCamera();
 
             void drawRecourses(EngineResource::ResourceManager *recourseManager);
+
+            void drawRenderStats(EngineScene::Scene *scene, float fps);
         
         private:
             bool m_showSceneHierarchyWindow = false;

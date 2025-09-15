@@ -94,6 +94,8 @@ namespace EngineRenderer{
             vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &obj->descriptorSets[currentFrame], 0, nullptr);
 
             obj->draw(commandBuffer, pipelineLayout);
+
+            drawCallCount++;
         }
 
         ImDrawData* imguiDrawData = ImGui::GetDrawData();

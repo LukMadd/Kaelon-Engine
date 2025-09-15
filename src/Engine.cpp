@@ -64,6 +64,8 @@ namespace Engine{
 
         while(!glfwWindowShouldClose(window)){
             glfwPollEvents();
+            drawCallCountLastFrame = drawCallCount;
+            drawCallCount = 0;
 
             auto currentTime = std::chrono::high_resolution_clock::now();
             float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastTime).count();

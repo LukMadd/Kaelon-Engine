@@ -31,7 +31,7 @@ namespace EngineRenderer {
             SwapChain appSwapChain;
             VkSwapchainKHR swapChain;
 
-            Pipeline appPipeline;
+            PipelineManager appPipeline;
 
             Vertex vertexCommand;
             VertexBuffer vertexBufferCommand;

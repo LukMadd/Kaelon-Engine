@@ -9,8 +9,6 @@
 
 #include <vulkan/vulkan.hpp>
 
-
-
 namespace EngineRenderer {
     void Instance::pickPhysicalDevice(VkInstance instance, VkSurfaceKHR surface){
         Queue queue;
@@ -88,6 +86,7 @@ namespace EngineRenderer {
 
         VkPhysicalDeviceFeatures deviceFeatures{};
         deviceFeatures.samplerAnisotropy = VK_TRUE;
+        deviceFeatures.fillModeNonSolid = VK_TRUE;
 
         std::vector<const char*> deviceExtensions = {
             "VK_KHR_portability_subset",

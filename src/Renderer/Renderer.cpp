@@ -35,7 +35,7 @@ namespace EngineRenderer{
         dummyresources.createDummyresources();
         auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
         descriptorLayouts.push_back(layout);
-        appPipeline.createGraphicsPipeline(appSwapChain.swapChainExtent, descriptorSetLayout);
+        appPipeline.createPipelines(appSwapChain.swapChainExtent, descriptorSetLayout);
         multiSampler.createColorResources(appSwapChain.swapChainImageFormat, appSwapChain.swapChainExtent);
         depthBuffer.createDepthResources(appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
         appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView, multiSampler.colorImageView);
@@ -113,7 +113,11 @@ namespace EngineRenderer{
 
         vkResetCommandBuffer(commandbuffers[currentFrame], 0);
 
-        appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipeline, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, fps);
+        if(!wireFrameModeEnabled){
+            appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineFill, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, fps);
+        } else{
+            appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineWireFrame, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, fps);
+        }
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -177,7 +181,7 @@ namespace EngineRenderer{
 
         appCommand.cleanup();
 
-        appPipeline.cleanupPipeline();
+        appPipeline.cleanupPipelines();
         
         for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
             vkDestroyBuffer(device, uniformBuffers[i], nullptr);

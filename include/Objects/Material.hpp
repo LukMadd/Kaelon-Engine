@@ -9,12 +9,7 @@ namespace EngineObject{
             Material() = default;
             ~Material() = default;
 
-            void addTexture(std::shared_ptr<Texture> texture, bool isDefault = false) {
-                textures.push_back(texture);
-                if(isDefault == false){
-                    texturesEmpty = false;
-                }
-            }
+            void addTexture(std::shared_ptr<Texture> texture) {textures.push_back(texture);}
             std::vector<std::shared_ptr<Texture>> &getTextures() {return textures;}
 
             void setShader(Shader &shader) {this->shader = shader;}
@@ -32,8 +27,6 @@ namespace EngineObject{
             void setAlbedo(float albedo) {this->albedo = albedo;}
             const float getAlbedo() const {return albedo;}
 
-            bool isTexturesEmpty() {return texturesEmpty;}
-
         private:
             Shader shader;
             std::vector<std::shared_ptr<Texture>> textures;
@@ -42,6 +35,5 @@ namespace EngineObject{
             float roughness{1.0f};
             float metallic{0.0f};
             float albedo{0.0f};
-            bool texturesEmpty = true;
     };
 }

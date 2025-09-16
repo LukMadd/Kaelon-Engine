@@ -95,11 +95,9 @@ namespace Engine{
             for(auto &object : sceneManager.getCurrentScene()->objects){
                 ObjectUBO objectUbo;
 
-<<<<<<< HEAD
-                objectUbo.hasTexture = object->material->isTexturesEmpty() ? 0 : 1;
-=======
                 objectUbo.hasTexture = object->material->getTextures().empty() ? 0 : 1;
->>>>>>> aaa4a49 (Added support for objects to have a color instead of a texture)
+
+                objectUbo.hasTexture = object->material->getTextures().empty() ? 0 : 1;
 
                 objectUbo.baseColor = object->material->getBaseColor();
 

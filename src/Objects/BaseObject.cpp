@@ -1,7 +1,6 @@
 #include "BaseObjects.hpp"
 #include "RecourseManager.hpp"
 #include "ObjectRegistry.hpp"
-#include <iostream>
 
 namespace EngineObject{
     Object* makeMeshObject(const nlohmann::json& data) {
@@ -54,21 +53,16 @@ namespace EngineObject{
             this->mesh->meshPath = meshPathRef;
         }
         if(!texturePathRef.empty()){
-<<<<<<< HEAD
+            Texture texture = Texture();
             texture.texturePath = texturePathRef;
+            material->addTexture(std::make_shared<Texture>(texture));
         }
         this->modelMatrix[3] = glm::vec4(position, 1.0f);
         modelMatrix = glm::translate(glm::mat4(1.0f), position);
 
-        this->material->addTexture(std::make_shared<Texture>(texture), true);
-=======
-            Texture texture = Texture();
-            texture.texturePath = texturePathRef;
-            this->material->addTexture(std::make_shared<Texture>(texture));
-        }
         this->modelMatrix[3] = glm::vec4(position, 1.0f);
+
         modelMatrix = glm::translate(glm::mat4(1.0f), position);
->>>>>>> aaa4a49 (Added support for objects to have a color instead of a texture)
     }
 
     void MeshObject::initVulkanResources(EngineResource::ResourceManager &resourceManager){

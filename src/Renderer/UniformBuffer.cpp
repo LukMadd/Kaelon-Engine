@@ -4,7 +4,6 @@
 #include "ValidationLayers.hpp"
 #include <array>
 #include <cstdint>
-#include <iostream>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>

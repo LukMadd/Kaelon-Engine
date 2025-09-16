@@ -33,6 +33,11 @@ namespace EngineScene{
             glm::mat4 modelMatrix{1.0f};
             VkDescriptorSetLayout descriptorSetLayout;
             std::vector<VkDescriptorSet> descriptorSets;
+            std::vector<VkBuffer> objectUniformBuffer;
+            std::vector<VkDeviceMemory> objectUniformMemory;
+            std::vector<void*> objectUniformMapped;  
+
+            bool hasTexture = false;
 
             std::shared_ptr<Mesh> mesh;
             std::shared_ptr<Material> material;

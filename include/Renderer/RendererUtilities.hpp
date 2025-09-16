@@ -1,6 +1,6 @@
 #include <vulkan/vulkan.hpp>
 namespace EngineRenderer{
-    void createBuffer(VkDeviceSize &size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory);
+    void createBuffer(const std::string &name, VkDeviceSize &size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory);
     VkCommandBuffer beginSingleTimeCommands(VkCommandPool commandPool);
     void endSingleTimeCommands(VkCommandBuffer commandBuffer, VkCommandPool commandPool);;
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);

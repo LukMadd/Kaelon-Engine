@@ -79,21 +79,28 @@ namespace Engine{
 
             float fps = fpsManager.updateFPS(deltaTime);
 
-            EngineRenderer::UniformBufferObject ubo{};
-            ubo.view = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getViewMatrix();
-
-            //Adds the one light to the uniform buffer object, will be expanded to handle multiple at once
-            if(!lights.getDirectionalLights().empty()){
-                const auto& directionalLight = lights.getDirectionalLights()[0];
-                ubo.lightDir = glm::vec4(glm::normalize(directionalLight.direction), 0.0f);
-                ubo.lightColorIntensity = glm::vec4(directionalLight.color, directionalLight.intensity);
-            }
-
             uiManager.renderUI(fps);
 
-            ubo.cameraPos = glm::vec4(sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->position, 0.0f); //Updates the camera positio
+                EngineRenderer::UniformBufferObject ubo{};
+                ubo.view = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getViewMatrix();
+                if(!lights.getDirectionalLights().empty()){
+                    const auto& directionalLight = lights.getDirectionalLights()[0];
+                    ubo.lightDir = glm::vec4(glm::normalize(directionalLight.direction), 0.0f);
+                    ubo.lightColorIntensity = glm::vec4(directionalLight.color, directionalLight.intensity);
+                }
 
-            renderer.updateUniformBuffers(ubo, sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getFov()); //Sends the uniform buffer object down to the uniform buffer manager for it to be processed
+                ubo.cameraPos = glm::vec4(sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->position, 0.0f); //Updates the camera position
+                renderer.updateUniformBuffers(ubo, sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getFov()); //Sends the uniform buffer object down to the uniform buffer manager for it to be processed
+            
+            for(auto &object : sceneManager.getCurrentScene()->objects){
+                ObjectUBO objectUbo;
+
+                objectUbo.hasTexture = object->material->isTexturesEmpty() ? 0 : 1;
+
+                objectUbo.baseColor = object->material->getBaseColor();
+
+                renderer.updateObjectUniformBuffers(objectUbo);
+            }   
 
             renderer.drawFrame(sceneManager.getCurrentScene()->objects, fps);
         }
@@ -109,6 +116,6 @@ namespace Engine{
         resourceManager.cleanup(device);
         EngineObject::defaultResources.cleanupDefault(); //Destroys the default recourses
         uiManager.shutDownImGui(imguiPool);
-        renderer.cleanup();
+        renderer.cleanup(sceneManager.getCurrentScene());
     }
 }

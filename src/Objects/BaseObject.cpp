@@ -1,6 +1,7 @@
 #include "BaseObjects.hpp"
 #include "RecourseManager.hpp"
 #include "ObjectRegistry.hpp"
+#include <iostream>
 
 namespace EngineObject{
     Object* makeMeshObject(const nlohmann::json& data) {
@@ -28,6 +29,18 @@ namespace EngineObject{
         shader.vertShader = jsonData["shader"]["vert"];
         shader.fragShader = jsonData["shader"]["frag"];
 
+        glm::vec4 baseColor;
+        baseColor.x = jsonData["base_color"]["r"];
+        baseColor.y = jsonData["base_color"]["g"];
+        baseColor.z = jsonData["base_color"]["b"];
+        baseColor.w = jsonData["base_color"]["a"];
+
+        material->setBaseColor(baseColor);
+
+        material->setRoughness(jsonData["roughness"]);
+        material->setMetallic(jsonData["metallic"]);
+        material->setAlbedo(jsonData["albedo"]);
+
         material->setShader(shader);
     }
 
@@ -39,12 +52,16 @@ namespace EngineObject{
 
         this->name = "Mesh_Object";
         this->type = "Mesh_Object";
-        this->mesh->meshPath = meshPathRef;
-        texture.texturePath = texturePathRef;
+        if(!meshPathRef.empty()){
+            this->mesh->meshPath = meshPathRef;
+        }
+        if(!texturePathRef.empty()){
+            texture.texturePath = texturePathRef;
+        }
         this->modelMatrix[3] = glm::vec4(position, 1.0f);
         modelMatrix = glm::translate(glm::mat4(1.0f), position);
 
-        this->material->addTexture(std::make_shared<Texture>(texture));
+        this->material->addTexture(std::make_shared<Texture>(texture), true);
     }
 
     void MeshObject::initVulkanResources(EngineResource::ResourceManager &resourceManager){
@@ -60,14 +77,17 @@ namespace EngineObject{
                 if(!texturePath.empty()){
                     auto texture = resourceManager.load<Texture>(texturePath);
                     material->addTexture(texture);
-                } else{
-                    material->addTexture(defaultResources.texture);
-                }
+                    hasTexture = true;
+                } 
             }
         } else{
             for(auto &texture : material->getTextures()){
+                if(texture->texturePath.empty()){
+                    continue;
+                }
                 if(!texture->textureSampler || !texture->textureImage){
                     texture = resourceManager.load<Texture>(texture->texturePath);
+                    hasTexture = true;
                 }
             }
         }

@@ -1,4 +1,5 @@
 #include "Serialization.hpp"
+#include "Object.hpp"
 
 json serializeObject(const Object &object){
     json jsonData;
@@ -7,9 +8,20 @@ json serializeObject(const Object &object){
     } else{
         jsonData["name"] = "Generic";
      }
+
     jsonData["uuid"] = object.uuid;
     jsonData["type"] = object.type;
     jsonData["mesh"] = object.mesh->meshPath;
+        jsonData["base_color"] = {
+            {"r", object.material->getBaseColor().x},
+            {"g", object.material->getBaseColor().y},
+            {"b", object.material->getBaseColor().z},
+            {"a", object.material->getBaseColor().w},
+        };
+        jsonData["roughness"] = object.material->getRoughness();
+        jsonData["metallic"] = object.material->getMetallic();
+        jsonData["albedo"] = object.material->getAlbedo();
+
     jsonData["textures"] = json::array();
     for(const auto &texture : object.material->getTextures()){
         jsonData["textures"].push_back(texture->texturePath);

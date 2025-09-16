@@ -18,6 +18,15 @@ layout(binding = 0) uniform UniformBufferObject {
 
 layout(binding = 1) uniform sampler2D texSampler;
 
+layout(binding = 2) uniform ObjectUBO {
+    vec4 baseColor;
+    int hasTexture;
+    int _pad1;
+    int _pad2;
+    int _pad3;
+} objectUBO;
+
+
 void main() {
     vec3 norm = normalize(fragNormal);
     vec3 lightDir = normalize(-ubo.lightDir.xyz);
@@ -27,7 +36,14 @@ void main() {
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 16.0);
     vec3 specular = 0.75 * spec * ubo.lightColorIntensity.rgb * ubo.lightColorIntensity.w;
-    vec3 texColor = texture(texSampler, fragTexCoord).rgb;
+
+    vec3 texColor;
+    if(objectUBO.hasTexture == 1){
+        texColor = texture(texSampler, fragTexCoord).rgb;
+     } else{
+        texColor = objectUBO.baseColor.rgb;
+     }
+
     vec3 ambient = 0.5 * texColor;
     
     vec3 linearColor = ambient + diffuse + specular;

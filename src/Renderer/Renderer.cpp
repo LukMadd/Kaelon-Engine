@@ -32,14 +32,14 @@ namespace EngineRenderer{
     
     void Renderer::initObjectResources(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects, EngineResource::ResourceManager &resourceManager){
         defaultResources.init(resourceManager);
-        dummyresources.createDummyresources();
         auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
         descriptorLayouts.push_back(layout);
         appPipeline.createPipelines(appSwapChain.swapChainExtent, descriptorSetLayout);
         multiSampler.createColorResources(appSwapChain.swapChainImageFormat, appSwapChain.swapChainExtent);
         depthBuffer.createDepthResources(appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
         appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView, multiSampler.colorImageView);
-        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, uniformBuffers, uniformBuffersMemory, uniformBuffersMapped);
+        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, sizeof(UniformBufferObject), uniformBuffers, uniformBuffersMemory, uniformBuffersMapped);
+        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, sizeof(ObjectUBO), objectUniformBuffers, objectUniformBuffersMemory, objectUniformBuffersMapped);
         uniformBufferCommand.createDescriptorPool(objectCount, MAX_FRAMES_IN_FLIGHT, descriptorPool);
         appCommand.createCommandBuffers(commandbuffers, MAX_FRAMES_IN_FLIGHT);
         createSyncObjects();
@@ -65,7 +65,7 @@ namespace EngineRenderer{
                 throw std::runtime_error("Failed to allocate descriptor sets for object");
             }
 
-            uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, layout, descriptorPool, obj->descriptorSets, obj->material->getTextures());
+            uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, objectUniformBuffers, layout, descriptorPool, obj->descriptorSets, obj->material->getTextures());
         }
         scene.isInitialized = true;
     }
@@ -166,7 +166,7 @@ namespace EngineRenderer{
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
 
-    void Renderer::cleanup(){
+    void Renderer::cleanup(Scene *scene){
         appSwapChain.cleanupSwapChain(depthBuffer, multiSampler);
         depthBuffer.cleanup();
 
@@ -182,22 +182,44 @@ namespace EngineRenderer{
         appCommand.cleanup();
 
         appPipeline.cleanupPipelines();
-        
-        for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
-            vkDestroyBuffer(device, uniformBuffers[i], nullptr);
-            vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+
+        for (auto &obj : scene->objects) {
+            for (size_t frame = 0; frame < MAX_FRAMES_IN_FLIGHT; ++frame) {
+                if (frame < obj->objectUniformMapped.size() && obj->objectUniformMapped[frame]) {
+                    vkUnmapMemory(device, obj->objectUniformMemory[frame]);
+                    obj->objectUniformMapped[frame] = nullptr;
+                }
+                if (frame < obj->objectUniformBuffer.size() && obj->objectUniformBuffer[frame] != VK_NULL_HANDLE) {
+                    vkDestroyBuffer(device, obj->objectUniformBuffer[frame], nullptr);
+                    obj->objectUniformBuffer[frame] = VK_NULL_HANDLE;
+                }
+                if (frame < obj->objectUniformMemory.size() && obj->objectUniformMemory[frame] != VK_NULL_HANDLE) {
+                    vkFreeMemory(device, obj->objectUniformMemory[frame], nullptr);
+                    obj->objectUniformMemory[frame] = VK_NULL_HANDLE;
+                }
+            }
         }
 
         vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+
+        for(int i = 0; i < uniformBuffers.size(); i++){
+            vkDestroyBuffer(device, uniformBuffers[i], nullptr);
+        }
+        for(int i = 0; i < uniformBuffersMemory.size(); i++){
+            vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+        }
+        for(int i = 0; i < objectUniformBuffers.size(); i++){
+            vkDestroyBuffer(device, objectUniformBuffers[i], nullptr);
+        }
+        for(int i = 0; i < objectUniformBuffersMemory.size(); i++){
+            vkFreeMemory(device, objectUniformBuffersMemory[i], nullptr);
+        }
 
         for(auto &layout : descriptorLayouts){
             vkDestroyDescriptorSetLayout(device, layout, nullptr);
         }
 
-        vkDestroyImageView(device, dummyresources.texture->textureImageView, nullptr);
-        vkDestroyImage(device, dummyresources.texture->textureImage, nullptr);
-        vkFreeMemory(device, dummyresources.texture->textureImageMemory, nullptr);
-        vkDestroySampler(device, dummyresources.texture->textureSampler, nullptr);
+        uniformBufferCommand.cleanup();
        
         vkDestroyDevice(device, nullptr);
 

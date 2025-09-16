@@ -49,6 +49,10 @@ namespace EngineRenderer {
             std::vector<VkDeviceMemory> uniformBuffersMemory;
             std::vector<void*> uniformBuffersMapped;
 
+            std::vector<VkBuffer> objectUniformBuffers;
+            std::vector<VkDeviceMemory> objectUniformBuffersMemory;
+            std::vector<void*> objectUniformBuffersMapped;
+
             Command appCommand;
             std::vector<VkCommandBuffer> commandbuffers;
 
@@ -57,8 +61,6 @@ namespace EngineRenderer {
             std::vector<VkFence> inFlightFences;
 
             uint32_t currentFrame = 0;
-
-            DummyRecources dummyresources;
 
             public: 
                 Renderer();
@@ -70,11 +72,15 @@ namespace EngineRenderer {
                 void initObjectResources(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects, EngineResource::ResourceManager &resourceManager);
                 void initObjects(Scene &scene, EngineResource::ResourceManager &resourceManage);
                 void initSceneDescriptors(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
-                void cleanup();
+                void cleanup(Scene *scene);
                 void drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects, float fps);
 
                 void updateUniformBuffers(UniformBufferObject &ubo, float fov){
                     uniformBufferCommand.updateUniformBuffers(ubo, fov, currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);
+                }
+
+                void updateObjectUniformBuffers(ObjectUBO &objectUBO){
+                    uniformBufferCommand.updateObjectUniformBuffers(objectUBO, objectUniformBuffersMapped, currentFrame);
                 }
 
                 VkInstance& getInstance(){return instance;}

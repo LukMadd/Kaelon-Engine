@@ -4,15 +4,14 @@
 #include "ValidationLayers.hpp"
 #include <array>
 #include <cstdint>
+#include <iostream>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <chrono>
-
 namespace EngineRenderer{
-    void DummyRecources::createDummyresources(){
+    void DummyRecources::createDummyResources(){
         texture = std::make_shared<Texture>();
         
         uint32_t whitePixel = 0xFFFFFFFF;
@@ -21,7 +20,7 @@ namespace EngineRenderer{
         VkBuffer stagingBuffer;
         VkDeviceMemory stagingMemory;
 
-        createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingMemory);
+        createBuffer("Dummy_Buffer", imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingMemory);
         void* data;
         vkMapMemory(device, stagingMemory, 0, imageSize, 0, &data);
         memcpy(data, &whitePixel, static_cast<size_t>(imageSize));
@@ -73,8 +72,13 @@ namespace EngineRenderer{
         samplerLayoutBinding.descriptorCount = 1;
         samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
-        std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};
+        VkDescriptorSetLayoutBinding objectUboBinding{};
+        objectUboBinding.binding = 2;
+        objectUboBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        objectUboBinding.descriptorCount = 1;
+        objectUboBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 
+        std::array<VkDescriptorSetLayoutBinding, 3> bindings = {uboLayoutBinding, samplerLayoutBinding, objectUboBinding};
         VkDescriptorSetLayoutCreateInfo layoutInfo{};
         layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
         layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
@@ -88,56 +92,78 @@ namespace EngineRenderer{
         return descriptorSetLayout;
     }
 
+    void DummyRecources::cleanupDummyRecourses(){
+        vkDestroyImageView(device, texture->textureImageView, nullptr);
+        vkDestroyImage(device, texture->textureImage, nullptr);
+        vkFreeMemory(device, texture->textureImageMemory, nullptr);
+        vkDestroySampler(device, texture->textureSampler, nullptr);
+    }
 
 
-    void UniformBuffer::createUniformBuffers(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, std::vector<VkDeviceMemory> &uniformBuffersMemory, std::vector<void*> &uniformBuffersMapped){
-        VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
+    void UniformBuffer::createUniformBuffers(int MAX_FRAMES_IN_FLIGHT, VkDeviceSize bufferSize, std::vector<VkBuffer> &uniformBuffers, std::vector<VkDeviceMemory> &uniformBuffersMemory, std::vector<void*> &uniformBuffersMapped){
         uniformBuffers.resize(MAX_FRAMES_IN_FLIGHT);
         uniformBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
         uniformBuffersMapped.resize(MAX_FRAMES_IN_FLIGHT);
 
         for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
-            createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+            createBuffer("Uniform_Buffer_Index_" + std::to_string(i) + "_size_" + std::to_string(bufferSize), bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
 
             vkMapMemory(device, uniformBuffersMemory[i], 0, bufferSize, 0, &uniformBuffersMapped[i]);
         }
     }
 
     void UniformBuffer::createDescriptorPool(uint32_t objectCount, int MAX_FRAMES_IN_FLIGHT, VkDescriptorPool &descriptorPool){
-        std::array<VkDescriptorPoolSize, 2> poolSizes{};
-        poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * objectCount);
-        poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        poolSizes[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * objectCount); 
+            std::array<VkDescriptorPoolSize, 2> poolSizes{};
+            poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * objectCount * 2);
+            poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            poolSizes[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * objectCount); 
 
-        VkDescriptorPoolCreateInfo poolInfo{};
-        poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
-        poolInfo.pPoolSizes = poolSizes.data();
-        poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * objectCount);
+            VkDescriptorPoolCreateInfo poolInfo{};
+            poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+            poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+            poolInfo.pPoolSizes = poolSizes.data();
+            poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * objectCount);
 
-        VkResult result = vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool);
-        if(result != VK_SUCCESS){
-            throw std::runtime_error("Failed to create descriptor pool erorr code: " + std::to_string(result) + "!");
-        }    
-        setObjectName(device, (uint64_t)descriptorPool, VK_OBJECT_TYPE_DESCRIPTOR_POOL, "Main_Descriptor_Pool");
-    }
+            VkResult result = vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool);
+            if(result != VK_SUCCESS){
+                throw std::runtime_error("Failed to create descriptor pool erorr code: " + std::to_string(result) + "!");
+            }    
+            setObjectName(device, (uint64_t)descriptorPool, VK_OBJECT_TYPE_DESCRIPTOR_POOL, "Main_Descriptor_Pool");
+        }
 
-    void UniformBuffer::createDescriptorSets(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, VkDescriptorSetLayout descriptorSetLayout, VkDescriptorPool &descriptorPool, std::vector<VkDescriptorSet> &descriptorSets, const std::vector<std::shared_ptr<Texture>> &textures){
+    void UniformBuffer::createDescriptorSets(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, std::vector<VkBuffer> &objectUniformBuffers, VkDescriptorSetLayout descriptorSetLayout, VkDescriptorPool &descriptorPool, std::vector<VkDescriptorSet> &descriptorSets, const std::vector<std::shared_ptr<Texture>> &textures){
         descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
+        if(!dummyResources.texture){
+            dummyResources.createDummyResources();
+        }
 
+        for (size_t frame = 0; frame < MAX_FRAMES_IN_FLIGHT; ++frame) {
+            if(descriptorSets[frame] == VK_NULL_HANDLE){
+                continue;
+            }
+        
         for(size_t frame = 0; frame < MAX_FRAMES_IN_FLIGHT; frame++){
             VkDescriptorBufferInfo bufferInfo{};
             bufferInfo.buffer = uniformBuffers[frame];
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
+            VkDescriptorBufferInfo objectBufferInfo{};
+            objectBufferInfo.buffer = objectUniformBuffers[frame]; // provide this vector to the function
+            objectBufferInfo.offset = 0;
+            objectBufferInfo.range  = sizeof(ObjectUBO);
 
-            std::vector<VkDescriptorImageInfo> imageInfos(textures.size());
-            for(size_t i = 0; i < textures.size(); i++){
-                imageInfos[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-                imageInfos[i].imageView = textures[i]->textureImageView;
-                imageInfos[i].sampler = textures[i]->textureSampler;
+            VkDescriptorImageInfo imageInfo{};
+            if(!textures.empty() && textures[0]->textureImageView != VK_NULL_HANDLE){
+                imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                imageInfo.imageView = textures[0]->textureImageView;
+                imageInfo.sampler = textures[0]->textureSampler;
+            } else{
+                assert(dummyResources.texture->textureImageView != VK_NULL_HANDLE);
+                imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                imageInfo.imageView = dummyResources.texture->textureImageView;
+                imageInfo.sampler = dummyResources.texture->textureSampler;
             }
 
             std::vector<VkWriteDescriptorSet> descriptorWrites;
@@ -151,32 +177,38 @@ namespace EngineRenderer{
             uboWrite.pBufferInfo = &bufferInfo;
             descriptorWrites.push_back(uboWrite);
 
-            for(size_t i = 0; i < textures.size(); i++){
-                VkWriteDescriptorSet textureWrite{};
-                textureWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                textureWrite.dstSet = descriptorSets[frame];
-                textureWrite.dstBinding = static_cast<uint32_t>(i + 1);
-                textureWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-                textureWrite.descriptorCount = 1;
-                textureWrite.pImageInfo = &imageInfos[i];
-                descriptorWrites.push_back(textureWrite);
-            }
+            VkWriteDescriptorSet textureWrite{};
+            textureWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            textureWrite.dstSet = descriptorSets[frame];
+            textureWrite.dstBinding = 1;
+            textureWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            textureWrite.descriptorCount = 1;
+            textureWrite.pImageInfo = &imageInfo;
+            descriptorWrites.push_back(textureWrite);
+
+            VkWriteDescriptorSet objectUboWrite{};
+            objectUboWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            objectUboWrite.dstSet = descriptorSets[frame];
+            objectUboWrite.dstBinding = 2;
+            objectUboWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            objectUboWrite.descriptorCount = 1;
+            objectUboWrite.pBufferInfo = &objectBufferInfo;
+            descriptorWrites.push_back(objectUboWrite);
 
             vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
         }
     }
+    }    
 
     void UniformBuffer::updateUniformBuffers(UniformBufferObject ubo, float fov, uint32_t currentImage, VkExtent2D swapChainExtent, std::vector<void*> &uniformBuffersMapped){
-        static auto startTime = std::chrono::high_resolution_clock::now();
-
-        auto currentTime = std::chrono::high_resolution_clock::now();
-
-        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
         ubo.proj = glm::perspective(glm::radians(fov), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 100.0f);
 
         ubo.proj[1][1]*=-1;
 
         memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+    }
+
+    void UniformBuffer::updateObjectUniformBuffers(ObjectUBO objectUbo, std::vector<void*> &uniformBuffersMapped, uint32_t currentImage){
+        memcpy(uniformBuffersMapped[currentImage], &objectUbo, sizeof(objectUbo));
     }
 }

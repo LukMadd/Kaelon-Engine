@@ -1,9 +1,10 @@
 #include "RendererUtilities.hpp"
 #include "RendererGlobals.hpp"
+#include "ValidationLayers.hpp"
 #include <cstdint>
 
 namespace EngineRenderer{
-    void createBuffer(VkDeviceSize &size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory){
+    void createBuffer(const std::string &name, VkDeviceSize &size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory){
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;
@@ -29,6 +30,7 @@ namespace EngineRenderer{
         }
 
         vkBindBufferMemory(device, buffer, bufferMemory, 0);
+        setObjectName(device, (uint64_t) buffer, VK_OBJECT_TYPE_BUFFER, name);
     }
 
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties){

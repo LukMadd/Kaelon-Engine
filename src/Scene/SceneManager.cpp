@@ -35,7 +35,7 @@ namespace EngineScene{
         auto &scenePtr = scenes.at(newSceneID);
 
         if(!scenePtr->isInitialized){
-            scenePtr->initScene(false, *resourceManager);
+            scenePtr->initScene(true, *resourceManager);
         }
 
         currentSceneIndex = newIndex;

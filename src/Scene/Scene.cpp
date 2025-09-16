@@ -23,7 +23,7 @@ namespace EngineScene{
         if(whichScene){
             for(int i = 0; i < 10; i++){
                 for(int j = 0; j < 10; j++){
-                    auto cube = std::make_unique<MeshObject>(pos, "models/Crate1.obj");
+                    auto cube = std::make_unique<MeshObject>(pos, "models/Crate1.obj", "textures/crate_1.jpg");
 
                     SceneNode* node = new SceneNode();
                     node->object = cube.get();

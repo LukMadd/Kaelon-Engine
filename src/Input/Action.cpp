@@ -23,5 +23,6 @@ namespace EngineInput{
         bind(Action::USER_ESCAPE_PROGRAM, Key::KEY_ESCAPE);
         bind(Action::USER_FULL_SCREEN, Key::KEY_F10);
         bind(Action::USER_HIDE_CURSOR, Key::KEY_SHIFT);
+        bind(Action::USER_SHOW_CURSOR, Key::KEY_GRAVE_ACCENT);
     }
 }

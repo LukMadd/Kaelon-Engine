@@ -7,10 +7,10 @@ using namespace EngineInput;
 
 namespace EngineCamera{
     void Camera::init(){
-        position = glm::vec3(5.0f, 12.5f, -30.0f);
+        position = glm::vec3(-0.2f, 11.5f, -33.5f);
         up = glm::vec3(0.0f, 1.0f, 0.0f);
 
-        glm::vec3 target = glm::vec3((6.75f));
+        glm::vec3 target = glm::vec3((0.0f));
         glm::vec3 direction = glm::normalize(target - position);
 
         yaw = glm::degrees(atan2(direction.z, direction.x ));

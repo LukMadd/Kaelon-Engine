@@ -26,6 +26,17 @@ namespace Engine{
         }
         totalObjects = std::max(totalObjects, size_t(1));
 
+        VkPhysicalDeviceProperties deviceProperties;
+        vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+
+        VkDeviceSize minUboAlignment = deviceProperties.limits.minUniformBufferOffsetAlignment;
+        VkDeviceSize stride = sizeof(ObjectUBO);
+        if (stride % minUboAlignment != 0) {
+            stride += minUboAlignment - (stride % minUboAlignment);
+        }
+
+        renderer.setObjectUboStride(stride);
+
         renderer.initObjectResources(totalObjects, sceneManager.getCurrentScene()->objects, resourceManager);
     
         for(auto &scene : sceneManager.getScenes()){
@@ -81,28 +92,30 @@ namespace Engine{
 
             uiManager.renderUI(fps);
 
-                EngineRenderer::UniformBufferObject ubo{};
-                ubo.view = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getViewMatrix();
-                if(!lights.getDirectionalLights().empty()){
-                    const auto& directionalLight = lights.getDirectionalLights()[0];
-                    ubo.lightDir = glm::vec4(glm::normalize(directionalLight.direction), 0.0f);
-                    ubo.lightColorIntensity = glm::vec4(directionalLight.color, directionalLight.intensity);
-                }
+            EngineRenderer::UniformBufferObject ubo{};
+            ubo.view = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getViewMatrix();
+            if(!lights.getDirectionalLights().empty()){
+                const auto& directionalLight = lights.getDirectionalLights()[0];
+                ubo.lightDir = glm::vec4(glm::normalize(directionalLight.direction), 0.0f);
+                ubo.lightColorIntensity = glm::vec4(directionalLight.color, directionalLight.intensity);
+            }
 
-                ubo.cameraPos = glm::vec4(sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->position, 0.0f); //Updates the camera position
-                renderer.updateUniformBuffers(ubo, sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getFov()); //Sends the uniform buffer object down to the uniform buffer manager for it to be processed
+            ubo.cameraPos = glm::vec4(sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->position, 0.0f); //Updates the camera position
+            renderer.updateUniformBuffers(ubo, sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getFov()); //Sends the uniform buffer object down to the uniform buffer manager for it to be processed
             
-            for(auto &object : sceneManager.getCurrentScene()->objects){
-                ObjectUBO objectUbo;
+            for(size_t i = 0; i < sceneManager.getCurrentScene()->objects.size(); i++){
+                auto &object = sceneManager.getCurrentScene()->objects[i];
 
+                ObjectUBO objectUbo{};
                 objectUbo.hasTexture = object->material->getTextures().empty() ? 0 : 1;
+                objectUbo.baseColor  = object->material->getBaseColor();
 
-                objectUbo.hasTexture = object->material->getTextures().empty() ? 0 : 1;
+                memcpy((char*)renderer.getObjectUniformBuffersMapped()[renderer.getCurrentFrame()] + i * sizeof(ObjectUBO),
+                    &objectUbo,
+                    sizeof(ObjectUBO));
 
-                objectUbo.baseColor = object->material->getBaseColor();
-
-                renderer.updateObjectUniformBuffers(objectUbo);
-            }   
+                object->uniformIndex = i;
+            }
 
             renderer.drawFrame(sceneManager.getCurrentScene()->objects, fps);
         }

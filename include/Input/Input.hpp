@@ -19,7 +19,8 @@ namespace Engine{
         KEY_ESCAPE = GLFW_KEY_ESCAPE,
         KEY_TAB = GLFW_KEY_TAB,
         KEY_F10 = GLFW_KEY_F10,
-        KEY_PERIOD = GLFW_KEY_PERIOD
+        KEY_PERIOD = GLFW_KEY_PERIOD,
+        KEY_GRAVE_ACCENT = GLFW_KEY_GRAVE_ACCENT
     };
 }
 

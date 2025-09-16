@@ -13,15 +13,16 @@ namespace EngineInput{
         if(actionManager.isActionActive(Action::USER_ESCAPE_PROGRAM)){
             if(Engine::isFullscreen){
                 toggleFullscreen(window);
-            } else{
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-                Input::get().resetMouse();
             }
         }
         if(actionManager.isActionActive(Action::USER_FULL_SCREEN)){
             if(Engine::isFullscreen == false){
                 toggleFullscreen(window);
             }
+        }
+        if(actionManager.isActionActive(Action::USER_SHOW_CURSOR)){
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            Input::get().resetMouse();
         }
         if(actionManager.isActionActive(Action::USER_HIDE_CURSOR)){
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

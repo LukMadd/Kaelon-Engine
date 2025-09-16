@@ -26,12 +26,13 @@ namespace EngineScene{
             std::string type;
             std::string name;
             
+            int uniformIndex = 0;
+            
             bool selected = false; 
             SceneNode* node = nullptr;
 
             std::string uuid;
             glm::mat4 modelMatrix{1.0f};
-            VkDescriptorSetLayout descriptorSetLayout;
             std::vector<VkDescriptorSet> descriptorSets;
             std::vector<VkBuffer> objectUniformBuffer;
             std::vector<VkDeviceMemory> objectUniformMemory;

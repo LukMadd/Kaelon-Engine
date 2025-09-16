@@ -39,7 +39,7 @@ namespace EngineRenderer{
         depthBuffer.createDepthResources(appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
         appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView, multiSampler.colorImageView);
         uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, sizeof(UniformBufferObject), uniformBuffers, uniformBuffersMemory, uniformBuffersMapped);
-        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, sizeof(ObjectUBO), objectUniformBuffers, objectUniformBuffersMemory, objectUniformBuffersMapped);
+        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, objectUboStride * objectCount * MAX_FRAMES_IN_FLIGHT, objectUniformBuffers, objectUniformBuffersMemory, objectUniformBuffersMapped);
         uniformBufferCommand.createDescriptorPool(objectCount, MAX_FRAMES_IN_FLIGHT, descriptorPool);
         appCommand.createCommandBuffers(commandbuffers, MAX_FRAMES_IN_FLIGHT);
         createSyncObjects();
@@ -50,7 +50,6 @@ namespace EngineRenderer{
             obj->initVulkanResources(resourceManager);
 
             auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
-            obj->descriptorSetLayout = layout;
             descriptorLayouts.push_back(layout);
             std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
             obj->descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
@@ -114,9 +113,9 @@ namespace EngineRenderer{
         vkResetCommandBuffer(commandbuffers[currentFrame], 0);
 
         if(!wireFrameModeEnabled){
-            appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineFill, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, fps);
+            appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineFill, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, objectUboStride);
         } else{
-            appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineWireFrame, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, fps);
+            appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineWireFrame, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, objectUboStride);
         }
 
         VkSubmitInfo submitInfo{};

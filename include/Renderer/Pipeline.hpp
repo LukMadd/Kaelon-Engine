@@ -23,7 +23,7 @@ namespace EngineRenderer {
 
             void pushPipeline(VkPipeline &pipeline){pipelines.push_back(&pipeline);}
 
-            void createPipelines(VkExtent2D swapChainExtent, VkDescriptorSetLayout descriptorSetLayout);
+            void createPipelines(VkExtent2D swapChainExtent, VkDescriptorSetLayout globalDescriptorSetLayout);
 
             void createRenderPass(VkFormat swapChainImageFormat);
 

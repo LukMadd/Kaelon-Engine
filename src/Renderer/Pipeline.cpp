@@ -204,7 +204,8 @@ namespace EngineRenderer {
 
 
 
-    void PipelineManager::createPipelines(VkExtent2D swapChainExtent, VkDescriptorSetLayout descriptorSetLayout){
+    void PipelineManager::createPipelines(VkExtent2D swapChainExtent, VkDescriptorSetLayout globalDescriptorSetLayout){
+
         VkPushConstantRange pushConstantRange{};
         pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
         pushConstantRange.offset = 0;
@@ -213,7 +214,7 @@ namespace EngineRenderer {
         VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
         pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipelineLayoutCreateInfo.setLayoutCount = 1;
-        pipelineLayoutCreateInfo.pSetLayouts = &descriptorSetLayout;
+        pipelineLayoutCreateInfo.pSetLayouts = &globalDescriptorSetLayout;
         pipelineLayoutCreateInfo.pushConstantRangeCount = 1;
         pipelineLayoutCreateInfo.pPushConstantRanges = &pushConstantRange;
 
@@ -225,9 +226,9 @@ namespace EngineRenderer {
 
         PipelineInfo pipelineInfo{};
         pipelineInfo.wireFrameMode = false;
-        createGraphicsPipeline(graphicsPipelineFill, pipelineInfo, "Main", swapChainExtent, descriptorSetLayout);
+        createGraphicsPipeline(graphicsPipelineFill, pipelineInfo, "Main", swapChainExtent, globalDescriptorSetLayout);
         pipelineInfo.wireFrameMode = true;
-        createGraphicsPipeline(graphicsPipelineWireFrame, pipelineInfo,"Wireframe", swapChainExtent, descriptorSetLayout);
+        createGraphicsPipeline(graphicsPipelineWireFrame, pipelineInfo,"Wireframe", swapChainExtent, globalDescriptorSetLayout);
 
         pushPipeline(graphicsPipelineFill);
         pushPipeline(graphicsPipelineWireFrame);

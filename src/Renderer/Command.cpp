@@ -43,7 +43,18 @@ namespace EngineRenderer{
         }
     }
 
-    void Command::recordCommandBuffers(std::vector<std::unique_ptr<Object>> &objects, VkCommandBuffer commandBuffer, uint32_t imageIndex, VkRenderPass renderPass, SwapChain swapChain, VkPipeline &graphicsPipeline, VkPipelineLayout &pipelineLayout, uint32_t currentFrame, VkBuffer &vertexBuffer, VkBuffer &indexBuffer, float fps){
+    void Command::recordCommandBuffers(std::vector<std::unique_ptr<Object>> &objects, 
+        VkCommandBuffer commandBuffer, 
+        uint32_t imageIndex, 
+        VkRenderPass renderPass, 
+        SwapChain swapChain, 
+        VkPipeline &graphicsPipeline,
+        VkPipelineLayout &pipelineLayout, 
+        uint32_t currentFrame, 
+        VkBuffer &vertexBuffer, 
+        VkBuffer &indexBuffer, 
+        VkDeviceSize objectUboStride){
+
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         beginInfo.flags = 0;
@@ -63,7 +74,7 @@ namespace EngineRenderer{
         renderPassInfo.renderArea.extent = swapChain.swapChainExtent;
 
         std::array<VkClearValue, 2> clearValues{};        
-        clearValues[0].color = {{0.0f, 0.0f, 0.0f, 1.0f}};
+        clearValues[0].color = {{0.39f, 0.58f, 0.93f, 1.0f}};
         clearValues[1].depthStencil = {1.0f, 0};
 
         renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
@@ -92,7 +103,13 @@ namespace EngineRenderer{
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
         for(auto& obj : objects){
-            vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &obj->descriptorSets[currentFrame], 0, nullptr);
+            uint32_t dynamicOffset = obj->uniformIndex * objectUboStride;
+
+            vkCmdBindDescriptorSets(commandBuffer,
+                                    VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                    pipelineLayout,
+                                    0, 1, &obj->descriptorSets[currentFrame],
+                                    1, &dynamicOffset);
 
             obj->draw(commandBuffer, pipelineLayout);
 

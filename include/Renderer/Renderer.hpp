@@ -53,6 +53,8 @@ namespace EngineRenderer {
             std::vector<VkDeviceMemory> objectUniformBuffersMemory;
             std::vector<void*> objectUniformBuffersMapped;
 
+            VkDeviceSize objectUboStride;
+
             Command appCommand;
             std::vector<VkCommandBuffer> commandbuffers;
 
@@ -87,6 +89,10 @@ namespace EngineRenderer {
                 VkDescriptorPool& getDescriptorPool(){return descriptorPool;}
                 VkRenderPass& getRenderPass(){return appPipeline.renderPass;}
                 VkCommandBuffer& getCurrentCommandBuffer(){return commandbuffers[currentFrame];}
+                int getCurrentFrame() {return currentFrame;}
+                void setObjectUboStride(VkDeviceSize objectUboStride){this->objectUboStride = objectUboStride;}
+                VkDeviceSize getObjectUboStride(){return objectUboStride;}
+                std::vector<void*>& getObjectUniformBuffersMapped(){return objectUniformBuffersMapped;}
 
     };
 }

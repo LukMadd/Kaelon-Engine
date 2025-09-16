@@ -73,7 +73,7 @@ namespace EngineRenderer{
 
         VkDescriptorSetLayoutBinding objectUboBinding{};
         objectUboBinding.binding = 2;
-        objectUboBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        objectUboBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
         objectUboBinding.descriptorCount = 1;
         objectUboBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 
@@ -113,11 +113,15 @@ namespace EngineRenderer{
     }
 
     void UniformBuffer::createDescriptorPool(uint32_t objectCount, int MAX_FRAMES_IN_FLIGHT, VkDescriptorPool &descriptorPool){
-            std::array<VkDescriptorPoolSize, 2> poolSizes{};
+            std::array<VkDescriptorPoolSize, 3> poolSizes{};
             poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-            poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * objectCount * 2);
-            poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-            poolSizes[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * objectCount); 
+            poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+
+            poolSizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+            poolSizes[1].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * objectCount);
+
+            poolSizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            poolSizes[2].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT * objectCount);
 
             VkDescriptorPoolCreateInfo poolInfo{};
             poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -189,7 +193,7 @@ namespace EngineRenderer{
             objectUboWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             objectUboWrite.dstSet = descriptorSets[frame];
             objectUboWrite.dstBinding = 2;
-            objectUboWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            objectUboWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
             objectUboWrite.descriptorCount = 1;
             objectUboWrite.pBufferInfo = &objectBufferInfo;
             descriptorWrites.push_back(objectUboWrite);

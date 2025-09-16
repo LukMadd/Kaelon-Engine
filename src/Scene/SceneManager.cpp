@@ -20,7 +20,7 @@ namespace EngineScene{
     //ALMOST THERE, I can almost get rid of this horrible stuff
     void SceneManager::addScene(const std::string &name, int id){
         auto scene = Scene::createScene(id, name);
-        scene->initScene(true, *resourceManager);
+        scene->initBaseScene(*resourceManager);
         sceneOrder.push_back(id); //Pushes the scenes ID into sceneOrder to be used for current scene tracking
         scenes[id] = std::move(scene);
 
@@ -35,7 +35,7 @@ namespace EngineScene{
         auto &scenePtr = scenes.at(newSceneID);
 
         if(!scenePtr->isInitialized){
-            scenePtr->initScene(true, *resourceManager);
+            scenePtr->initBaseScene(*resourceManager);
         }
 
         currentSceneIndex = newIndex;

@@ -153,7 +153,7 @@ namespace EngineRenderer{
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
             VkDescriptorBufferInfo objectBufferInfo{};
-            objectBufferInfo.buffer = objectUniformBuffers[frame]; // provide this vector to the function
+            objectBufferInfo.buffer = objectUniformBuffers[frame];
             objectBufferInfo.offset = 0;
             objectBufferInfo.range  = sizeof(ObjectUBO);
 

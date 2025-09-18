@@ -3,9 +3,9 @@
         {
             "fov": 35.0,
             "front": [
-                0.005646607838571072,
-                -0.32468003034591675,
-                0.9458070397377014
+                -0.009274153038859367,
+                -0.3048008978366852,
+                0.9523710012435913
             ],
             "is_initialized": true,
             "name": "Generic_Camera",
@@ -15,8 +15,8 @@
                 -33.5
             ],
             "rotation": {
-                "pitch": -18.946189880371094,
-                "yaw": 89.65794372558594
+                "pitch": -17.746185302734375,
+                "yaw": 90.55792999267578
             },
             "sensitivity": 0.10000000149011612,
             "speed": 10.0,
@@ -41,7 +41,7 @@
                 },
                 "mesh": "models/Crate1.obj",
                 "metallic": 0.0,
-                "name": "Mesh_Object",
+                "name": "Base_Scene_Floor",
                 "roughness": 1.0,
                 "shader": {
                     "frag": "shaders/base_frag_shader.spv",
@@ -49,7 +49,7 @@
                 },
                 "textures": [],
                 "type": "Mesh_Object",
-                "uuid": "0c5ec11b5acd873f29389c558398f17f"
+                "uuid": "4084e0058c52d17991f6f66e1db490b9"
             },
             "transform": {
                 "position": [
@@ -81,7 +81,7 @@
                 },
                 "mesh": "models/Crate1.obj",
                 "metallic": 0.0,
-                "name": "Mesh_Object",
+                "name": "Base_Scene_Cube",
                 "roughness": 1.0,
                 "shader": {
                     "frag": "shaders/base_frag_shader.spv",
@@ -89,7 +89,7 @@
                 },
                 "textures": [],
                 "type": "Mesh_Object",
-                "uuid": "8da04e305d47d7f6c4ad431321361efc"
+                "uuid": "3b636954c554b982a6c0b41ee2541117"
             },
             "transform": {
                 "position": [

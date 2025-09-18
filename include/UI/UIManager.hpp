@@ -5,6 +5,7 @@
 #include "SceneManager.hpp"
 #include "CameraManager.hpp"
 #include "RecourseManager.hpp"
+#include "imgui.h"
 
 namespace EngineUI{
     struct UIInfo{
@@ -25,6 +26,9 @@ namespace EngineUI{
             void beginFrame(float fps);
             void renderUI(float fps);
 
+            void rebuildImGuiFontAtlas();
+            void uploadFontAtlasToGPU();
+
             VkDescriptorPool createImGuiDescriptorPool();
 
             void shutDownImGui(VkDescriptorPool &imGuiDescriptorPool);
@@ -33,6 +37,10 @@ namespace EngineUI{
                 EngineUI engineUI;
 
                 UIInfo uiInfo;
+
+                float scale = 16.0f;
+
+                ImGuiStyle baseStyle;
     };
 }
 

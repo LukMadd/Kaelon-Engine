@@ -23,6 +23,10 @@ namespace EngineUI{
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
+        ImGui::GetStyle().ScaleAllSizes(io.DisplayFramebufferScale.x);
+        io.Fonts->AddFontFromFileTTF("../fonts/PixeloidMono.ttf", io.DisplayFramebufferScale.x * scale);
+        baseStyle = ImGui::GetStyle();
+
         ImGui_ImplGlfw_InitForVulkan(uiInfo.window, true);
         ImGui_ImplVulkan_InitInfo init_info{};
         init_info.Instance = uiInfo.instance;
@@ -73,15 +77,40 @@ namespace EngineUI{
     }
 
     void UIManager::beginFrame(float fps){
-        int width, height;
-        glfwGetFramebufferSize(uiInfo.window, &width, &height);
+        int frameBufferWidth, frameBufferHeight;
+        glfwGetFramebufferSize(uiInfo.window, &frameBufferWidth, &frameBufferHeight);
+
+        int windowWidth, windowHeight;
+        glfwGetWindowSize(uiInfo.window, &windowWidth, &windowHeight);
+
         ImGuiIO &io = ImGui::GetIO();
-        io.FontGlobalScale = 1.5f;
+        io.DisplaySize = ImVec2((float)frameBufferWidth, (float)frameBufferHeight);
+        io.DisplayFramebufferScale = ImVec2(
+            windowWidth > 0 ? (float)frameBufferWidth / windowWidth : 1.0f,
+            windowHeight > 0 ? (float)frameBufferHeight / windowHeight : 1.0f
+        );
+        
+
+        float contentScaleX, contentScaleY;
+        glfwGetWindowContentScale(uiInfo.window, &contentScaleX, &contentScaleY);
+        static float previous_scale = contentScaleX;
+
+        if(contentScaleX != previous_scale){
+            if(contentScaleX < previous_scale){
+                io.FontGlobalScale = 1 + (contentScaleX / (contentScaleX / 1.1)); //I don't know but it is close enough
+            } else{
+                io.FontGlobalScale = 1;
+            }
+            previous_scale = contentScaleX;
+
+            ImGuiStyle& style = ImGui::GetStyle();
+            style = baseStyle; //Prevents exponential scaling(ScaleAllSizes multiples _MainScale by input)
+            style.ScaleAllSizes(io.FontGlobalScale);
+        }
 
         ImGui_ImplVulkan_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
         //Create a dock space
         ImGui::SetNextWindowPos(ImVec2(0,0));
         ImGui::SetNextWindowSize(io.DisplaySize);
@@ -119,7 +148,6 @@ namespace EngineUI{
         ImGui::Render();
         //ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData()); happens in recordCommandBuffers() in command.cpp
     }
-
 
     void UIManager::shutDownImGui(VkDescriptorPool &imGuiDescriptorPool){
         ImGui_ImplVulkan_Shutdown();

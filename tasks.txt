@@ -1,5 +1,5 @@
 Ongoing tasks:
-    EMPTY
+    - Add the ability to add objects to a scene
 
 
 Completed Tasks:

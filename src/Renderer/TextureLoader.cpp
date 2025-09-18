@@ -16,7 +16,7 @@ namespace EngineRenderer{
         texture->texturePath = filePath;
         createTextureImage(filePath, texture->textureImage, texture->textureImageMemory);
         createTextureImageView(texture->textureImage, texture->textureImageView);
-        createTextureSampler(texture->textureSampler, filePath);
+        createTextureSampler(texture->textureSampler);
 
         return texture;
     }
@@ -62,14 +62,14 @@ namespace EngineRenderer{
         textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipMap.mipLevels);
     }
 
-    void TextureLoader::createTextureSampler(VkSampler &textureSampler, const std::string &texturePath){
+    void TextureLoader::createTextureSampler(VkSampler &textureSampler, VkFilter filter){
         VkPhysicalDeviceProperties properties{};
         vkGetPhysicalDeviceProperties(physicalDevice, &properties);
 
         VkSamplerCreateInfo samplerInfo{};
         samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        samplerInfo.magFilter = VK_FILTER_LINEAR;
-        samplerInfo.minFilter = VK_FILTER_LINEAR;
+        samplerInfo.magFilter = filter;
+        samplerInfo.minFilter = filter;
         samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
@@ -88,6 +88,6 @@ namespace EngineRenderer{
         if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to create texture sampler error code: " + std::to_string(result) + "!");
         }
-        setObjectName(device, (uint64_t)textureSampler, VK_OBJECT_TYPE_SAMPLER, "Texture_Sampler(" + texturePath + ")");
+        setObjectName(device, (uint64_t)textureSampler, VK_OBJECT_TYPE_SAMPLER, "Texture_Sampler(" + std::to_string((uint64_t)textureSampler) + ")");
     }
 }

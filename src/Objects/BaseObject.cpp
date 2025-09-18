@@ -47,7 +47,6 @@ namespace EngineObject{
         this->mesh = std::make_shared<Mesh>();
         this->material = std::make_shared<Material>();
 
-        this->name = "Mesh_Object";
         this->type = "Mesh_Object";
         if(!meshPathRef.empty()){
             this->mesh->meshPath = meshPathRef;

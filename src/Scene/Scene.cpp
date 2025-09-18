@@ -19,32 +19,34 @@ namespace EngineScene{
 
     void Scene::initBaseScene(EngineResource::ResourceManager &resourceManager){
         cameraManager.checkIfCamerasEmpty();
-            auto floor = std::make_unique<MeshObject>(glm::vec3( 0, 0, 0), "models/Crate1.obj");
+        auto floor = std::make_unique<MeshObject>(glm::vec3( 0, 0, 0), "models/Crate1.obj");
 
-            SceneNode* floorNode = new SceneNode();
-            floorNode->object = floor.get();
-            floorNode->transform.position = floorNode->object->modelMatrix[3];
-            floorNode->transform.scale = glm::vec3(10.0f);
-            floorNode->transform.scale.y = 0.5f;
-            floor->node = floorNode;
-            floor->material->setBaseColor(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
+        SceneNode* floorNode = new SceneNode();
+        floorNode->object = floor.get();
+        floorNode->transform.position = floorNode->object->modelMatrix[3];
+        floorNode->transform.scale = glm::vec3(10.0f);
+        floorNode->transform.scale.y = 0.5f;
+        floor->node = floorNode;
+        floor->material->setBaseColor(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
+        floor->name = "Base_Scene_Floor";
 
-            objects.push_back(std::move(floor));
-            root.addChild(floorNode);   
+        objects.push_back(std::move(floor));
+        root.addChild(floorNode);   
 
-            auto cube = std::make_unique<MeshObject>(glm::vec3( 0, 2, 0), "models/Crate1.obj");
+        auto cube = std::make_unique<MeshObject>(glm::vec3( 0, 2, 0), "models/Crate1.obj");
 
-            SceneNode* cubeNode = new SceneNode();
-            cubeNode->object = cube.get();
-            cubeNode->transform.position = cubeNode->object->modelMatrix[3];
-            cubeNode->transform.scale = glm::vec3(2.0f);
-            cube->node = cubeNode;
-            cube->material->setBaseColor(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
+        SceneNode* cubeNode = new SceneNode();
+        cubeNode->object = cube.get();
+        cubeNode->transform.position = cubeNode->object->modelMatrix[3];
+        cubeNode->transform.scale = glm::vec3(2.0f);
+        cube->node = cubeNode;
+        cube->material->setBaseColor(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
+        cube->name = "Base_Scene_Cube";
 
-            objects.push_back(std::move(cube));
-            root.addChild(cubeNode);   
+        objects.push_back(std::move(cube));
+        root.addChild(cubeNode);   
 
-            root.update();
+        root.update();
     }
 
     void Scene::cleanupObjects(){

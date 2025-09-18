@@ -141,7 +141,7 @@ namespace EngineUI{
             std::vector<std::string> recourseTextures;
             std::vector<std::string> recourseModels;
 
-            //Get the textures from recource manager and put them in the vectors above
+            //Get the textures & models from recource manager and put them in the vectors above
             for(auto &recourse : recourseManager->getCache()){
                
                 if(recourse.first.find("textures/") != std::string::npos){
@@ -153,7 +153,7 @@ namespace EngineUI{
                 }
             }
 
-            //Put the textures/models in a tree node for the UI
+            //Put the textures & models in a tree node for the UI
             if(ImGui::TreeNode("Textures")){
                 for(int i = 0; i < recourseTextures.size(); i++){
                     ImGui::Text("%s", recourseTextures[i].c_str());

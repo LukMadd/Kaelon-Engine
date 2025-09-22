@@ -40,6 +40,9 @@ namespace EngineCamera{
             float pitch = 0.0f;
             float sensitivity = 0.1f;
 
+            float lastYawUpdate = 0.0f; //To allow for yaw & pitch editing while the camera is locked
+            float lastPitchUpdate = 0.0f;
+
             void moveUp(float velocity);
             void moveDown(float velocity);
             void moveForward(float velocity);

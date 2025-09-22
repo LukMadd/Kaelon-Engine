@@ -65,6 +65,9 @@ namespace EngineCamera{
 
         input.xOffset = 0.0;
         input.yOffset = 0.0;
+
+        lastYawUpdate = yaw;
+        lastPitchUpdate = pitch;
     }
 
     void Camera::updateCameraPosition(float deltaTime, ActionManager &actionManager, bool is_scene_immersed){
@@ -89,7 +92,7 @@ namespace EngineCamera{
             moveRight(velocity);
         }
 
-        if(is_scene_immersed){
+        if(is_scene_immersed || yaw != lastYawUpdate  || pitch != lastPitchUpdate){
             updateYawAndPitch();
         }
     }

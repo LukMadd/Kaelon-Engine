@@ -1,5 +1,6 @@
 #include "Engine.hpp"
 #include "Input.hpp"
+#include "Renderer.hpp"
 #include "RendererGlobals.hpp"
 #include "ObjectRegistry.hpp"
 #include "ObjectGlobals.hpp"
@@ -20,8 +21,7 @@ namespace Engine{
             scene->update();
         }
 
-        size_t totalObjects = 0;
-        for (auto &scene : sceneManager.getScenes()) {
+        for(auto &scene : sceneManager.getScenes()){
             totalObjects += scene->objects.size();
         }
         totalObjects = std::max(totalObjects, size_t(1));
@@ -83,6 +83,12 @@ namespace Engine{
             lastTime = currentTime;
 
             inputHandler.update(window, actionManager, sceneManager);
+
+            if(sceneManager.getCurrentScene()->areObjectsInitialized == false){
+                totalObjects+=sceneManager.getCurrentScene()->objects.size();
+                renderer.recreateObjectResources(totalObjects, sceneManager.getCurrentScene()->objects, resourceManager);
+                renderer.initObjects(*sceneManager.getCurrentScene(), resourceManager);
+            }
 
             sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->updateCameraPosition(deltaTime, actionManager, inputHandler.isSceneImmersed());
 

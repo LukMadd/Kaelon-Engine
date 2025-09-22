@@ -29,6 +29,8 @@ namespace EngineRenderer {
 
             void cleanupPipelines();
 
+            std::vector<VkPipeline*>& getPipelines() {return pipelines;}
+
         private:
             VkShaderModule vertShaderModule;
             VkShaderModule fragShaderModule;

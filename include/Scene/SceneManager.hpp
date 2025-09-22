@@ -12,7 +12,7 @@ namespace EngineScene{
 
             void init(EngineResource::ResourceManager &resourceManager);
 
-            void addScene(const std::string &name, int id);
+            void addDefaultScene();
             void changeScenes(int indexChange);
 
             std::vector<Scene*> getScenes();
@@ -28,6 +28,8 @@ namespace EngineScene{
 
         private:
             EngineResource::ResourceManager *resourceManager;
+
+            
 
             std::unordered_map<int, std::unique_ptr<Scene>> scenes;
 

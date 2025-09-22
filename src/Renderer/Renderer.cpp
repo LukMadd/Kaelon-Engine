@@ -45,6 +45,60 @@ namespace EngineRenderer{
         createSyncObjects();
     }
 
+    void Renderer::recreateObjectResources(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects, EngineResource::ResourceManager &resourceManager){
+        vkDeviceWaitIdle(device);
+        for(auto framebuffersr : appSwapChain.swapChainFramebuffers){
+            vkDestroyFramebuffer(device, framebuffersr, nullptr);
+        }
+        
+        for(auto& pipeline : appPipeline.getPipelines()){
+            vkDestroyPipeline(device, *pipeline, nullptr);
+        }      
+        appPipeline.getPipelines().clear();
+        
+        for(auto& layout : descriptorLayouts) vkDestroyDescriptorSetLayout(device, layout, nullptr);
+        descriptorLayouts.clear();
+
+        for(int i = 0; i < uniformBuffers.size(); i++){
+            vkDestroyBuffer(device, uniformBuffers[i], nullptr);
+        }
+        
+        for(int i = 0; i < uniformBuffersMemory.size(); i++){
+            vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+        }
+        
+        for(int i = 0; i < objectUniformBuffers.size(); i++){
+            vkDestroyBuffer(device, objectUniformBuffers[i], nullptr);
+        }
+        
+        for(int i = 0; i < objectUniformBuffersMemory.size(); i++){
+            vkFreeMemory(device, objectUniformBuffersMemory[i], nullptr);
+        }
+
+        for(auto &layout : descriptorLayouts){
+            vkDestroyDescriptorSetLayout(device, layout, nullptr);
+        }
+
+        vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+
+        vkDestroyPipelineLayout(device, appPipeline.pipelineLayout, nullptr);
+
+        for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
+            vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(device, inFlightFences[i], nullptr);
+        }
+
+        multiSampler.cleanup();
+        depthBuffer.cleanup();
+
+        for(size_t i = 0; i < renderFinishedSemaphores.size(); i++){
+            vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
+        }
+
+        initObjectResources(objectCount, objects, resourceManager);
+    }
+
+
     void Renderer::initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager){
         for(auto &obj : scene.objects){
             obj->initVulkanResources(resourceManager);
@@ -66,7 +120,7 @@ namespace EngineRenderer{
 
             uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, objectUniformBuffers, layout, descriptorPool, obj->descriptorSets, obj->material->getTextures());
         }
-        scene.isInitialized = true;
+        scene.areObjectsInitialized = true;
     }
 
     void Renderer::createSyncObjects(){
@@ -174,7 +228,7 @@ namespace EngineRenderer{
             vkDestroyFence(device, inFlightFences[i], nullptr);
         }
 
-        for (size_t i = 0; i < renderFinishedSemaphores.size(); i++) {
+        for(size_t i = 0; i < renderFinishedSemaphores.size(); i++){
             vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
         }
 

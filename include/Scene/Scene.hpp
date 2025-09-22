@@ -18,7 +18,7 @@ namespace EngineScene{
             std::vector<std::unique_ptr<Object>> objects; 
             SceneNode root;
 
-            bool isInitialized = false;;
+            bool areObjectsInitialized = false;
 
             static std::unique_ptr<Scene> createScene(int id, const std::string &name);
             void initBaseScene(EngineResource::ResourceManager &resourceManager);

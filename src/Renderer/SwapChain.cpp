@@ -192,7 +192,7 @@ namespace EngineRenderer {
     }
 
     void SwapChain::cleanupSwapChain(DepthBuffer &depthBuffer, MultiSampler &multiSampler){
-        for (auto framebuffersr : swapChainFramebuffers){
+        for(auto framebuffersr : swapChainFramebuffers){
             vkDestroyFramebuffer(device, framebuffersr, nullptr);
         }
 

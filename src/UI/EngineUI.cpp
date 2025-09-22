@@ -5,13 +5,26 @@
 #include "imgui.h"
 
 namespace EngineUI{
-    void EngineUI::drawMainLayout(){
-        if(ImGui::BeginMenuBar()){
-            ImGui::Checkbox("Scene Hierarchy", &m_showSceneHierarchyWindow);
-            ImGui::Checkbox("Object Inspector", &m_showObjectInspector);
-            ImGui::Checkbox("Camera", &m_showCameraWindow);
-            ImGui::Checkbox("Recources", &m_showResourceWindow);
-            ImGui::Checkbox("Render Stats", &m_showRenderStats);
+    void EngineUI::drawMainLayout(EngineScene::SceneManager *sceneManager){
+            if(ImGui::BeginMenuBar()){
+            if(ImGui::BeginMenu("Scene")){
+                ImGui::Checkbox("Scene Hierarchy", &m_showSceneHierarchyWindow);
+                ImGui::Checkbox("Object Inspector", &m_showObjectInspector);
+                ImGui::Checkbox("Camera Inspector", &m_showCameraWindow);
+                ImGui::EndMenu();
+            }
+            if(ImGui::BeginMenu("Engine")){
+                ImGui::Checkbox("Resources", &m_showResourceWindow);
+                ImGui::Checkbox("Render Stats", &m_showRenderStats);
+                ImGui::EndMenu();
+            }
+            if(ImGui::BeginMenu("Actions")){
+                if(ImGui::Button("Add Scene")){
+                    sceneManager->addDefaultScene();
+                }
+                ImGui::EndMenu();
+            }
+
             ImGui::EndMenuBar();
         }
     }
@@ -103,7 +116,7 @@ namespace EngineUI{
         }
     }
 
-    void EngineUI::drawCamera(){
+    void EngineUI::drawCameraInspector(){
         if(m_showCameraWindow && selectedCamera){
             ImGui::Begin("Camera Inspector");
 

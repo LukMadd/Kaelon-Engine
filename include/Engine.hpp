@@ -33,5 +33,6 @@ namespace Engine{
             VkDescriptorPool imguiPool;
 
             uint32_t currentSceneIndex = 0;
+            size_t totalObjects;
     };
 }

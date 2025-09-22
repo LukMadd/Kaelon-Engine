@@ -131,10 +131,10 @@ namespace EngineUI{
         ImGuiID dockspaceID = ImGui::GetID("Dock_Space");
         ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags);
         
-        engineUI.drawMainLayout();
+        engineUI.drawMainLayout(uiInfo.sceneManager);
         engineUI.drawSceneHierarchy(uiInfo.sceneManager->getCurrentScene());
         engineUI.drawObjectInspector();
-        engineUI.drawCamera();
+        engineUI.drawCameraInspector();
         engineUI.drawRecourses(uiInfo.recourseManager);
         engineUI.drawRenderStats(uiInfo.sceneManager->getCurrentScene() ,fps);
 

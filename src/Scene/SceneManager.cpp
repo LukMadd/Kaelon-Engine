@@ -18,11 +18,12 @@ namespace EngineScene{
     SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), resourceManager(nullptr){};
 
     //ALMOST THERE, I can almost get rid of this horrible stuff
-    void SceneManager::addScene(const std::string &name, int id){
-        auto scene = Scene::createScene(id, name);
+    void SceneManager::addDefaultScene(){
+        auto scene = Scene::createScene(currentID, "Default_Scene");
         scene->initBaseScene(*resourceManager);
-        sceneOrder.push_back(id); //Pushes the scenes ID into sceneOrder to be used for current scene tracking
-        scenes[id] = std::move(scene);
+        sceneOrder.push_back(currentID); //Pushes the scenes ID into sceneOrder to be used for current scene tracking
+        scene->update();
+        scenes[currentID] = std::move(scene);
 
         currentID++;
     }
@@ -33,10 +34,6 @@ namespace EngineScene{
 
         int newSceneID = sceneOrder[newIndex];
         auto &scenePtr = scenes.at(newSceneID);
-
-        if(!scenePtr->isInitialized){
-            scenePtr->initBaseScene(*resourceManager);
-        }
 
         currentSceneIndex = newIndex;
     }
@@ -52,7 +49,7 @@ namespace EngineScene{
         std::sort(files.begin(), files.end());     
         
         if(files.empty()){
-            addScene("Base Scene", currentID);
+            addDefaultScene();
         } else{
             for(auto &file : files){
                 deserializeScene(file.string());

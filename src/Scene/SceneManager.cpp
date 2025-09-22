@@ -17,7 +17,6 @@ using namespace nlohmann;
 namespace EngineScene{
     SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), resourceManager(nullptr){};
 
-    //ALMOST THERE, I can almost get rid of this horrible stuff
     void SceneManager::addDefaultScene(){
         auto scene = Scene::createScene(currentID, "Default_Scene");
         scene->initBaseScene(*resourceManager);

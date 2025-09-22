@@ -28,12 +28,17 @@ namespace EngineInput{
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             Input::get().resetMouse();
         }
-        if(actionManager.isActionActive(Action::DEVELOPER_CHANGE_SCENE_PLUS)){
+        bool is_scene_plus_active = actionManager.isActionActive(Action::DEVELOPER_CHANGE_SCENE_PLUS);
+        if (is_scene_plus_active && !was_scene_plus_active) {
             sceneManager.changeScenes(1);
-        } 
-        if(actionManager.isActionActive(Action::DEVELOPER_CHANGE_SCENE_MINUS)){
+        }
+        was_scene_plus_active = is_scene_plus_active;
+
+        bool is_scene_minus_active = actionManager.isActionActive(Action::DEVELOPER_CHANGE_SCENE_MINUS);
+        if (is_scene_minus_active && !was_scene_minus_active) {
             sceneManager.changeScenes(-1);
         }
+        was_scene_minus_active = is_scene_minus_active;
 
         //Logic prevents multiple switching in one press(Disables holding down the key)
         bool is_immersed_action_active = actionManager.isActionActive(Action::DEVELOPER_SCENE_IMMERSED);

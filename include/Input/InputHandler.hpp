@@ -19,6 +19,8 @@ namespace EngineInput{
         private:
             bool is_scene_immersed = true;
             bool was_immersed_action_active = false; //Used to help with preventing multiple scene immersion flips in one frame
+            bool was_scene_plus_active = false;
+            bool was_scene_minus_active = false; //Same thing with these two as with scene immersion
     };
 }
 

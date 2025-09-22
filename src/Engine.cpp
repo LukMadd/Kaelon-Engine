@@ -86,7 +86,6 @@ namespace Engine{
 
             if(sceneManager.getCurrentScene()->areObjectsInitialized == false){
                 totalObjects+=sceneManager.getCurrentScene()->objects.size();
-                renderer.recreateObjectResources(totalObjects, sceneManager.getCurrentScene()->objects, resourceManager);
                 renderer.initObjects(*sceneManager.getCurrentScene(), resourceManager);
             }
 

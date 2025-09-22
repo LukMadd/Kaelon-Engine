@@ -29,8 +29,6 @@ namespace EngineScene{
         private:
             EngineResource::ResourceManager *resourceManager;
 
-            
-
             std::unordered_map<int, std::unique_ptr<Scene>> scenes;
 
             std::vector<int> sceneOrder;

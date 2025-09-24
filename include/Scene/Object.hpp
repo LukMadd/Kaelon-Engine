@@ -27,6 +27,8 @@ namespace EngineScene{
             std::string name;
             
             int uniformIndex = 0;
+
+            int objectIndex = 0;
             
             bool selected = false; 
             SceneNode* node = nullptr;

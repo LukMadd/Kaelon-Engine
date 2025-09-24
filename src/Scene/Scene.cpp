@@ -70,7 +70,27 @@ namespace EngineScene{
         root.update();
     }
 
+    //Potentially dangerous as if an object is erased from the main object vector but is in the newObjects vector it can cause problems
+    void Scene::removeObject(Object *object){
+        auto newIt = std::find(newObjects.begin(), newObjects.end(), object);
+        if(newIt != newObjects.end()){
+            newObjects.erase(newIt);
+        }
 
+        auto it = std::find_if(objects.begin(), objects.end(), [&](const std::unique_ptr<Object> &obj){
+            return obj.get() == object;
+        });
+        if(it != objects.end()){
+            objects.erase(it);
+        }
+
+        auto nodeIt = std::find(object->node->parent->children.begin(), object->node->parent->children.end(), object->node);
+        if(nodeIt != object->node->parent->children.end()){ //Don't think this is necessary but oh well
+            object->node->parent->children.erase(nodeIt);
+        }
+
+        object->cleanup(device);
+    }
 
     void Scene::cleanupObjects(){
         for(auto& obj : objects){

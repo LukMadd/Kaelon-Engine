@@ -13,8 +13,8 @@ namespace EngineScene{
 
             EngineCamera::CameraManager cameraManager;
 
-            std::string name;
             int id;
+            std::string name;
             std::vector<std::unique_ptr<Object>> objects; 
             std::vector<Object*> newObjects;
             SceneNode root;
@@ -24,7 +24,11 @@ namespace EngineScene{
             static std::unique_ptr<Scene> createScene(int id, const std::string &name);
             void initBaseScene(EngineResource::ResourceManager &resourceManager);
 
+            void pushObject(std::unique_ptr<Object> object);
+
             void addDefaultObject();
+
+            void removeObject(Object *object);
 
             int getId() const {return id;}
             std::string getName() const {return name;}

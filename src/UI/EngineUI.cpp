@@ -87,7 +87,7 @@ namespace EngineUI{
         }
     }
 
-    void EngineUI::drawObjectInspector(){
+    void EngineUI::drawObjectInspector(EngineScene::Scene *scene){
         if(m_showObjectInspector && selectedObject){
             ImGui::Begin("Object Inspector");
 
@@ -113,6 +113,11 @@ namespace EngineUI{
                 ImGui::InputFloat("Y: ", &selectedObject->node->transform.scale.y);
                 ImGui::InputFloat("Z: ", &selectedObject->node->transform.scale.z);
                 ImGui::TreePop();
+            }
+
+            if(ImGui::Button("Delete")){
+                scene->removeObject(selectedObject);
+                selectedObject = nullptr;
             }
 
             ImGui::End();

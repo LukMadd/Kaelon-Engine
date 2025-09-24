@@ -10,7 +10,7 @@ namespace EngineUI{
 
             void drawSceneHierarchy(EngineScene::Scene *scene);
 
-            void drawObjectInspector();
+            void drawObjectInspector(EngineScene::Scene *scene);
 
             void drawCameraInspector();
 

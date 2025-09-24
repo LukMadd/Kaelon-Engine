@@ -133,7 +133,7 @@ namespace EngineUI{
         
         engineUI.drawMainLayout(uiInfo.sceneManager);
         engineUI.drawSceneHierarchy(uiInfo.sceneManager->getCurrentScene());
-        engineUI.drawObjectInspector();
+        engineUI.drawObjectInspector(uiInfo.sceneManager->getCurrentScene());
         engineUI.drawCameraInspector();
         engineUI.drawRecourses(uiInfo.recourseManager);
         engineUI.drawRenderStats(uiInfo.sceneManager->getCurrentScene() ,fps);

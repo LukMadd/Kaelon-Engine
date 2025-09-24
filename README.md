@@ -27,10 +27,11 @@
 
 ----------Current Commands----------
 1. WASD for movement
-2. Space, tab, and up & down arrows for quick up and down
+2. Space and tab for up and down
 3. F10 for full screen
+4. Esc for exiting fullscreen
+3. '~' for showing cursor
 4. Shift for hiding cursor
-5. Esc for showing cursor and exiting full screen
 6. "." to lock camera
 
 

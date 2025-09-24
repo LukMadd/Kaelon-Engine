@@ -71,8 +71,9 @@ namespace EngineRenderer {
                 bool framebuffersrResized = false;
 
                 void initVulkan();
-                void initObjectResources(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects, EngineResource::ResourceManager &resourceManager);
-                void initObjects(Scene &scene, EngineResource::ResourceManager &resourceManage);
+                void initObjectResources(uint32_t objectCount, EngineResource::ResourceManager &resourceManager);
+                void initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager);
+                void createObjectDescriptorSets(Object *object);
                 void initSceneDescriptors(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
                 void cleanup(Scene *scene);
                 void drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects, float fps);

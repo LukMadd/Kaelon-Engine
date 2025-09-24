@@ -9,6 +9,8 @@
 #include "MultiSampling.hpp"
 #include "Queue.hpp"
 
+constexpr uint32_t MAX_OBJECTS = 1750;
+
 namespace EngineRenderer{
     inline VkQueue graphicsQueue;
     inline VkQueue presentQueue;

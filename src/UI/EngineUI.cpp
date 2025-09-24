@@ -22,6 +22,9 @@ namespace EngineUI{
                 if(ImGui::Button("Add Scene")){
                     sceneManager->addDefaultScene();
                 }
+                if(ImGui::Button("Add Object")){
+                    sceneManager->getCurrentScene()->addDefaultObject();
+                }
                 ImGui::EndMenu();
             }
 

@@ -37,7 +37,7 @@ namespace Engine{
 
         renderer.setObjectUboStride(stride);
 
-        renderer.initObjectResources(totalObjects, sceneManager.getCurrentScene()->objects, resourceManager);
+        renderer.initObjectResources(totalObjects,resourceManager);
     
         for(auto &scene : sceneManager.getScenes()){
             renderer.initObjects(*scene, resourceManager);
@@ -96,6 +96,15 @@ namespace Engine{
             float fps = fpsManager.updateFPS(deltaTime);
 
             uiManager.renderUI(fps);
+
+            if(sceneManager.getCurrentScene()->newObjects.empty() == false){
+                while(sceneManager.getCurrentScene()->newObjects.empty() == false){
+                    auto object = sceneManager.getCurrentScene()->newObjects.back();
+                    object->initVulkanResources(resourceManager);
+                    renderer.createObjectDescriptorSets(object);
+                    sceneManager.getCurrentScene()->newObjects.pop_back();
+                }    
+            }
 
             EngineRenderer::UniformBufferObject ubo{};
             ubo.view = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getViewMatrix();

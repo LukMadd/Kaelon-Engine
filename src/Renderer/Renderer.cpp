@@ -30,7 +30,7 @@ namespace EngineRenderer{
         appCommand.createCommandPool(surface, queueFamilyIndices);
     }
     
-    void Renderer::initObjectResources(uint32_t objectCount, std::vector<std::unique_ptr<EngineScene::Object>>& objects, EngineResource::ResourceManager &resourceManager){
+    void Renderer::initObjectResources(uint32_t objectCount, EngineResource::ResourceManager &resourceManager){
         defaultResources.init(resourceManager);
         auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
         descriptorLayouts.push_back(layout);
@@ -39,32 +39,36 @@ namespace EngineRenderer{
         depthBuffer.createDepthResources(appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
         appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView, multiSampler.colorImageView);
         uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, sizeof(UniformBufferObject), uniformBuffers, uniformBuffersMemory, uniformBuffersMapped);
-        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, objectUboStride * objectCount * MAX_FRAMES_IN_FLIGHT, objectUniformBuffers, objectUniformBuffersMemory, objectUniformBuffersMapped);
-        uniformBufferCommand.createDescriptorPool(objectCount, MAX_FRAMES_IN_FLIGHT, descriptorPool);
+        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, objectUboStride * MAX_OBJECTS * MAX_FRAMES_IN_FLIGHT, objectUniformBuffers, objectUniformBuffersMemory, objectUniformBuffersMapped);
+        uniformBufferCommand.createDescriptorPool(MAX_FRAMES_IN_FLIGHT, descriptorPool);
         appCommand.createCommandBuffers(commandbuffers, MAX_FRAMES_IN_FLIGHT);
         createSyncObjects();
+    }
+
+    void Renderer::createObjectDescriptorSets(Object *object){
+        auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
+        descriptorLayouts.push_back(layout);
+        std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
+        object->descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
+        
+        VkDescriptorSetAllocateInfo allocInfo{};
+        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        allocInfo.descriptorPool = descriptorPool;
+        allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+        allocInfo.pSetLayouts = layouts.data();
+
+        if (vkAllocateDescriptorSets(device, &allocInfo, object->descriptorSets.data()) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to allocate descriptor sets for object");
+        }
+
+        uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, objectUniformBuffers, layout, descriptorPool, object->descriptorSets, object->material->getTextures());
     }
 
     void Renderer::initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager){
         for(auto &obj : scene.objects){
             obj->initVulkanResources(resourceManager);
 
-            auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
-            descriptorLayouts.push_back(layout);
-            std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
-            obj->descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
-            
-            VkDescriptorSetAllocateInfo allocInfo{};
-            allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-            allocInfo.descriptorPool = descriptorPool;
-            allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
-            allocInfo.pSetLayouts = layouts.data();
-
-            if (vkAllocateDescriptorSets(device, &allocInfo, obj->descriptorSets.data()) != VK_SUCCESS) {
-                throw std::runtime_error("Failed to allocate descriptor sets for object");
-            }
-
-            uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, objectUniformBuffers, layout, descriptorPool, obj->descriptorSets, obj->material->getTextures());
+            createObjectDescriptorSets(obj.get());
         }
         scene.areObjectsInitialized = true;
     }

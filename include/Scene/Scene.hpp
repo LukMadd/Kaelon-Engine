@@ -16,12 +16,15 @@ namespace EngineScene{
             std::string name;
             int id;
             std::vector<std::unique_ptr<Object>> objects; 
+            std::vector<Object*> newObjects;
             SceneNode root;
 
             bool areObjectsInitialized = false;
 
             static std::unique_ptr<Scene> createScene(int id, const std::string &name);
             void initBaseScene(EngineResource::ResourceManager &resourceManager);
+
+            void addDefaultObject();
 
             int getId() const {return id;}
             std::string getName() const {return name;}

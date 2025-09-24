@@ -35,7 +35,7 @@ namespace EngineRenderer{
         DummyRecources dummyResources;
         VkDescriptorSetLayout createDescriptorSetLayout(VkDescriptorSetLayout &descriptorSetLayout);
         void createUniformBuffers(int MAX_FRAMES_IN_FLIGHT, VkDeviceSize bufferSize, std::vector<VkBuffer> &uniformBuffers, std::vector<VkDeviceMemory> &uniformBuffersMemory, std::vector<void*> &uniformBuffersMapped);
-        void createDescriptorPool(uint32_t objectCount, int MAX_FRAMES_IN_FLIGHT, VkDescriptorPool &descriptorPool);
+        void createDescriptorPool(int MAX_FRAMES_IN_FLIGHT, VkDescriptorPool &descriptorPool);
         void createDescriptorSets(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, std::vector<VkBuffer> &objectUniformBuffers, VkDescriptorSetLayout descriptorSetLayout, VkDescriptorPool &descriptorPool, std::vector<VkDescriptorSet> &descriptorSets, const std::vector<std::shared_ptr<Texture>> &textures);
         void updateUniformBuffers(UniformBufferObject ubo, float fov, uint32_t currentImage, VkExtent2D swapChainExtent, std::vector<void*> &uniformBuffersMapped);
         void updateObjectUniformBuffers(ObjectUBO objectUbo, std::vector<void*> &uniformBuffersMapped, uint32_t currentImage);

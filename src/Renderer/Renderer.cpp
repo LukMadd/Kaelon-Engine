@@ -3,9 +3,8 @@
 #include "RecourseManager.hpp"
 #include "ObjectGlobals.hpp"
 #include "RendererGlobals.hpp"
+#include "ValidationLayers.hpp"
 #include <cstdint>
-
-const int MAX_FRAMES_IN_FLIGHT = 2;
 
 namespace EngineRenderer{
     Renderer::Renderer() : appWindow(){}
@@ -28,49 +27,69 @@ namespace EngineRenderer{
         renderFinishedSemaphores.resize(appSwapChain.swapChainImages.size());        
         appPipeline.createRenderPass(appSwapChain.swapChainImageFormat);
         appCommand.createCommandPool(surface, queueFamilyIndices);
+        imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+        renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+        imagesInFlight.resize(appSwapChain.swapChainImages.size(), VK_NULL_HANDLE);
+        initQueryPool();
+    }
+
+    void Renderer::initQueryPool(){
+        VkQueryPoolCreateInfo queryPoolInfo{};
+        queryPoolInfo.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+        queryPoolInfo.queryType = VK_QUERY_TYPE_TIMESTAMP;
+        queryPoolInfo.queryCount = 2; 
+        VkResult result = vkCreateQueryPool(device, &queryPoolInfo, nullptr, &queryPool);
+        if(result != VK_SUCCESS){
+            throw std::runtime_error("Failed to create query pool!");
+        }
+        setObjectName(device,(uint64_t)queryPool, VK_OBJECT_TYPE_QUERY_POOL, "Main_Query_Pool");
+    }
+
+    float Renderer::getGpuFPS(){
+        vkQueueWaitIdle(graphicsQueue);
+
+        VkPhysicalDeviceProperties properties;
+        vkGetPhysicalDeviceProperties(physicalDevice, &properties);
+
+        auto timestampPeriod = properties.limits.timestampPeriod;
+
+        uint64_t timestamps[2];
+        vkGetQueryPoolResults(device, queryPool, 0, 2, sizeof(timestamps), timestamps, sizeof(uint64_t),
+                       VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT);
+        
+        float frameTimeNS = (timestamps[1] - timestamps[0]) * timestampPeriod;
+        float fps = 1e9 / frameTimeNS;
+
+        return fps;
     }
     
     void Renderer::initObjectResources(uint32_t objectCount, EngineResource::ResourceManager &resourceManager){
         defaultResources.init(resourceManager);
-        auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
-        descriptorLayouts.push_back(layout);
+        uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
         appPipeline.createPipelines(appSwapChain.swapChainExtent, descriptorSetLayout);
         multiSampler.createColorResources(appSwapChain.swapChainImageFormat, appSwapChain.swapChainExtent);
         depthBuffer.createDepthResources(appSwapChain.swapChainExtent, depthBuffer.depthImage, depthBuffer.depthImageMemory, depthBuffer.depthImageView);
         appSwapChain.createFramebuffers(appPipeline.renderPass, depthBuffer.depthImageView, multiSampler.colorImageView);
         uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, sizeof(UniformBufferObject), uniformBuffers, uniformBuffersMemory, uniformBuffersMapped);
-        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, objectUboStride * MAX_OBJECTS * MAX_FRAMES_IN_FLIGHT, objectUniformBuffers, objectUniformBuffersMemory, objectUniformBuffersMapped);
+        uniformBufferCommand.createUniformBuffers(MAX_FRAMES_IN_FLIGHT, objectUboStride * MAX_OBJECTS, objectUniformBuffers, objectUniformBuffersMemory, objectUniformBuffersMapped);
         uniformBufferCommand.createDescriptorPool(MAX_FRAMES_IN_FLIGHT, descriptorPool);
         appCommand.createCommandBuffers(commandbuffers, MAX_FRAMES_IN_FLIGHT);
         createSyncObjects();
     }
 
-    void Renderer::createObjectDescriptorSets(Object *object){
-        auto layout = uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
-        descriptorLayouts.push_back(layout);
-        std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
-        object->descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
-        
-        VkDescriptorSetAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorPool = descriptorPool;
-        allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
-        allocInfo.pSetLayouts = layouts.data();
-
-        if(vkAllocateDescriptorSets(device, &allocInfo, object->descriptorSets.data()) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to allocate descriptor sets for object");
-        }
-
-        uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, objectUniformBuffers, layout, descriptorPool, object->descriptorSets, object->material->getTextures());
-    }
-
     void Renderer::initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager){
         for(auto &obj : scene.objects){
             obj->initVulkanResources(resourceManager);
-
-            createObjectDescriptorSets(obj.get());
         }
         scene.areObjectsInitialized = true;
+    }
+
+    void Renderer::createSceneDescriptorSets(Scene *scene){
+        if(!descriptorSetLayout){
+            uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
+        }
+        uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, objectUniformBuffers, descriptorSetLayout, descriptorPool, scene->descriptorSets, scene->getSceneTextures());
+        scene->areDescriptorSetsInitialized = true;
     }
 
     void Renderer::createSyncObjects(){
@@ -98,7 +117,7 @@ namespace EngineRenderer{
         }
     }
     
-    void Renderer::drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects, float fps){
+    void Renderer::drawFrame(Scene* scene){
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex;
@@ -112,14 +131,19 @@ namespace EngineRenderer{
             throw std::runtime_error("Failed to acquire swap chain image!");
         }
 
+        if(imagesInFlight[imageIndex] != VK_NULL_HANDLE){
+            vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
+        }
+        imagesInFlight[imageIndex] = inFlightFences[currentFrame];
+
         vkResetFences(device, 1, &inFlightFences[currentFrame]);
 
         vkResetCommandBuffer(commandbuffers[currentFrame], 0);
 
         if(!wireFrameModeEnabled){
-            appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineFill, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, objectUboStride);
+            appCommand.recordCommandBuffers(scene, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineFill, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, queryPool, objectUboStride);
         } else{
-            appCommand.recordCommandBuffers(objects, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineWireFrame, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, objectUboStride);
+            appCommand.recordCommandBuffers(scene, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineWireFrame, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, queryPool,objectUboStride);
         }
 
         VkSubmitInfo submitInfo{};
@@ -134,7 +158,7 @@ namespace EngineRenderer{
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &commandbuffers[currentFrame];
 
-        VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[imageIndex]};
+        VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
@@ -186,23 +210,6 @@ namespace EngineRenderer{
 
         appPipeline.cleanupPipelines();
 
-        for (auto &obj : scene->objects) {
-            for (size_t frame = 0; frame < MAX_FRAMES_IN_FLIGHT; ++frame) {
-                if (frame < obj->objectUniformMapped.size() && obj->objectUniformMapped[frame]) {
-                    vkUnmapMemory(device, obj->objectUniformMemory[frame]);
-                    obj->objectUniformMapped[frame] = nullptr;
-                }
-                if (frame < obj->objectUniformBuffer.size() && obj->objectUniformBuffer[frame] != VK_NULL_HANDLE) {
-                    vkDestroyBuffer(device, obj->objectUniformBuffer[frame], nullptr);
-                    obj->objectUniformBuffer[frame] = VK_NULL_HANDLE;
-                }
-                if (frame < obj->objectUniformMemory.size() && obj->objectUniformMemory[frame] != VK_NULL_HANDLE) {
-                    vkFreeMemory(device, obj->objectUniformMemory[frame], nullptr);
-                    obj->objectUniformMemory[frame] = VK_NULL_HANDLE;
-                }
-            }
-        }
-
         vkDestroyDescriptorPool(device, descriptorPool, nullptr);
 
         for(int i = 0; i < uniformBuffers.size(); i++){
@@ -218,12 +225,12 @@ namespace EngineRenderer{
             vkFreeMemory(device, objectUniformBuffersMemory[i], nullptr);
         }
 
-        for(auto &layout : descriptorLayouts){
-            vkDestroyDescriptorSetLayout(device, layout, nullptr);
-        }
+        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
         uniformBufferCommand.cleanup();
-       
+
+        vkDestroyQueryPool(device, queryPool, nullptr);
+
         vkDestroyDevice(device, nullptr);
 
         vkDestroySurfaceKHR(instance, surface, nullptr);

@@ -43,7 +43,8 @@ namespace EngineRenderer{
         }
     }
 
-    void Command::recordCommandBuffers(std::vector<std::unique_ptr<Object>> &objects, 
+    void Command::recordCommandBuffers(
+        EngineScene::Scene *scene, 
         VkCommandBuffer commandBuffer, 
         uint32_t imageIndex, 
         VkRenderPass renderPass, 
@@ -53,6 +54,7 @@ namespace EngineRenderer{
         uint32_t currentFrame, 
         VkBuffer &vertexBuffer, 
         VkBuffer &indexBuffer, 
+        VkQueryPool &queryPool,
         VkDeviceSize objectUboStride){
 
         VkCommandBufferBeginInfo beginInfo{};
@@ -80,6 +82,9 @@ namespace EngineRenderer{
         renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
         renderPassInfo.pClearValues = clearValues.data();
 
+        vkCmdResetQueryPool(commandBuffer, queryPool, 0, 2);
+        vkCmdWriteTimestamp(commandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, queryPool, 0);
+
         vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
         if(graphicsPipeline == VK_NULL_HANDLE){
@@ -102,15 +107,18 @@ namespace EngineRenderer{
         scissor.extent = swapChain.swapChainExtent;
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-        for(auto& obj : objects){
-            uint32_t dynamicOffset = obj->uniformIndex * objectUboStride;
+        for(auto& obj : scene->objects){
+            if(!scene->descriptorSets[0]){
+                throw std::runtime_error("Invalid descriptor sets for binding!");
+            }
 
+            uint32_t dynamicOffset = obj->uniformIndex * objectUboStride;
             vkCmdBindDescriptorSets(commandBuffer,
                                     VK_PIPELINE_BIND_POINT_GRAPHICS,
                                     pipelineLayout,
-                                    0, 1, &obj->descriptorSets[currentFrame],
+                                    0, 1, &scene->descriptorSets[currentFrame],
                                     1, &dynamicOffset);
-
+           
             obj->draw(commandBuffer, pipelineLayout);
 
             drawCallCount++;
@@ -122,6 +130,8 @@ namespace EngineRenderer{
         }
         
         vkCmdEndRenderPass(commandBuffer);
+
+        vkCmdWriteTimestamp(commandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, queryPool, 1);
 
         VkResult endResult = vkEndCommandBuffer(commandBuffer);
         if(endResult != VK_SUCCESS){

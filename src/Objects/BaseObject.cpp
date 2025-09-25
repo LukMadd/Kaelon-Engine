@@ -22,6 +22,7 @@ namespace EngineObject{
             pendingTexturePaths.push_back(texturePath);
         }
         Shader shader = Shader();
+        if(!material) material = std::make_shared<Material>();
 
         name = jsonData["name"];
 
@@ -56,11 +57,6 @@ namespace EngineObject{
             texture.texturePath = texturePathRef;
             material->addTexture(std::make_shared<Texture>(texture));
         }
-        this->modelMatrix[3] = glm::vec4(position, 1.0f);
-        modelMatrix = glm::translate(glm::mat4(1.0f), position);
-
-        this->modelMatrix[3] = glm::vec4(position, 1.0f);
-
         modelMatrix = glm::translate(glm::mat4(1.0f), position);
     }
 
@@ -76,8 +72,10 @@ namespace EngineObject{
             for(const auto &texturePath : pendingTexturePaths) {
                 if(!texturePath.empty()){
                     auto texture = resourceManager.load<Texture>(texturePath);
-                    material->addTexture(texture);
-                    hasTexture = true;
+                    if(texture){
+                        material->addTexture(texture);
+                        hasTexture = true;
+                    }
                 } 
             }
         } else{

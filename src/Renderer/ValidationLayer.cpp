@@ -3,18 +3,18 @@
 #include <iostream>
 #include <vulkan/vulkan.hpp>
 
-    void setObjectName(VkDevice device, uint64_t objectHandle, VkObjectType objectType, const std::string& name){
-        VkDebugUtilsObjectNameInfoEXT nameInfo{};
-        nameInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;
-        nameInfo.objectType = objectType;
-        nameInfo.objectHandle = objectHandle;
-        nameInfo.pObjectName = name.c_str();
+void setObjectName(VkDevice device, uint64_t objectHandle, VkObjectType objectType, const std::string& name){
+    VkDebugUtilsObjectNameInfoEXT nameInfo{};
+    nameInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;
+    nameInfo.objectType = objectType;
+    nameInfo.objectHandle = objectHandle;
+    nameInfo.pObjectName = name.c_str();
 
-        auto func = (PFN_vkSetDebugUtilsObjectNameEXT) vkGetDeviceProcAddr(device, "vkSetDebugUtilsObjectNameEXT");
-        if(func != nullptr){
-            func(device, &nameInfo);
-        }
+    auto func = (PFN_vkSetDebugUtilsObjectNameEXT) vkGetDeviceProcAddr(device, "vkSetDebugUtilsObjectNameEXT");
+    if(func != nullptr){
+        func(device, &nameInfo);
     }
+}
 
 namespace EngineRenderer {
     bool ValidationLayers::CheckValidationSupport(){

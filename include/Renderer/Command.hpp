@@ -3,9 +3,9 @@
 
 
 #include <vulkan/vulkan.hpp>
+#include "Scene.hpp"
 #include "SwapChain.hpp"
 #include "Queue.hpp"
-#include "Object.hpp"
 
 using namespace EngineScene;
 
@@ -18,7 +18,8 @@ namespace EngineRenderer{
 
             void createCommandBuffers(std::vector<VkCommandBuffer> &commandBuffers, int MAX_FRAMES_IN_FLIGHT);
 
-            void recordCommandBuffers(std::vector<std::unique_ptr<Object>> &objects, 
+            void recordCommandBuffers(
+                EngineScene::Scene *scene, 
                 VkCommandBuffer commandBuffer, 
                 uint32_t imageIndex, 
                 VkRenderPass renderPass, 
@@ -28,6 +29,7 @@ namespace EngineRenderer{
                 uint32_t currentFrame, 
                 VkBuffer &vertexBuffer, 
                 VkBuffer &indexBuffer, 
+                VkQueryPool &queryPool,
                 VkDeviceSize objectUboStride);
     };
 }

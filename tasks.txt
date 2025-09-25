@@ -1,7 +1,11 @@
 Ongoing tasks:
-    - Add the ability to add objects to a scene
+    - Make both a GPU fps & frametime(profiling) + real time fps & framtime
 
+
+Future things:
+    - Switch to texture atlas for textures
 
 Completed Tasks:
     -Move serialization code to a separate folder
     -Add render stats
+    - Add the ability to add objects to a scene

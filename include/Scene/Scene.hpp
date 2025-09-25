@@ -17,9 +17,11 @@ namespace EngineScene{
             std::string name;
             std::vector<std::unique_ptr<Object>> objects; 
             std::vector<Object*> newObjects;
+            std::vector<VkDescriptorSet> descriptorSets;
             SceneNode root;
 
             bool areObjectsInitialized = false;
+            bool areDescriptorSetsInitialized = false;
 
             static std::unique_ptr<Scene> createScene(int id, const std::string &name);
             void initBaseScene(EngineResource::ResourceManager &resourceManager);
@@ -32,6 +34,8 @@ namespace EngineScene{
 
             int getId() const {return id;}
             std::string getName() const {return name;}
+
+            std::vector<std::shared_ptr<Texture>> getSceneTextures();
 
             void update();
 

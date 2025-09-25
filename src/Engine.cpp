@@ -43,6 +43,8 @@ namespace Engine{
             renderer.initObjects(*scene, resourceManager);
         }
 
+        renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
+
         window = renderer.window;
 
         EngineRenderer::DirectionalLight sun;
@@ -87,23 +89,31 @@ namespace Engine{
             if(sceneManager.getCurrentScene()->areObjectsInitialized == false){
                 totalObjects+=sceneManager.getCurrentScene()->objects.size();
                 renderer.initObjects(*sceneManager.getCurrentScene(), resourceManager);
+                renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
             }
 
             sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->updateCameraPosition(deltaTime, actionManager, inputHandler.isSceneImmersed());
 
             sceneManager.getCurrentScene()->update(); //Updates the current frame's children with it's matrix and so forth
 
-            float fps = fpsManager.updateFPS(deltaTime);
+            static float rawFps = 0.0f;
+            static float smoothFPS = 0.0f;
+            if(rawFps != 0.0f){
+                smoothFPS = fpsManager.smoothFPS(rawFps);
+            }
 
-            uiManager.renderUI(fps);
+            uiManager.renderUI(smoothFPS);
 
             if(sceneManager.getCurrentScene()->newObjects.empty() == false){
                 while(sceneManager.getCurrentScene()->newObjects.empty() == false){
                     auto object = sceneManager.getCurrentScene()->newObjects.back();
                     object->initVulkanResources(resourceManager);
-                    renderer.createObjectDescriptorSets(object);
                     sceneManager.getCurrentScene()->newObjects.pop_back();
                 }    
+            }
+
+            if(sceneManager.getCurrentScene()->areDescriptorSetsInitialized == false){
+                renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
             }
 
             EngineRenderer::UniformBufferObject ubo{};
@@ -117,21 +127,33 @@ namespace Engine{
             ubo.cameraPos = glm::vec4(sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->position, 0.0f); //Updates the camera position
             renderer.updateUniformBuffers(ubo, sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getFov()); //Sends the uniform buffer object down to the uniform buffer manager for it to be processed
             
+            auto* mappedBuffer = reinterpret_cast<ObjectUBO*>(renderer.getObjectUniformBuffersMapped()[renderer.getCurrentFrame()]);
+
             for(size_t i = 0; i < sceneManager.getCurrentScene()->objects.size(); i++){
                 auto &object = sceneManager.getCurrentScene()->objects[i];
 
                 ObjectUBO objectUbo{};
                 objectUbo.hasTexture = object->material->getTextures().empty() ? 0 : 1;
                 objectUbo.baseColor  = object->material->getBaseColor();
+                int index = 0;
+                if(!object->material->getTextures().empty()){
+                    auto sceneTextures = sceneManager.getCurrentScene()->getSceneTextures();
+                    auto it = std::find(sceneTextures.begin(), sceneTextures.end(), object->material->getTextures()[0]);
+                    if(it != sceneTextures.end()){
+                        index = static_cast<int>(std::distance(sceneTextures.begin(), it));
+                    } else{
+                        index = 0; //Fallback if texture was not found
+                    }
+                }
+                objectUbo.textureIndex = std::min(index, (int)MAX_TEXTURES - 1);
+                
+                memcpy((char*)renderer.getObjectUniformBuffersMapped()[renderer.getCurrentFrame()] + i * renderer.getObjectUboStride(), &objectUbo, sizeof(ObjectUBO));
 
-                memcpy((char*)renderer.getObjectUniformBuffersMapped()[renderer.getCurrentFrame()] + i * sizeof(ObjectUBO),
-                    &objectUbo,
-                    sizeof(ObjectUBO));
-
-                object->uniformIndex = i;
+                object->uniformIndex =  static_cast<uint32_t>(i);
             }
 
-            renderer.drawFrame(sceneManager.getCurrentScene()->objects, fps);
+            renderer.drawFrame(sceneManager.getCurrentScene());
+            rawFps = renderer.getGpuFPS();
         }
         vkDeviceWaitIdle(EngineRenderer::device);
     }

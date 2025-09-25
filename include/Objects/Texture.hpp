@@ -10,6 +10,8 @@ namespace EngineObject{
         VkDeviceMemory textureImageMemory;
         VkImageView textureImageView;
         VkSampler textureSampler;
+
+        bool isValid() {return textureImage && textureImageMemory && textureImageView && textureImageView && textureSampler;}
     };
 }
 

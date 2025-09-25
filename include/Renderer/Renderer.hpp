@@ -1,6 +1,7 @@
 #ifndef _RENDERER_HPP
 #define _RENDERER_HPP
 
+#include <cstdint>
 #include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
 #include "Window.hpp"
@@ -13,11 +14,14 @@
 #include "Object.hpp"
 #include "Scene.hpp"
 
+constexpr uint32_t MAX_FRAMES_IN_FLIGHT = 3;
+
 using namespace EngineScene;
 namespace EngineRenderer {
     class Renderer{
         private:
             void createSyncObjects();
+            void initQueryPool();
 
             Window appWindow;
             
@@ -33,6 +37,8 @@ namespace EngineRenderer {
 
             PipelineManager appPipeline;
 
+            VkQueryPool queryPool;
+
             Vertex vertexCommand;
             VertexBuffer vertexBufferCommand;
             VkBuffer vertexBuffer;
@@ -44,7 +50,6 @@ namespace EngineRenderer {
             UniformBuffer uniformBufferCommand;
             VkDescriptorSetLayout descriptorSetLayout;
             VkDescriptorPool descriptorPool;
-            std::vector<VkDescriptorSetLayout> descriptorLayouts;
             std::vector<VkBuffer> uniformBuffers;
             std::vector<VkDeviceMemory> uniformBuffersMemory;
             std::vector<void*> uniformBuffersMapped;
@@ -52,6 +57,8 @@ namespace EngineRenderer {
             std::vector<VkBuffer> objectUniformBuffers;
             std::vector<VkDeviceMemory> objectUniformBuffersMemory;
             std::vector<void*> objectUniformBuffersMapped;
+
+            std::vector<VkDescriptorSet> descriptorSets;
 
             VkDeviceSize objectUboStride;
 
@@ -61,6 +68,7 @@ namespace EngineRenderer {
             std::vector<VkSemaphore> imageAvailableSemaphores;
             std::vector<VkSemaphore> renderFinishedSemaphores;
             std::vector<VkFence> inFlightFences;
+            std::vector<VkFence> imagesInFlight;
 
             uint32_t currentFrame = 0;
 
@@ -73,10 +81,10 @@ namespace EngineRenderer {
                 void initVulkan();
                 void initObjectResources(uint32_t objectCount, EngineResource::ResourceManager &resourceManager);
                 void initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager);
-                void createObjectDescriptorSets(Object *object);
                 void initSceneDescriptors(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
                 void cleanup(Scene *scene);
-                void drawFrame(std::vector<std::unique_ptr<EngineScene::Object>>& objects, float fps);
+                void drawFrame(Scene* scene);
+                void createSceneDescriptorSets(Scene *scene);
 
                 void updateUniformBuffers(UniformBufferObject &ubo, float fov){
                     uniformBufferCommand.updateUniformBuffers(ubo, fov, currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);
@@ -85,6 +93,8 @@ namespace EngineRenderer {
                 void updateObjectUniformBuffers(ObjectUBO &objectUBO){
                     uniformBufferCommand.updateObjectUniformBuffers(objectUBO, objectUniformBuffersMapped, currentFrame);
                 }
+
+                float getGpuFPS();
 
                 VkInstance& getInstance(){return instance;}
                 VkDescriptorPool& getDescriptorPool(){return descriptorPool;}

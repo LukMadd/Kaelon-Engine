@@ -14,4 +14,13 @@ namespace EngineUI{
 
         return fps;
     }
+
+    float FPSManager::smoothFPS(float fps){
+        if(smoothedFPS <= 0.0f){
+            smoothedFPS = fps;
+        }else {
+            smoothedFPS = alpha * fps + (1.0f - alpha) * smoothedFPS;
+        }
+        return smoothedFPS;
+    }
 }

@@ -9,6 +9,7 @@
 #include "MultiSampling.hpp"
 #include "Queue.hpp"
 
+constexpr uint32_t MAX_TEXTURES = 16;
 constexpr uint32_t MAX_OBJECTS = 1750;
 
 namespace EngineRenderer{

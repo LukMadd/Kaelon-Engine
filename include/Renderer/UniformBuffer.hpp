@@ -28,12 +28,14 @@ namespace EngineRenderer{
         alignas(16) glm::vec4 baseColor;
 
         alignas(4) int hasTexture;
+
+        alignas(4) int textureIndex;
     };
 
 
     struct UniformBuffer{
         DummyRecources dummyResources;
-        VkDescriptorSetLayout createDescriptorSetLayout(VkDescriptorSetLayout &descriptorSetLayout);
+        void createDescriptorSetLayout(VkDescriptorSetLayout &descriptorSetLayout);
         void createUniformBuffers(int MAX_FRAMES_IN_FLIGHT, VkDeviceSize bufferSize, std::vector<VkBuffer> &uniformBuffers, std::vector<VkDeviceMemory> &uniformBuffersMemory, std::vector<void*> &uniformBuffersMapped);
         void createDescriptorPool(int MAX_FRAMES_IN_FLIGHT, VkDescriptorPool &descriptorPool);
         void createDescriptorSets(int MAX_FRAMES_IN_FLIGHT, std::vector<VkBuffer> &uniformBuffers, std::vector<VkBuffer> &objectUniformBuffers, VkDescriptorSetLayout descriptorSetLayout, VkDescriptorPool &descriptorPool, std::vector<VkDescriptorSet> &descriptorSets, const std::vector<std::shared_ptr<Texture>> &textures);

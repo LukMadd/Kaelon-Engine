@@ -11,13 +11,13 @@ namespace EngineRenderer {
 
     void Instance::createInstance(VkInstance &instance){
         #ifdef NDEBUG
-            enableValidationLaye = false;
+            enableValidationLayers = false;
         #else
             enableValidationLayers = true;
         #endif
             
         if(enableValidationLayers && !m_ValidationLayers.CheckValidationSupport()){
-            throw std::runtime_error("Validation laye requested but not available");
+            throw std::runtime_error("Validation layers requested but not available");
         } 
 
         VkApplicationInfo appInfo{};

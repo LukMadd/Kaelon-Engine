@@ -16,7 +16,6 @@ namespace EngineScene{
         root.transform.worldMatrix = glm::mat4(1.0f);
     }
 
-
     void Scene::initBaseScene(EngineResource::ResourceManager &resourceManager){
         cameraManager.checkIfCamerasEmpty();
         auto floor = std::make_unique<MeshObject>(glm::vec3( 0, 0, 0), "models/Crate1.obj");
@@ -72,24 +71,37 @@ namespace EngineScene{
 
     //Potentially dangerous as if an object is erased from the main object vector but is in the newObjects vector it can cause problems
     void Scene::removeObject(Object *object){
+        auto nodeIt = std::find(object->node->parent->children.begin(), object->node->parent->children.end(), object->node);
+        if(nodeIt != object->node->parent->children.end()){ //Don't think this is necessary but oh well
+            object->node->parent->children.erase(nodeIt);
+            object->node = nullptr;
+        }
+
         auto newIt = std::find(newObjects.begin(), newObjects.end(), object);
         if(newIt != newObjects.end()){
             newObjects.erase(newIt);
         }
 
+        object->cleanup(device);
+        
         auto it = std::find_if(objects.begin(), objects.end(), [&](const std::unique_ptr<Object> &obj){
             return obj.get() == object;
         });
         if(it != objects.end()){
             objects.erase(it);
         }
+    }
 
-        auto nodeIt = std::find(object->node->parent->children.begin(), object->node->parent->children.end(), object->node);
-        if(nodeIt != object->node->parent->children.end()){ //Don't think this is necessary but oh well
-            object->node->parent->children.erase(nodeIt);
+    std::vector<std::shared_ptr<Texture>> Scene::getSceneTextures(){
+        std::vector<std::shared_ptr<Texture>> sceneTextures;
+        for(auto &object : objects){
+            for(auto &texture : object->material->getTextures()){
+                if(texture->isValid()){
+                    sceneTextures.push_back(texture);
+                }
+            }
         }
-
-        object->cleanup(device);
+        return sceneTextures;
     }
 
     void Scene::cleanupObjects(){

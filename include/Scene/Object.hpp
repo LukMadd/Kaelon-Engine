@@ -26,7 +26,7 @@ namespace EngineScene{
             std::string type;
             std::string name;
             
-            int uniformIndex = 0;
+            uint32_t uniformIndex = 0;
 
             int objectIndex = 0;
             
@@ -35,10 +35,6 @@ namespace EngineScene{
 
             std::string uuid;
             glm::mat4 modelMatrix{1.0f};
-            std::vector<VkDescriptorSet> descriptorSets;
-            std::vector<VkBuffer> objectUniformBuffer;
-            std::vector<VkDeviceMemory> objectUniformMemory;
-            std::vector<void*> objectUniformMapped;  
 
             bool hasTexture = false;
 

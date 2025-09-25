@@ -27,14 +27,13 @@ namespace EngineScene{
         currentID++;
     }
 
-    void SceneManager::changeScenes(int indexChange){
-        int newIndex = currentSceneIndex + indexChange;
-        if(newIndex >= sceneOrder.size() || newIndex < 0) return;
+    void SceneManager::changeScenes(int index){
+        if(index >= sceneOrder.size() || index < 0) return;
 
-        int newSceneID = sceneOrder[newIndex];
+        int newSceneID = sceneOrder[index];
         auto &scenePtr = scenes.at(newSceneID);
 
-        currentSceneIndex = newIndex;
+        currentSceneIndex = index;
     }
 
     void SceneManager::init(EngineResource::ResourceManager &resourceManagerRef){

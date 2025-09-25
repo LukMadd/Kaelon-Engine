@@ -23,6 +23,8 @@ namespace EngineScene{
             bool areObjectsInitialized = false;
             bool areDescriptorSetsInitialized = false;
 
+            bool selected = false;
+
             static std::unique_ptr<Scene> createScene(int id, const std::string &name);
             void initBaseScene(EngineResource::ResourceManager &resourceManager);
 

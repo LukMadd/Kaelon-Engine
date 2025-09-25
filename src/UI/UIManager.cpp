@@ -137,6 +137,7 @@ namespace EngineUI{
         engineUI.drawCameraInspector();
         engineUI.drawRecourses(uiInfo.recourseManager);
         engineUI.drawRenderStats(uiInfo.sceneManager->getCurrentScene() ,fps);
+        engineUI.drawScenes(uiInfo.sceneManager);
 
         ImGui::End();
         ImGui::PopStyleVar(2);

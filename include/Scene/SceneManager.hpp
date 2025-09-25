@@ -13,10 +13,11 @@ namespace EngineScene{
             void init(EngineResource::ResourceManager &resourceManager);
 
             void addDefaultScene();
-            void changeScenes(int indexChange);
+            void changeScenes(int index);
 
             std::vector<Scene*> getScenes();
             Scene* getCurrentScene();
+            int getCurrentSceneIndex(){return currentSceneIndex;}
 
             void serializeScene(Scene &scene, uint32_t sceneIndex);
             void deserializeScene(const std::string& filename);

@@ -86,12 +86,6 @@ namespace Engine{
 
             inputHandler.update(window, actionManager, sceneManager);
 
-            if(sceneManager.getCurrentScene()->areObjectsInitialized == false){
-                totalObjects+=sceneManager.getCurrentScene()->objects.size();
-                renderer.initObjects(*sceneManager.getCurrentScene(), resourceManager);
-                renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
-            }
-
             sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->updateCameraPosition(deltaTime, actionManager, inputHandler.isSceneImmersed());
 
             sceneManager.getCurrentScene()->update(); //Updates the current frame's children with it's matrix and so forth
@@ -103,6 +97,12 @@ namespace Engine{
             }
 
             uiManager.renderUI(smoothFPS);
+
+            if(sceneManager.getCurrentScene()->areObjectsInitialized == false){
+                totalObjects+=sceneManager.getCurrentScene()->objects.size();
+                renderer.initObjects(*sceneManager.getCurrentScene(), resourceManager);
+                renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
+            }
 
             if(sceneManager.getCurrentScene()->newObjects.empty() == false){
                 while(sceneManager.getCurrentScene()->newObjects.empty() == false){

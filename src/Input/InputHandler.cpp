@@ -30,13 +30,13 @@ namespace EngineInput{
         }
         bool is_scene_plus_active = actionManager.isActionActive(Action::DEVELOPER_CHANGE_SCENE_PLUS);
         if (is_scene_plus_active && !was_scene_plus_active) {
-            sceneManager.changeScenes(1);
+            sceneManager.changeScenes(sceneManager.getCurrentSceneIndex() + 1);
         }
         was_scene_plus_active = is_scene_plus_active;
 
         bool is_scene_minus_active = actionManager.isActionActive(Action::DEVELOPER_CHANGE_SCENE_MINUS);
         if (is_scene_minus_active && !was_scene_minus_active) {
-            sceneManager.changeScenes(-1);
+            sceneManager.changeScenes(sceneManager.getCurrentSceneIndex() - 1);
         }
         was_scene_minus_active = is_scene_minus_active;
 

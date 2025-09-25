@@ -18,7 +18,7 @@ namespace EngineUI{
 
             void drawRenderStats(EngineScene::Scene *scene, float fps);
 
-            void drawSceneActions();
+            void drawScenes(EngineScene::SceneManager *sceneManager);
         
         private:
             bool m_showSceneHierarchyWindow = false;
@@ -26,8 +26,10 @@ namespace EngineUI{
             bool m_showCameraWindow = false;
             bool m_showResourceWindow = false;
             bool m_showRenderStats = false;
+            bool m_showScenesWindow = false;
 
             EngineScene::Object *selectedObject = nullptr;
             EngineCamera::Camera *selectedCamera = nullptr;
+            EngineScene::Scene *selectedScene = nullptr;
     };
 }

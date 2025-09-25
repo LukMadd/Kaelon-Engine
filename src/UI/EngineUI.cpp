@@ -2,6 +2,7 @@
 #include "Object.hpp"
 #include "RendererGlobals.hpp"
 #include "Scene.hpp"
+#include "SceneManager.hpp"
 #include "imgui.h"
 
 namespace EngineUI{
@@ -25,6 +26,10 @@ namespace EngineUI{
                 if(ImGui::Button("Add Object")){
                     sceneManager->getCurrentScene()->addDefaultObject();
                 }
+                ImGui::EndMenu();
+            }
+            if(ImGui::BeginMenu("Scenes")){
+                ImGui::Checkbox("View Scenes", &m_showScenesWindow);
                 ImGui::EndMenu();
             }
 
@@ -57,31 +62,31 @@ namespace EngineUI{
                 ImGui::EndCombo();
             }
 
-                uint32_t cameraIndex = 0;
-                const char* camera_preview_text = selectedCamera ? selectedCamera->name.c_str() : "Select an camera";
-                if(ImGui::BeginCombo("Cameras", camera_preview_text)){
-                    for(auto &camera : scene->cameraManager.getCameras()){
-                        ImGui::PushID(camera.get());
-                        bool is_camera_selected = (selectedCamera == camera.get());
-                        if(ImGui::Selectable(camera->name.c_str(), is_camera_selected)){
-                            if(selectedCamera) selectedCamera->selected = false;
-                            selectedCamera = camera.get();
-                            selectedCamera->selected = true;
+            uint32_t cameraIndex = 0;
+            const char* camera_preview_text = selectedCamera ? selectedCamera->name.c_str() : "Select an camera";
+            if(ImGui::BeginCombo("Cameras", camera_preview_text)){
+                for(auto &camera : scene->cameraManager.getCameras()){
+                    ImGui::PushID(camera.get());
+                    bool is_camera_selected = (selectedCamera == camera.get());
+                    if(ImGui::Selectable(camera->name.c_str(), is_camera_selected)){
+                        if(selectedCamera) selectedCamera->selected = false;
+                        selectedCamera = camera.get();
+                        selectedCamera->selected = true;
 
-                            scene->cameraManager.changeCamera(cameraIndex);
+                        scene->cameraManager.changeCamera(cameraIndex);
 
-                            if(!m_showCameraWindow){
-                                m_showCameraWindow = true;
-                            }
+                        if(!m_showCameraWindow){
+                            m_showCameraWindow = true;
                         }
-                        if(is_camera_selected){
-                            ImGui::SetItemDefaultFocus();
-                        }
-                        ImGui::PopID();
-                        cameraIndex++;
                     }
-                    ImGui::EndCombo();
+                    if(is_camera_selected){
+                        ImGui::SetItemDefaultFocus();
+                    }
+                    ImGui::PopID();
+                    cameraIndex++;
                 }
+                ImGui::EndCombo();
+            }
             
             ImGui::End();
         }
@@ -211,5 +216,27 @@ namespace EngineUI{
             ImGui::End();
         }
     }
+
+    void EngineUI::drawScenes(EngineScene::SceneManager *sceneManager){
+        if(m_showScenesWindow){
+            ImGui::Begin("Scenes");
+            for(auto& scene : sceneManager->getScenes()){
+                ImGui::PushID(scene);
+                bool is_scene_selected = (selectedScene == scene);
+                if(ImGui::Selectable(scene->name.c_str(), is_scene_selected)){
+                    if(selectedScene) selectedScene->selected = false;
+                    selectedScene = scene;
+                    selectedScene->selected = true;
+
+                    sceneManager->changeScenes(selectedScene->getId());
+                }
+                ImGui::PopID();
+            }
+        
+            ImGui::End();
+        }
+    }
+
+
 
 }

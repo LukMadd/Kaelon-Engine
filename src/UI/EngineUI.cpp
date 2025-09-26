@@ -93,16 +93,25 @@ namespace EngineUI{
     }
 
     void EngineUI::drawObjectInspector(EngineScene::Scene *scene){
-        if(m_showObjectInspector || selectedObject){
+        if(m_showObjectInspector && selectedObject || previousObject != selectedObject){
+            previousObject = selectedObject;
+            m_showObjectInspector = true;
+            
             ImGui::Begin("Object Inspector");
 
             ImGui::Text("UUID: %s", selectedObject->uuid.c_str());
 
             ImGui::Text("Name: %s", selectedObject->name.c_str());
             if(ImGui::TreeNode("Position")){
-                ImGui::InputFloat("X: ", &selectedObject->node->transform.position.x);
-                ImGui::InputFloat("Y: ", &selectedObject->node->transform.position.y);
-                ImGui::InputFloat("Z: ", &selectedObject->node->transform.position.z);
+                float positionX = selectedObject->node->transform.position.x;
+                float positionY = selectedObject->node->transform.position.y;
+                float positionZ = selectedObject->node->transform.position.z;
+                ImGui::InputFloat("X: ", &positionX);
+                ImGui::InputFloat("Y: ", &positionY);
+                ImGui::InputFloat("Z: ", &positionZ);
+                if(glm::vec3(positionX, positionY, positionZ) != selectedObject->node->transform.position){
+                    selectedObject->move(glm::vec3(positionX, positionY, positionZ));
+                }
                 ImGui::TreePop();
             }
 
@@ -122,7 +131,6 @@ namespace EngineUI{
 
             if(ImGui::Button("Delete")){
                 scene->removeObject(selectedObject);
-                selectedObject = nullptr;
             }
 
             ImGui::End();

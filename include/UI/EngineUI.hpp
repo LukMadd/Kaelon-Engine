@@ -28,12 +28,14 @@ namespace EngineUI{
             bool m_showRenderStats = false;
             bool m_showScenesWindow = false;
 
-            EngineScene::Object *selectedObject = nullptr;
+            EngineObject::Object *selectedObject = nullptr;
             EngineCamera::Camera *selectedCamera = nullptr;
             EngineScene::Scene *selectedScene = nullptr;
 
+            EngineObject::Object *previousObject = nullptr;
+
         public:
-            EngineScene::Object*& getSelectedObject(){return selectedObject;}
+            EngineObject::Object*& getSelectedObject(){return selectedObject;}
             EngineScene::Scene* getSelectedScene(){return selectedScene;}
     };
 }

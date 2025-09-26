@@ -10,9 +10,9 @@
             "is_initialized": true,
             "name": "Generic_Camera",
             "position": [
-                -0.20000000298023224,
-                11.5,
-                -33.5
+                -0.09201633185148239,
+                5.4563188552856445,
+                -15.41273307800293
             ],
             "rotation": {
                 "pitch": -18.946189880371094,
@@ -49,12 +49,12 @@
                 },
                 "textures": [],
                 "type": "Mesh_Object",
-                "uuid": "07297bdcf3b26bc2706dc362170e25b3"
+                "uuid": "3cc5720a8a2b7cd300589e0c3aa24fda"
             },
             "transform": {
                 "position": [
                     0.0,
-                    0.0,
+                    5.0,
                     0.0
                 ],
                 "rotation": [
@@ -89,7 +89,7 @@
                 },
                 "textures": [],
                 "type": "Mesh_Object",
-                "uuid": "eef6aa89a1590c9224f96ef5f1e1fbc8"
+                "uuid": "d0b966e735b7dd264999d9f98ca70d1e"
             },
             "transform": {
                 "position": [

@@ -1,6 +1,7 @@
 Ongoing tasks:
     - Make both a GPU fps & frametime(profiling) + real time fps & framtime
     - Update bounding boxes to work when the object is moved
+    - Add a ticking system
 
 Future things:
     - Switch to texture atlas for textures

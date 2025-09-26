@@ -41,7 +41,7 @@ namespace EngineUI{
                 ImGuiStyle baseStyle;
             
             public:
-                EngineScene::Object*& getSelectedObject(){return engineUI.getSelectedObject();}
+                EngineObject::Object*& getSelectedObject(){return engineUI.getSelectedObject();}
                 EngineScene::Scene* getSelectedScene(){return engineUI.getSelectedScene();}
     };
 }

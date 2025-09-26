@@ -28,6 +28,10 @@ namespace EngineUI{
         baseStyle = ImGui::GetStyle();
 
         ImGui_ImplGlfw_InitForVulkan(uiInfo.window, true);
+        ImGui_ImplVulkan_PipelineInfo pipeline_info{};
+        pipeline_info.RenderPass = uiInfo.renderPass;
+        pipeline_info.MSAASamples = msaaSamples;
+
         ImGui_ImplVulkan_InitInfo init_info{};
         init_info.Instance = uiInfo.instance;
         init_info.PhysicalDevice = physicalDevice;
@@ -35,8 +39,7 @@ namespace EngineUI{
         init_info.QueueFamily = queueFamilyIndices.graphicsFamily.value();
         init_info.Queue = graphicsQueue;
         init_info.PipelineCache = uiInfo.pipelineCache;
-        init_info.RenderPass = uiInfo.renderPass;
-        init_info.MSAASamples = msaaSamples;
+        init_info.PipelineInfoMain = pipeline_info;
         init_info.DescriptorPool = uiInfo.imGuiDescriptorPool;
         init_info.MinImageCount = imageCount;
         init_info.ImageCount = imageCount;

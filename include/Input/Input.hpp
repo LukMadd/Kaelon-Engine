@@ -43,7 +43,7 @@ namespace Engine{
                 bool firstMouse = true;
 
                 static EngineCamera::Camera *inputCamera;
-                static EngineScene::Object** selectedObject;
+                static EngineObject::Object** selectedObject;
                 static EngineScene::Scene *inputScene;
 
                 static std::unordered_map<int, bool> keyStates;

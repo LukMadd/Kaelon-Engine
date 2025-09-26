@@ -44,24 +44,6 @@ namespace EngineObject{
         material->setShader(shader);
     }
 
-    void createBoundingBox(MeshObject *object){
-
-        for(const auto& v : object->mesh->vertexBuffer.vertices){
-            
-            object->localBoundingBox.min.x = std::min(object->localBoundingBox.min.x, v.pos.x);
-            object->localBoundingBox.min.y = std::min(object->localBoundingBox.min.y, v.pos.y);
-            object->localBoundingBox.min.z = std::min(object->localBoundingBox.min.z, v.pos.z);
-
-            object->localBoundingBox.max.x = std::max(object->localBoundingBox.max.x, v.pos.x);
-            object->localBoundingBox.max.y = std::max(object->localBoundingBox.max.y, v.pos.y);
-            object->localBoundingBox.max.z = std::max(object->localBoundingBox.max.z, v.pos.z);    
-
-        }
-
-        object->worldBoundingBox.min = object->getPosition() + object->localBoundingBox.min * object->node->transform.scale;
-        object->worldBoundingBox.max = object->getPosition() + object->localBoundingBox.max * object->node->transform.scale;
-    }
-
     MeshObject::MeshObject(glm::vec3 position, const std::string &meshPathRef, const std::string &texturePathRef){
         this->mesh = std::make_shared<Mesh>();
         this->material = std::make_shared<Material>();

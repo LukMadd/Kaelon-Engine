@@ -5,6 +5,8 @@
 #include "Object.hpp"
 #include "RecourseManager.hpp"
 
+using namespace EngineObject;
+
 namespace EngineScene{
     class Scene{
         public:
@@ -15,8 +17,8 @@ namespace EngineScene{
 
             int id;
             std::string name;
-            std::vector<std::unique_ptr<Object>> objects; 
-            std::vector<Object*> newObjects;
+            std::vector<std::unique_ptr<EngineObject::Object>> objects; 
+            std::vector<EngineObject::Object*> newObjects;
             std::vector<VkDescriptorSet> descriptorSets;
             SceneNode root;
 

@@ -81,7 +81,7 @@ namespace EngineRenderer {
                 void initVulkan();
                 void initObjectResources(uint32_t objectCount, EngineResource::ResourceManager &resourceManager);
                 void initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager);
-                void initSceneDescriptors(std::vector<std::unique_ptr<EngineScene::Object>>& objects);
+                void initSceneDescriptors(std::vector<std::unique_ptr<EngineObject::Object>>& objects);
                 void cleanup(Scene *scene);
                 void drawFrame(Scene* scene);
                 void createSceneDescriptorSets(Scene *scene);

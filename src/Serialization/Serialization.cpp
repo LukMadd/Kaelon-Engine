@@ -1,7 +1,7 @@
 #include "Serialization.hpp"
 #include "Object.hpp"
 
-json serializeObject(const Object &object){
+json serializeObject(const EngineObject::Object &object){
     json jsonData;
     if(!object.name.empty()){
         jsonData["name"] = object.name;

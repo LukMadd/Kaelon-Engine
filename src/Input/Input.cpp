@@ -13,7 +13,7 @@ using namespace EngineUtility;
 
 namespace EngineInput{
     EngineCamera::Camera* Input::inputCamera = nullptr;
-    EngineScene::Object** Input::selectedObject = nullptr;
+    EngineObject::Object** Input::selectedObject = nullptr;
     EngineScene::Scene* Input::inputScene = nullptr;
 
     std::unordered_map<int, bool> Input::keyStates;

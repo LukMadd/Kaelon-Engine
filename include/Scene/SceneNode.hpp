@@ -6,8 +6,10 @@
 
 using namespace EngineObject;
 
-namespace EngineScene{
+namespace EngineObject{
     class Object;
+}
+namespace EngineScene{
     
     class SceneNode{
         public:

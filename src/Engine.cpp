@@ -73,96 +73,100 @@ namespace Engine{
         actionManager.setupBindings();
     }
 
+    void GameEngine::RendererMainLoop(std::chrono::time_point<std::chrono::high_resolution_clock>& lastTime){
+        glfwPollEvents();
+        drawCallCountLastFrame = drawCallCount;
+        drawCallCount = 0;
+
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastTime).count();
+        lastTime = currentTime;
+
+        inputHandler.update(window, actionManager, sceneManager);
+
+        Input::get().inputCamera = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera().get();
+
+        sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->giveExtent(renderer.getSwapChainExtent());
+
+        sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->updateCamera(deltaTime, actionManager, inputHandler.isSceneImmersed());
+
+        sceneManager.getCurrentScene()->update(); //Updates the current frame's children with it's matrix and so forth
+
+        static float rawFps = 0.0f;
+        static float smoothFPS = 0.0f;
+        if(rawFps != 0.0f){
+            smoothFPS = fpsManager.smoothFPS(rawFps);
+        }
+
+        Input::get().selectedObject = &uiManager.getSelectedObject();
+        Input::get().inputScene = sceneManager.getCurrentScene();
+
+        uiManager.renderUI(smoothFPS);
+
+        if(sceneManager.getCurrentScene()->areObjectsInitialized == false){
+            totalObjects+=sceneManager.getCurrentScene()->objects.size();
+            renderer.initObjects(*sceneManager.getCurrentScene(), resourceManager);
+            renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
+        }
+
+        if(sceneManager.getCurrentScene()->newObjects.empty() == false){
+            while(sceneManager.getCurrentScene()->newObjects.empty() == false){
+                auto object = sceneManager.getCurrentScene()->newObjects.back();
+                object->initVulkanResources(resourceManager);
+                sceneManager.getCurrentScene()->newObjects.pop_back();
+            }    
+        }
+
+        if(sceneManager.getCurrentScene()->areDescriptorSetsInitialized == false){
+            renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
+        }
+
+        EngineRenderer::UniformBufferObject ubo{};
+        ubo.view = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getViewMatrix();
+        if(!lights.getDirectionalLights().empty()){
+            const auto& directionalLight = lights.getDirectionalLights()[0];
+            ubo.lightDir = glm::vec4(glm::normalize(directionalLight.direction), 0.0f);
+            ubo.lightColorIntensity = glm::vec4(directionalLight.color, directionalLight.intensity);
+        }
+
+        ubo.proj = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getProjection();
+        ubo.cameraPos = glm::vec4(sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->position, 0.0f); //Updates the camera position
+        renderer.updateUniformBuffers(ubo, sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getFov()); //Sends the uniform buffer object down to the uniform buffer manager for it to be processed
+        
+        auto* mappedBuffer = reinterpret_cast<ObjectUBO*>(renderer.getObjectUniformBuffersMapped()[renderer.getCurrentFrame()]);
+
+        for(size_t i = 0; i < sceneManager.getCurrentScene()->objects.size(); i++){
+            auto &object = sceneManager.getCurrentScene()->objects[i];
+
+            ObjectUBO objectUbo{};
+            objectUbo.hasTexture = object->material->getTextures().empty() ? 0 : 1;
+            objectUbo.baseColor  = object->material->getBaseColor();
+            int index = 0;
+            if(!object->material->getTextures().empty()){
+                auto sceneTextures = sceneManager.getCurrentScene()->getSceneTextures();
+                auto it = std::find(sceneTextures.begin(), sceneTextures.end(), object->material->getTextures()[0]);
+                if(it != sceneTextures.end()){
+                    index = static_cast<int>(std::distance(sceneTextures.begin(), it));
+                } else{
+                    index = 0; //Fallback if texture was not found
+                }
+            }
+            objectUbo.textureIndex = std::min(index, (int)MAX_TEXTURES - 1);
+            
+            memcpy((char*)renderer.getObjectUniformBuffersMapped()[renderer.getCurrentFrame()] + i * renderer.getObjectUboStride(), &objectUbo, sizeof(ObjectUBO));
+
+            object->uniformIndex =  static_cast<uint32_t>(i);
+        }
+
+        renderer.drawFrame(sceneManager.getCurrentScene());
+        rawFps = renderer.getGpuFPS();
+    }
+
     void GameEngine::mainLoop(){
         auto lastTime = std::chrono::high_resolution_clock::now();
 
         while(!glfwWindowShouldClose(window)){
-            glfwPollEvents();
-            drawCallCountLastFrame = drawCallCount;
-            drawCallCount = 0;
-
-            auto currentTime = std::chrono::high_resolution_clock::now();
-            float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastTime).count();
-            lastTime = currentTime;
-
-            inputHandler.update(window, actionManager, sceneManager);
-
-            Input::get().inputCamera = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera().get();
-
-            sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->giveExtent(renderer.getSwapChainExtent());
-
-            sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->updateCamera(deltaTime, actionManager, inputHandler.isSceneImmersed());
-
-            sceneManager.getCurrentScene()->update(); //Updates the current frame's children with it's matrix and so forth
-
-            static float rawFps = 0.0f;
-            static float smoothFPS = 0.0f;
-            if(rawFps != 0.0f){
-                smoothFPS = fpsManager.smoothFPS(rawFps);
-            }
-
-            Input::get().selectedObject = &uiManager.getSelectedObject();
-            Input::get().inputScene = sceneManager.getCurrentScene();
-
-            uiManager.renderUI(smoothFPS);
-
-            if(sceneManager.getCurrentScene()->areObjectsInitialized == false){
-                totalObjects+=sceneManager.getCurrentScene()->objects.size();
-                renderer.initObjects(*sceneManager.getCurrentScene(), resourceManager);
-                renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
-            }
-
-            if(sceneManager.getCurrentScene()->newObjects.empty() == false){
-                while(sceneManager.getCurrentScene()->newObjects.empty() == false){
-                    auto object = sceneManager.getCurrentScene()->newObjects.back();
-                    object->initVulkanResources(resourceManager);
-                    sceneManager.getCurrentScene()->newObjects.pop_back();
-                }    
-            }
-
-            if(sceneManager.getCurrentScene()->areDescriptorSetsInitialized == false){
-                renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
-            }
-
-            EngineRenderer::UniformBufferObject ubo{};
-            ubo.view = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getViewMatrix();
-            if(!lights.getDirectionalLights().empty()){
-                const auto& directionalLight = lights.getDirectionalLights()[0];
-                ubo.lightDir = glm::vec4(glm::normalize(directionalLight.direction), 0.0f);
-                ubo.lightColorIntensity = glm::vec4(directionalLight.color, directionalLight.intensity);
-            }
-
-            ubo.proj = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getProjection();
-            ubo.cameraPos = glm::vec4(sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->position, 0.0f); //Updates the camera position
-            renderer.updateUniformBuffers(ubo, sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getFov()); //Sends the uniform buffer object down to the uniform buffer manager for it to be processed
-            
-            auto* mappedBuffer = reinterpret_cast<ObjectUBO*>(renderer.getObjectUniformBuffersMapped()[renderer.getCurrentFrame()]);
-
-            for(size_t i = 0; i < sceneManager.getCurrentScene()->objects.size(); i++){
-                auto &object = sceneManager.getCurrentScene()->objects[i];
-
-                ObjectUBO objectUbo{};
-                objectUbo.hasTexture = object->material->getTextures().empty() ? 0 : 1;
-                objectUbo.baseColor  = object->material->getBaseColor();
-                int index = 0;
-                if(!object->material->getTextures().empty()){
-                    auto sceneTextures = sceneManager.getCurrentScene()->getSceneTextures();
-                    auto it = std::find(sceneTextures.begin(), sceneTextures.end(), object->material->getTextures()[0]);
-                    if(it != sceneTextures.end()){
-                        index = static_cast<int>(std::distance(sceneTextures.begin(), it));
-                    } else{
-                        index = 0; //Fallback if texture was not found
-                    }
-                }
-                objectUbo.textureIndex = std::min(index, (int)MAX_TEXTURES - 1);
-                
-                memcpy((char*)renderer.getObjectUniformBuffersMapped()[renderer.getCurrentFrame()] + i * renderer.getObjectUboStride(), &objectUbo, sizeof(ObjectUBO));
-
-                object->uniformIndex =  static_cast<uint32_t>(i);
-            }
-
-            renderer.drawFrame(sceneManager.getCurrentScene());
-            rawFps = renderer.getGpuFPS();
+            RendererMainLoop(lastTime);
         }
         vkDeviceWaitIdle(EngineRenderer::device);
     }

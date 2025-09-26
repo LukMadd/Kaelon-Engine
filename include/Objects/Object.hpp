@@ -19,7 +19,9 @@ struct AAB{
     glm::vec3 max = glm::vec3(-FLT_MAX);
 };
 
-namespace EngineScene{
+using namespace EngineScene;
+
+namespace EngineObject{
     class Object{
         public:
             Object() : uuid(generateUUID()){};
@@ -43,6 +45,9 @@ namespace EngineScene{
 
             AAB localBoundingBox;
             AAB worldBoundingBox;
+
+            void createBoundingBox(Object *object);
+            void move(glm::vec3 position);
 
             bool hasTexture = false;
 

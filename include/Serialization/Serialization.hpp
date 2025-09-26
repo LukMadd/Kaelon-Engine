@@ -7,9 +7,9 @@ using namespace EngineObject;
 using namespace EngineScene;
 using namespace EngineCamera;
 
-json serializeObject(const Object &object);
+json serializeObject(const EngineObject::Object &object);
 json serializeNode(SceneNode *node);
 json serialzeCamera(std::shared_ptr<EngineCamera::Camera> Camera);
-Object* deserializeObject(const nlohmann::json& jsonData);
+EngineObject::Object* deserializeObject(const nlohmann::json& jsonData);
 SceneNode* deserializeNode(Scene &scene, const json& jsonNode);
 Camera* deserializeCamera(const nlohmann::json& jsonData);

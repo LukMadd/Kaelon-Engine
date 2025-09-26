@@ -22,7 +22,7 @@ namespace EngineScene{
 
         SceneNode* floorNode = new SceneNode();
         floorNode->object = floor.get();
-        floorNode->transform.position = floor->modelMatrix[3];
+        floorNode->transform.position = floor->getPosition();
         floorNode->transform.scale = glm::vec3(10.0f);
         floorNode->transform.scale.y = 0.5f;
         floor->node = floorNode;

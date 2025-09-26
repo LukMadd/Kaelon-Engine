@@ -1,9 +1,21 @@
 #include "Input.hpp"
 #include "imgui_impl_glfw.h"
+#include "EngineUtility.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <array>
+
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 
 using namespace Engine;
+using namespace EngineUtility;
 
 namespace EngineInput{
+    EngineCamera::Camera* Input::inputCamera = nullptr;
+    EngineScene::Object** Input::selectedObject = nullptr;
+    EngineScene::Scene* Input::inputScene = nullptr;
+
     std::unordered_map<int, bool> Input::keyStates;
     std::unordered_map<int, bool> Input::mouseButtonStates;
 
@@ -17,6 +29,47 @@ namespace EngineInput{
 
     void Input::MouseButtonCallBack(GLFWwindow *window, int button, int action, int mods){
         mouseButtonStates[button] = (action != GLFW_RELEASE);
+      
+        double mouseX, mouseY;
+        glfwGetCursorPos(window, &mouseX, &mouseY);
+
+        int windowFBWidth, windowFBHeight;
+        glfwGetFramebufferSize(window, &windowFBWidth, &windowFBHeight);
+       
+        float ndcX = (2.0f * mouseX) / windowFBWidth - 1.0f;
+        float ndcY = 1.0f - (2.0f * mouseY) / windowFBHeight;
+
+        glm::vec4 rayStartNDC(ndcX, ndcY, 0.0f, 1.0f);
+        glm::vec4 rayEndNDC  (ndcX, ndcY, 1.0f, 1.0f);
+
+        std::array<glm::vec4, 2> worldRays;
+
+        
+        worldRays = inputCamera->transformRay(rayStartNDC, rayEndNDC);
+
+        glm::vec3 rayOrigin = glm::vec3(worldRays[0]);
+        glm::vec3 farPoint = glm::vec3(worldRays[1]);
+        glm::vec3 rayDir = glm::normalize(farPoint - rayOrigin);
+
+        float closestDistance = FLT_MAX;
+        for(auto &object : inputScene->objects){
+            float t;
+            glm::vec3 worldMin = object->worldBoundingBox.min;
+            glm::vec3 worldMax = object->worldBoundingBox.max;
+            if(rayIntersectsAABB(rayOrigin, rayDir, worldMin, worldMax, t)){
+                if(t < closestDistance && t > 0.0f){
+                    closestDistance = t;
+
+                    if(*selectedObject != object.get()){
+                        if(*selectedObject){
+                            (*selectedObject)->selected = false;
+                        }
+                        *selectedObject = object.get();
+                        (*selectedObject)->selected = true;
+                    }
+                }
+            }
+        }
     }
 
     void Input::setCallBacks(){

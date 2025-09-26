@@ -220,8 +220,6 @@ namespace EngineRenderer{
     } 
 
     void UniformBuffer::updateUniformBuffers(UniformBufferObject ubo, float fov, uint32_t currentImage, VkExtent2D swapChainExtent, std::vector<void*> &uniformBuffersMapped){
-        ubo.proj = glm::perspective(glm::radians(fov), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 100.0f);
-
         ubo.proj[1][1]*=-1;
 
         memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));

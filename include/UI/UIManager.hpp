@@ -26,12 +26,10 @@ namespace EngineUI{
             void beginFrame(float fps);
             void renderUI(float fps);
 
-            void rebuildImGuiFontAtlas();
-            void uploadFontAtlasToGPU();
-
             VkDescriptorPool createImGuiDescriptorPool();
 
             void shutDownImGui(VkDescriptorPool &imGuiDescriptorPool);
+
 
             private:
                 EngineUI engineUI;
@@ -41,6 +39,10 @@ namespace EngineUI{
                 float scale = 16.0f;
 
                 ImGuiStyle baseStyle;
+            
+            public:
+                EngineScene::Object*& getSelectedObject(){return engineUI.getSelectedObject();}
+                EngineScene::Scene* getSelectedScene(){return engineUI.getSelectedScene();}
     };
 }
 

@@ -8,6 +8,7 @@
 #include <chrono>
 
 using namespace EngineObject;
+using namespace EngineInput;
 
 namespace Engine{
     GameEngine::GameEngine() : renderer(), sceneManager(){};
@@ -86,7 +87,11 @@ namespace Engine{
 
             inputHandler.update(window, actionManager, sceneManager);
 
-            sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->updateCameraPosition(deltaTime, actionManager, inputHandler.isSceneImmersed());
+            Input::get().inputCamera = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera().get();
+
+            sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->giveExtent(renderer.getSwapChainExtent());
+
+            sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->updateCamera(deltaTime, actionManager, inputHandler.isSceneImmersed());
 
             sceneManager.getCurrentScene()->update(); //Updates the current frame's children with it's matrix and so forth
 
@@ -95,6 +100,9 @@ namespace Engine{
             if(rawFps != 0.0f){
                 smoothFPS = fpsManager.smoothFPS(rawFps);
             }
+
+            Input::get().selectedObject = &uiManager.getSelectedObject();
+            Input::get().inputScene = sceneManager.getCurrentScene();
 
             uiManager.renderUI(smoothFPS);
 
@@ -124,6 +132,7 @@ namespace Engine{
                 ubo.lightColorIntensity = glm::vec4(directionalLight.color, directionalLight.intensity);
             }
 
+            ubo.proj = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getProjection();
             ubo.cameraPos = glm::vec4(sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->position, 0.0f); //Updates the camera position
             renderer.updateUniformBuffers(ubo, sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->getFov()); //Sends the uniform buffer object down to the uniform buffer manager for it to be processed
             

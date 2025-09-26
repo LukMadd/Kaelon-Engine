@@ -1,6 +1,9 @@
 #ifndef _INPUT_HPP
 #define _INPUT_HPP
 
+#include "Camera.hpp"
+#include "Object.hpp"
+#include "Scene.hpp"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
@@ -39,9 +42,12 @@ namespace Engine{
                 double lastX = 0.0, lastY = 0.0;
                 bool firstMouse = true;
 
+                static EngineCamera::Camera *inputCamera;
+                static EngineScene::Object** selectedObject;
+                static EngineScene::Scene *inputScene;
+
                 static std::unordered_map<int, bool> keyStates;
                 static std::unordered_map<int, bool> mouseButtonStates; 
-                static double mouseX, mouseY;
 
                 static void KeyCallBack(GLFWwindow* window, int key, int scanCode, int action, int mods);
                 static void MouseButtonCallBack(GLFWwindow* window, int button, int action, int mods);

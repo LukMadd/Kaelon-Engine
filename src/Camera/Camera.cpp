@@ -1,12 +1,18 @@
 #include "Camera.hpp"
 #include "Action.hpp"
 #include "Input.hpp"
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <array>
+#include "Action.hpp"
+
+constexpr float RENDER_DISTANCE = 100.0f;
 
 using namespace EngineInput;
 
 namespace EngineCamera{
     void Camera::init(){
+        projection = glm::perspective(glm::radians(fov), 0.0f, 0.1f, RENDER_DISTANCE);
         position = glm::vec3(-0.2f, 11.5f, -33.5f);
         up = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -70,7 +76,11 @@ namespace EngineCamera{
         lastPitchUpdate = pitch;
     }
 
-    void Camera::updateCameraPosition(float deltaTime, ActionManager &actionManager, bool is_scene_immersed){
+    void Camera::updateCamera(float deltaTime, EngineInput::ActionManager &actionManager, bool is_scene_immersed){
+        view = glm::lookAt(position, position + front, up);
+        
+        projection = glm::perspective(glm::radians(fov), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, RENDER_DISTANCE);
+
         velocity = speed * deltaTime;
 
         if(actionManager.isActionActive(Action::PLAYER_JUMP)){
@@ -97,7 +107,23 @@ namespace EngineCamera{
         }
     }
 
+    std::array<glm::vec4, 2> Camera::transformRay(glm::vec4 rayStartNDC, glm::vec4 rayEndNDC){
+        glm::mat4 invVP = glm::inverse(projection * view);
+
+        glm::vec4 rayStartWorld = invVP * rayStartNDC;
+        rayStartWorld/=rayStartWorld.w;
+
+        glm::vec4 rayEndWorld = invVP * rayEndNDC;
+        rayEndWorld/=rayEndWorld.w;
+
+        std::array<glm::vec4, 2> result;
+        result[0] = rayStartWorld;
+        result[1] = rayEndWorld;
+
+        return result;
+    }
+
     glm::mat4 Camera::getViewMatrix(){
-        return glm::lookAt(position, position + front, up);
+        return view;
     }
 }

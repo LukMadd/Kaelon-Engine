@@ -93,7 +93,7 @@ namespace EngineUI{
     }
 
     void EngineUI::drawObjectInspector(EngineScene::Scene *scene){
-        if(m_showObjectInspector && selectedObject){
+        if(m_showObjectInspector || selectedObject){
             ImGui::Begin("Object Inspector");
 
             ImGui::Text("UUID: %s", selectedObject->uuid.c_str());

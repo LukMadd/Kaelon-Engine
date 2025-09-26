@@ -31,5 +31,9 @@ namespace EngineUI{
             EngineScene::Object *selectedObject = nullptr;
             EngineCamera::Camera *selectedCamera = nullptr;
             EngineScene::Scene *selectedScene = nullptr;
+
+        public:
+            EngineScene::Object*& getSelectedObject(){return selectedObject;}
+            EngineScene::Scene* getSelectedScene(){return selectedScene;}
     };
 }

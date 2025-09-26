@@ -100,6 +100,7 @@ namespace EngineRenderer {
                 VkDescriptorPool& getDescriptorPool(){return descriptorPool;}
                 VkRenderPass& getRenderPass(){return appPipeline.renderPass;}
                 VkCommandBuffer& getCurrentCommandBuffer(){return commandbuffers[currentFrame];}
+                VkExtent2D getSwapChainExtent(){return appSwapChain.swapChainExtent;}
                 int getCurrentFrame() {return currentFrame;}
                 void setObjectUboStride(VkDeviceSize objectUboStride){this->objectUboStride = objectUboStride;}
                 VkDeviceSize getObjectUboStride(){return objectUboStride;}

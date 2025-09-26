@@ -2,6 +2,7 @@
 #include "SceneManager.hpp"
 #include "Renderer.hpp"
 #include "InputHandler.hpp"
+#include "Action.hpp"
 #include "Lighting.hpp"
 #include "UIManager.hpp"
 #include "FPSManager.hpp"
@@ -13,7 +14,7 @@ namespace Engine{
     struct GameEngine{    
         EngineResource::ResourceManager resourceManager;
         SceneManager sceneManager;
-        ActionManager actionManager;
+        EngineInput::ActionManager actionManager;
         EngineInput::InputHandler inputHandler;
         EngineUI::UIManager uiManager;
         EngineUI::FPSManager fpsManager; //Might just become debug manager in the future

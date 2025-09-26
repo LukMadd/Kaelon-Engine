@@ -14,6 +14,11 @@
 using namespace EngineRenderer;
 using namespace EngineObject;
 
+struct AAB{
+    glm::vec3 min = glm::vec3(FLT_MAX);
+    glm::vec3 max = glm::vec3(-FLT_MAX);
+};
+
 namespace EngineScene{
     class Object{
         public:
@@ -36,7 +41,12 @@ namespace EngineScene{
             std::string uuid;
             glm::mat4 modelMatrix{1.0f};
 
+            AAB localBoundingBox;
+            AAB worldBoundingBox;
+
             bool hasTexture = false;
+
+            glm::vec3 getPosition() {return modelMatrix[3];}
 
             std::shared_ptr<Mesh> mesh;
             std::shared_ptr<Material> material;

@@ -82,8 +82,6 @@ namespace Engine{
         float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastTime).count();
         lastTime = currentTime;
 
-        inputHandler.update(window, actionManager, sceneManager);
-
         Input::get().inputCamera = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera().get();
 
         sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->giveExtent(renderer.getSwapChainExtent());
@@ -167,6 +165,8 @@ namespace Engine{
 
         while(!glfwWindowShouldClose(window)){
             RendererMainLoop(lastTime);
+            inputHandler.update(window, actionManager, sceneManager);
+            
         }
         vkDeviceWaitIdle(EngineRenderer::device);
     }

@@ -18,7 +18,7 @@ namespace EngineScene{
 
     void Scene::initBaseScene(EngineResource::ResourceManager &resourceManager){
         cameraManager.checkIfCamerasEmpty();
-        auto floor = std::make_unique<MeshObject>(glm::vec3( 0, 0, 0), "models/Crate1.obj");
+        auto floor = std::make_unique<MeshObject>(glm::vec3( 0, 0, 0), "Crate1.obj");
 
         SceneNode* floorNode = new SceneNode();
         floorNode->object = floor.get();
@@ -32,7 +32,7 @@ namespace EngineScene{
         objects.push_back(std::move(floor));
         root.addChild(floorNode);   
 
-        auto cube = std::make_unique<MeshObject>(glm::vec3( 0, 2, 0), "models/Crate1.obj");
+        auto cube = std::make_unique<MeshObject>(glm::vec3( 0, 2, 0), "Crate1.obj");
 
         SceneNode* cubeNode = new SceneNode();
         cubeNode->object = cube.get();
@@ -49,7 +49,7 @@ namespace EngineScene{
     }
 
     void Scene::addDefaultObject(){
-        auto object = std::make_unique<MeshObject>(glm::vec3(0, 0, 0), "models/sphere.obj");
+        auto object = std::make_unique<MeshObject>(glm::vec3(0, 0, 0), "sphere.obj");
 
         SceneNode* objectNode = new SceneNode();
         objectNode->object = object.get();

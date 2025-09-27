@@ -122,8 +122,4 @@ namespace EngineCamera{
 
         return result;
     }
-
-    glm::mat4 Camera::getViewMatrix(){
-        return view;
-    }
 }

@@ -182,7 +182,7 @@ namespace EngineUI{
             ImGui::Begin("Scene Inspector");
 
             ImGui::Text("Id: %d", selectedScene->index);
-            ImGui::Text("Name: %s", selectedScene->getName().c_str());
+            ImGui::Text("Name: %s", selectedScene->name.c_str());
             ImGui::Text("Object Count: %d", (int)selectedScene->objects.size());
 
             if(ImGui::Button("Delete")){

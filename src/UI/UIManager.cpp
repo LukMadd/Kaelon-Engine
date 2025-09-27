@@ -23,8 +23,10 @@ namespace EngineUI{
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
+        std::string fontPath = std::string(KAELON_FONT_DIR) + "PixeloidMono.ttf";
+
         ImGui::GetStyle().ScaleAllSizes(io.DisplayFramebufferScale.x);
-        io.Fonts->AddFontFromFileTTF("../fonts/PixeloidMono.ttf", io.DisplayFramebufferScale.x * scale);
+        io.Fonts->AddFontFromFileTTF(fontPath.c_str(), io.DisplayFramebufferScale.x * scale);
         baseStyle = ImGui::GetStyle();
 
         ImGui_ImplGlfw_InitForVulkan(uiInfo.window, true);

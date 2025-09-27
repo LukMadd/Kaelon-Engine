@@ -30,7 +30,7 @@ namespace EngineScene{
             static std::unique_ptr<Scene> createScene(int id, const std::string &name);
             void initBaseScene(EngineResource::ResourceManager &resourceManager);
 
-            void pushObject(std::unique_ptr<Object> object);
+            void pushObject(std::unique_ptr<Object> object) {objects.push_back(std::move(object));};
 
             void addDefaultObject();
 

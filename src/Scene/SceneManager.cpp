@@ -41,7 +41,7 @@ namespace EngineScene{
         resourceManager = &resourceManagerRef;
 
         std::vector<std::filesystem::path> files;
-        for(auto& entry : std::filesystem::directory_iterator("../scenes"))
+        for(auto& entry : std::filesystem::directory_iterator(KAELON_SCENE_DIR))
             if(std::filesystem::is_regular_file(entry.path()) && entry.path().extension() == ".json")
                 files.push_back(entry.path());
 
@@ -74,8 +74,8 @@ namespace EngineScene{
             sceneData["cameras"].push_back(serialzeCamera(camera));
         }
 
-        std::filesystem::create_directories(("../scenes"));
-        std::ofstream file("../scenes/scene" + std::to_string(sceneIndex) + ".json");
+        std::filesystem::create_directories((KAELON_SCENE_DIR));
+        std::ofstream file(std::string(KAELON_SCENE_DIR) + "/scene" + std::to_string(sceneIndex) + ".json");
         if(!file.is_open()) {
             throw std::runtime_error("Failed to open JSON file");
         }
@@ -134,7 +134,7 @@ namespace EngineScene{
         }
 
 
-        std::string filename = "../scenes/scene" + std::to_string(sceneID) + ".json";
+        std::string filename = std::string(KAELON_SCENE_DIR) + "scene" + std::to_string(sceneID) + ".json";
         if(std::filesystem::exists(filename)){
             std::filesystem::remove(filename);
         }

@@ -1,9 +1,10 @@
 Ongoing tasks:
-    - Make both a GPU fps & frametime(profiling) + real time fps & framtime
-    - Add a ticking system
+    - Add a ticking system & Basic physics
+    - Separate game engine and game
 
 Future things:
     - Switch to texture atlas for textures
+    - Make both a GPU fps & frametime(profiling) + real time fps & framtime
 
 Completed Tasks:
     -Move serialization code to a separate folder

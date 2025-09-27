@@ -65,9 +65,9 @@ namespace EngineCamera{
 
             void updateYawAndPitch();
 
-            glm::mat4 getViewMatrix();
+            glm::mat4 getViewMatrix() {return view;};
 
-            glm::mat4 getProjection() {return projection;}
+           inline  glm::mat4 getProjection() {return projection;}
     };
 }
 

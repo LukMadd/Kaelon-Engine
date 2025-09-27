@@ -6,11 +6,19 @@
     - mkdir build
 2. Navigate to build and build project
     - cd build
-    - cmake ..
-    - make ("make -j" recommended for speed)
-3. Navigate to bin and run the executable(./Kaelon-Engine)
-    - cd .. && cd bin
-    - ./Kaelon-Engine   
+    - cmake .. && make -j
+
+----------How to Link------------
+1. Add subdirectory for Kaelon Engine:
+add_subdirectory(../Kaelon-Engine KaelonBuild)
+
+2. Include Kaelon Engine;
+target_include_directories(My_Game PUBLIC
+    ${CMAKE_SOURCE_DIR}/../Kaelon-Engine/include
+) (or the relative path from the game project to the engine)
+
+3. Link the engine
+target_link_libraries(My_Game PRIVATE Kaelon-Engine)
 
 ----------Required Libraries----------
 1. Vulkan SDK(1.2+)

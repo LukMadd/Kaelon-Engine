@@ -24,7 +24,7 @@ Mesh ModelLoader::loadMesh(std::string meshPath){
     reader_config.triangulate = true;
 
     tinyobj::ObjReader reader;
-    if(!reader.ParseFromFile("../"+meshPath, reader_config)){
+    if(!reader.ParseFromFile(std::string(KAELON_MODEL_DIR) + meshPath, reader_config)){
         throw std::runtime_error(reader.Error());
     }
 

@@ -30,7 +30,6 @@ namespace Engine{
     using namespace Engine;
 
     namespace EngineInput{
-
         class Input{
             private:
                 GLFWwindow* window;

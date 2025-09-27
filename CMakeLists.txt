@@ -78,9 +78,43 @@ endif()
 find_package(glm REQUIRED)
 
 #-----------------------------------------Set source files-----------------------------------------#
-file(GLOB_RECURSE SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp")
+file(GLOB_RECURSE ENGINE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
-add_executable(Kaelon-Engine ${SOURCES})
+list(FILTER ENGINE_SOURCES EXCLUDE REGEX ".*/main.cpp$")
+
+add_library(Kaelon-Engine STATIC ${ENGINE_SOURCES})
+
+target_compile_definitions(Kaelon-Engine PUBLIC
+    KAELON_SCENE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/scenes/"
+)
+target_compile_definitions(Kaelon-Engine PUBLIC
+    KAELON_TEXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/textures/"
+)
+target_compile_definitions(Kaelon-Engine PUBLIC
+    KAELON_MODEL_DIR="${CMAKE_CURRENT_SOURCE_DIR}/models/"
+)
+target_compile_definitions(Kaelon-Engine PUBLIC
+    KAELON_SHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/bin/shaders/"
+)
+target_compile_definitions(Kaelon-Engine PUBLIC
+    KAELON_FONT_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fonts/"
+)
+
+target_include_directories(Kaelon-Engine PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Core
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Camera
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Input
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Objects
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Renderer
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Scene
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/UI
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Serialization
+    ${Vulkan_INCLUDE_DIRS}
+    ${GLFW_INCLUDE_DIRS}
+    ${tinyobjloader_SOURCE_DIR}
+    ${glm_INCLUDE_DIRS}
+)
 
 #-----------------------------------------Find glslang-----------------------------------------#
 find_program(GLSLANG_VALIDATOR glslangValidator)
@@ -120,8 +154,6 @@ add_custom_target(
     DEPENDS ${SPIRV_SHADERS}
 )
 
-add_dependencies(Kaelon-Engine Shaders)
-
 #-----------------------------------------Include directories and libraries-----------------------------------------#
 FetchContent_Declare(
     imgui
@@ -146,29 +178,12 @@ add_library(imgui STATIC ${IMGUI_SOURCES})
 target_include_directories(imgui PUBLIC
     ${imgui_SOURCE_DIR}
     ${imgui_SOURCE_DIR}/backends
-    ${Vulkan_INCLUDE_DIRS}
-    ${GLFW_INCLUDE_DIRS}
 )
 
 target_link_libraries(imgui PUBLIC Vulkan::Vulkan glfw glm::glm)
 
-target_include_directories(Kaelon-Engine PRIVATE
-    ${CMAKE_SOURCE_DIR}/include
-    ${CMAKE_SOURCE_DIR}/include/Core
-    ${CMAKE_SOURCE_DIR}/include/Renderer
-    ${CMAKE_SOURCE_DIR}/include/Input
-    ${CMAKE_SOURCE_DIR}/include/Camera
-    ${CMAKE_SOURCE_DIR}/include/Scene
-    ${CMAKE_SOURCE_DIR}/include/Objects
-    ${CMAKE_SOURCE_DIR}/include/UI
-    ${CMAKE_SOURCE_DIR}/include/Serialization
-    ${Vulkan_INCLUDE_DIRS}
-    ${GLFW_INCLUDE_DIRS}
-    ${tinyobjloader_SOURCE_DIR}
-)
-
 message(STATUS "GLFW LIB PATH: ${GLFW_LIB_DIR}")
-target_link_libraries(Kaelon-Engine PRIVATE
+target_link_libraries(Kaelon-Engine PUBLIC
     glfw
     glm::glm
     "${Vulkan_LIB_DIR}/libvulkan.dylib"

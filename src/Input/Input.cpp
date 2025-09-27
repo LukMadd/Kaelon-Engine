@@ -52,12 +52,13 @@ namespace EngineInput{
         glm::vec3 rayDir = glm::normalize(farPoint - rayOrigin);
 
         float closestDistance = FLT_MAX;
+        const float MAX_DISTANCE = 100.0f;
         for(auto &object : inputScene->objects){
             float t;
             glm::vec3 worldMin = object->worldBoundingBox.min;
             glm::vec3 worldMax = object->worldBoundingBox.max;
             if(rayIntersectsAABB(rayOrigin, rayDir, worldMin, worldMax, t)){
-                if(t < closestDistance && t > 0.0f){
+                if(t < closestDistance && t > 0.0f && t < MAX_DISTANCE){
                     closestDistance = t;
 
                     if(*selectedObject != object.get()){

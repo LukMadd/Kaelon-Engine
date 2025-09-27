@@ -4,6 +4,7 @@
 
 #include "Scene.hpp"
 #include "RecourseManager.hpp"
+#include <cstdint>
 
 namespace EngineScene{
     class SceneManager{
@@ -21,6 +22,8 @@ namespace EngineScene{
 
             void serializeScene(Scene &scene, uint32_t sceneIndex);
             void deserializeScene(const std::string& filename);
+            
+            void deleteScene(Scene *scene);
 
             Scene* getScene(int id);
 

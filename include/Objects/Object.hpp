@@ -46,8 +46,10 @@ namespace EngineObject{
             AAB localBoundingBox;
             AAB worldBoundingBox;
 
-            void createBoundingBox(Object *object);
+            void createBoundingBox();
             void move(glm::vec3 position);
+            void rotate(glm::vec3 rotation);
+            void scale(glm::vec3 scale);
 
             bool hasTexture = false;
 

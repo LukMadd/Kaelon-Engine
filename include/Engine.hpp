@@ -25,6 +25,10 @@ namespace Engine{
 
         void RendererMainLoop(std::chrono::time_point<std::chrono::high_resolution_clock>& lastTime);
 
+        void SaveScenes(){
+            sceneManager.saveScenes();
+        }
+
         void mainLoop();
 
         void cleanup();

@@ -63,10 +63,10 @@ namespace EngineObject{
     void MeshObject::initVulkanResources(EngineResource::ResourceManager &resourceManager){
         if(!pendingMeshPath.empty()){
             mesh = resourceManager.load<Mesh>(pendingMeshPath);
-            createBoundingBox(this);
+            createBoundingBox();
         } else if(mesh && !mesh->meshPath.empty()){
             mesh = resourceManager.load<Mesh>(mesh->meshPath);
-            createBoundingBox(this);
+            createBoundingBox();
         }
 
         if(!pendingTexturePaths.empty()){

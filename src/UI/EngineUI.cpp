@@ -9,9 +9,10 @@ namespace EngineUI{
     void EngineUI::drawMainLayout(EngineScene::SceneManager *sceneManager){
             if(ImGui::BeginMenuBar()){
             if(ImGui::BeginMenu("Scene")){
+                ImGui::Checkbox("View Scenes", &m_showScenesWindow);
                 ImGui::Checkbox("Scene Hierarchy", &m_showSceneHierarchyWindow);
                 ImGui::Checkbox("Object Inspector", &m_showObjectInspector);
-                ImGui::Checkbox("Camera Inspector", &m_showCameraWindow);
+                ImGui::Checkbox("Camera Inspector", &m_showCameraInspector);
                 ImGui::EndMenu();
             }
             if(ImGui::BeginMenu("Engine")){
@@ -26,10 +27,6 @@ namespace EngineUI{
                 if(ImGui::Button("Add Object")){
                     sceneManager->getCurrentScene()->addDefaultObject();
                 }
-                ImGui::EndMenu();
-            }
-            if(ImGui::BeginMenu("Scenes")){
-                ImGui::Checkbox("View Scenes", &m_showScenesWindow);
                 ImGui::EndMenu();
             }
 
@@ -50,9 +47,7 @@ namespace EngineUI{
                         selectedObject = object.get();
                         selectedObject->selected = true;
 
-                        if(!m_showObjectInspector){
-                            m_showObjectInspector = true;
-                        }
+                        m_showObjectInspector = true;
                     }
                     if(is_object_selected){
                         ImGui::SetItemDefaultFocus();
@@ -75,9 +70,7 @@ namespace EngineUI{
 
                         scene->cameraManager.changeCamera(cameraIndex);
 
-                        if(!m_showCameraWindow){
-                            m_showCameraWindow = true;
-                        }
+                        m_showCameraInspector = true;
                     }
                     if(is_camera_selected){
                         ImGui::SetItemDefaultFocus();
@@ -96,7 +89,7 @@ namespace EngineUI{
         if(m_showObjectInspector && selectedObject || previousObject != selectedObject){
             previousObject = selectedObject;
             m_showObjectInspector = true;
-            
+
             ImGui::Begin("Object Inspector");
 
             ImGui::Text("UUID: %s", selectedObject->uuid.c_str());
@@ -116,21 +109,39 @@ namespace EngineUI{
             }
 
             if(ImGui::TreeNode("Rotation")){
-                ImGui::InputFloat("X: ", &selectedObject->node->transform.rotation.x);
-                ImGui::InputFloat("Y: ", &selectedObject->node->transform.rotation.y);
-                ImGui::InputFloat("Z: ", &selectedObject->node->transform.rotation.z);
+                float rotationX = selectedObject->node->transform.rotation.x;
+                float rotationY = selectedObject->node->transform.rotation.y;
+                float rotationZ = selectedObject->node->transform.rotation.z;
+                ImGui::InputFloat("X: ", &rotationX);
+                ImGui::InputFloat("Y: ", &rotationY);
+                ImGui::InputFloat("Z: ", &rotationZ);
+                glm::vec3 currentRotation = glm::vec3(selectedObject->node->transform.rotation.x, 
+                                                      selectedObject->node->transform.rotation.y,
+                                                      selectedObject->node->transform.rotation.z);
+                if(glm::vec3(rotationX, rotationY, rotationZ) != currentRotation){
+                    selectedObject->rotate(glm::vec3(rotationX, rotationY, rotationZ));
+                }
                 ImGui::TreePop();
             }
 
             if(ImGui::TreeNode("Scale")){
-                ImGui::InputFloat("X: ", &selectedObject->node->transform.scale.x);
-                ImGui::InputFloat("Y: ", &selectedObject->node->transform.scale.y);
-                ImGui::InputFloat("Z: ", &selectedObject->node->transform.scale.z);
+                float scaleX = selectedObject->node->transform.scale.x;
+                float scaleY = selectedObject->node->transform.scale.y;
+                float scaleZ = selectedObject->node->transform.scale.z;
+                ImGui::InputFloat("X: ", &scaleX);
+                ImGui::InputFloat("Y: ", &scaleY);
+                ImGui::InputFloat("Z: ", &scaleZ);
+                if(glm::vec3(scaleX, scaleY, scaleZ) != selectedObject->node->transform.scale){
+                    selectedObject->scale(glm::vec3(scaleX, scaleY, scaleZ));
+                }
                 ImGui::TreePop();
             }
 
             if(ImGui::Button("Delete")){
                 scene->removeObject(selectedObject);
+                selectedObject = nullptr;
+                previousObject = nullptr;
+                m_showObjectInspector = false;
             }
 
             ImGui::End();
@@ -138,7 +149,7 @@ namespace EngineUI{
     }
 
     void EngineUI::drawCameraInspector(){
-        if(m_showCameraWindow && selectedCamera){
+        if(m_showCameraInspector && selectedCamera){
             ImGui::Begin("Camera Inspector");
 
             ImGui::Text("Name: %s", selectedCamera->name.c_str());
@@ -160,6 +171,25 @@ namespace EngineUI{
                 ImGui::InputFloat("Speed: ", &selectedCamera->getSpeed());
                 ImGui::InputFloat("Sensitivity: ", &selectedCamera->getSensitivity());
                 ImGui::TreePop();
+            }
+
+            ImGui::End();
+        }
+    }
+
+    void EngineUI::drawSceneInspector(SceneManager *sceneManager){
+        if(m_showSceneInspector && selectedScene){
+            ImGui::Begin("Scene Inspector");
+
+            ImGui::Text("Id: %d", selectedScene->index);
+            ImGui::Text("Name: %s", selectedScene->getName().c_str());
+            ImGui::Text("Object Count: %d", (int)selectedScene->objects.size());
+
+            if(ImGui::Button("Delete")){
+                sceneManager->deleteScene(selectedScene);
+                if(selectedScene){
+                    selectedScene = nullptr;
+                }
             }
 
             ImGui::End();
@@ -228,6 +258,7 @@ namespace EngineUI{
     void EngineUI::drawScenes(EngineScene::SceneManager *sceneManager){
         if(m_showScenesWindow){
             ImGui::Begin("Scenes");
+            ImGui::Checkbox("Scene Inspector", &m_showSceneInspector);
             for(auto& scene : sceneManager->getScenes()){
                 ImGui::PushID(scene);
                 bool is_scene_selected = (selectedScene == scene);
@@ -236,11 +267,12 @@ namespace EngineUI{
                     selectedScene = scene;
                     selectedScene->selected = true;
 
-                    sceneManager->changeScenes(selectedScene->getId());
+                    m_showSceneInspector = true;
+
+                    sceneManager->changeScenes(selectedScene->getIndex());
                 }
                 ImGui::PopID();
-            }
-        
+            }        
             ImGui::End();
         }
     }

@@ -1,6 +1,7 @@
 #include "SceneManager.hpp"
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <memory>
 
 #include "Camera.hpp"
@@ -40,8 +41,8 @@ namespace EngineScene{
         resourceManager = &resourceManagerRef;
 
         std::vector<std::filesystem::path> files;
-        for (auto& entry : std::filesystem::directory_iterator("../scenes"))
-            if (std::filesystem::is_regular_file(entry.path()) && entry.path().extension() == ".json")
+        for(auto& entry : std::filesystem::directory_iterator("../scenes"))
+            if(std::filesystem::is_regular_file(entry.path()) && entry.path().extension() == ".json")
                 files.push_back(entry.path());
 
         std::sort(files.begin(), files.end());     
@@ -60,7 +61,7 @@ namespace EngineScene{
     void SceneManager::serializeScene(Scene &scene, uint32_t sceneIndex){
         json sceneData;
         sceneData["name"] = scene.name;
-        sceneData["id"] = scene.id;
+        sceneData["index"] = scene.index;
         sceneData["objects"] = json::array();
         sceneData["cameras"] = json::array();
 
@@ -83,14 +84,14 @@ namespace EngineScene{
         file.close();
     }
 
-        void SceneManager::deserializeScene(const std::string& filename){
+    void SceneManager::deserializeScene(const std::string& filename){
         std::ifstream file(filename);
         if(!file.is_open()) throw std::runtime_error("Failed to open file " + filename + " for deseralization");
 
         json sceneData;
         file >> sceneData;
 
-        std::unique_ptr<Scene> scene = Scene::createScene(sceneData["id"], sceneData["name"]);
+        std::unique_ptr<Scene> scene = Scene::createScene(sceneData["index"], sceneData["name"]);
 
         scene->objects.clear();
 
@@ -104,14 +105,40 @@ namespace EngineScene{
             scene->cameraManager.pushCamera(std::shared_ptr<EngineCamera::Camera>(camera));
         }
 
-        sceneOrder.push_back(scene->id);
+        sceneOrder.push_back(scene->index);
 
-        scenes[scene->id] = (std::move(scene));
+        scenes[scene->index] = (std::move(scene));
 
         currentID++;
     }
 
+    void SceneManager::deleteScene(Scene *scene){
+        if(getScenes().size() == 1){
+            std::cerr << "Warning: Cannot delete a scene when only one scene is present" << std::endl;
+            return;
+        }
+        int sceneID = scene->index;
 
+        scenes.erase(sceneID);
+
+        auto it = std::find(sceneOrder.begin(), sceneOrder.end(), sceneID);
+        if(it != sceneOrder.end()) {
+            size_t removedIndex = std::distance(sceneOrder.begin(), it);
+            sceneOrder.erase(it);
+
+            if(currentSceneIndex > removedIndex){
+                currentSceneIndex--;
+            } else if(currentSceneIndex == removedIndex){
+                currentSceneIndex = std::min(currentSceneIndex, (int)sceneOrder.size() - 1);
+            }
+        }
+
+
+        std::string filename = "../scenes/scene" + std::to_string(sceneID) + ".json";
+        if(std::filesystem::exists(filename)){
+            std::filesystem::remove(filename);
+        }
+    }
 
     void SceneManager::saveScenes(){
         for(auto& [id, scene] : scenes){
@@ -130,6 +157,17 @@ namespace EngineScene{
     }
 
     Scene* SceneManager::getCurrentScene(){
+        if(sceneOrder.empty()){
+            std::cerr << "(SceneManager::getCurrentScene()) Error: Scene order is empty! Returning nullptr" << std::endl;
+            return nullptr;
+        }
+        int id = sceneOrder[currentSceneIndex];
+        auto it = scenes.find(id);
+        if(it == scenes.end()){
+            std::cerr << "(SceneManager::getCurrentScene()) Error invliad currentSceneIndex! Returning nullptr" << std::endl;
+            return nullptr;
+        }
+
         return scenes.at(sceneOrder[currentSceneIndex]).get();
     }
 

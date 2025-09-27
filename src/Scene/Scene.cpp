@@ -7,7 +7,7 @@
 using namespace EngineObject;
 
 namespace EngineScene{
-    Scene::Scene(const std::string &name, int id) : name(name), id(id){
+    Scene::Scene(const std::string &name, int index) : name(name), index(index){
         root = SceneNode();
         root.transform.position = glm::vec3(0.0f);
         root.transform.rotation = glm::quat(1.0f, 0, 0, 0);
@@ -69,7 +69,6 @@ namespace EngineScene{
         root.update();
     }
 
-    //Potentially dangerous as if an object is erased from the main object vector but is in the newObjects vector it can cause problems
     void Scene::removeObject(Object *object){
         auto nodeIt = std::find(object->node->parent->children.begin(), object->node->parent->children.end(), object->node);
         if(nodeIt != object->node->parent->children.end()){ //Don't think this is necessary but oh well

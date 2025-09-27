@@ -10,12 +10,12 @@ using namespace EngineObject;
 namespace EngineScene{
     class Scene{
         public:
-            Scene(const std::string &name, int id);
+            Scene(const std::string &name, int index);
             ~Scene() = default;
 
             EngineCamera::CameraManager cameraManager;
 
-            int id;
+            int index;
             std::string name;
             std::vector<std::unique_ptr<EngineObject::Object>> objects; 
             std::vector<EngineObject::Object*> newObjects;
@@ -36,7 +36,7 @@ namespace EngineScene{
 
             void removeObject(Object *object);
 
-            int getId() const {return id;}
+            int getIndex() const {return index;}
             std::string getName() const {return name;}
 
             std::vector<std::shared_ptr<Texture>> getSceneTextures();

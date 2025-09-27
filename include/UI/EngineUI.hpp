@@ -14,6 +14,8 @@ namespace EngineUI{
 
             void drawCameraInspector();
 
+            void drawSceneInspector(SceneManager *sceneManager);
+
             void drawRecourses(EngineResource::ResourceManager *recourseManager);
 
             void drawRenderStats(EngineScene::Scene *scene, float fps);
@@ -23,7 +25,8 @@ namespace EngineUI{
         private:
             bool m_showSceneHierarchyWindow = false;
             bool m_showObjectInspector = false;
-            bool m_showCameraWindow = false;
+            bool m_showCameraInspector = false;
+            bool m_showSceneInspector = false;
             bool m_showResourceWindow = false;
             bool m_showRenderStats = false;
             bool m_showScenesWindow = false;

@@ -1,4 +1,4 @@
-#include "ObjectRegistry.hpp"
+#include "Core/ObjectRegistry.hpp"
 
 namespace EngineObject{
     void ObjectRegistry::registerType(const std::string& type, ObjectFactory factory){

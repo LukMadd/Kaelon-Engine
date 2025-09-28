@@ -1,9 +1,10 @@
-#include "Serialization.hpp"
-#include "ObjectRegistry.hpp"
+#include "Serialization/Serialization.hpp"
+#include "Core/ObjectRegistry.hpp"
 
 Object* deserializeObject(const nlohmann::json& objectJson){
     Object* obj = ObjectRegistry::get().create(objectJson["type"], objectJson);
     obj->uuid = objectJson.value("uuid", obj->uuid);
+    obj->isStatic = objectJson["is_static"];
 
     return obj;
 }

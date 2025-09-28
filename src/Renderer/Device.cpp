@@ -1,7 +1,7 @@
-#include "Instance.hpp"
-#include "SwapChain.hpp"
-#include "RendererGlobals.hpp"
-#include "RendererUtilities.hpp"
+#include "Renderer/Instance.hpp"
+#include "Renderer/SwapChain.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Renderer/RendererUtilities.hpp"
 
 #include <stdexcept>
 #include <cstdint>

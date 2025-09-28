@@ -1,6 +1,7 @@
-#include "BaseObjects.hpp"
-#include "RecourseManager.hpp"
-#include "ObjectRegistry.hpp"
+#include "Object/BaseObjects.hpp"
+#include "Core/RecourseManager.hpp"
+#include "Core/ObjectRegistry.hpp"
+#include "Spatial/Spatial_Partitioner.hpp"
 
 namespace EngineObject{
     Object* makeMeshObject(const nlohmann::json& data) {
@@ -60,11 +61,13 @@ namespace EngineObject{
         modelMatrix = glm::translate(glm::mat4(1.0f), position);
     }
 
-    void MeshObject::initVulkanResources(EngineResource::ResourceManager &resourceManager){
+    void MeshObject::initVulkanResources(EngineResource::ResourceManager &resourceManager,
+                                         EnginePartitioning::Spacial_Partitioner *spacialPartitioner){
+        this->spatialPartitioner = spacialPartitioner;
         if(!pendingMeshPath.empty()){
             mesh = resourceManager.load<Mesh>(pendingMeshPath);
             createBoundingBox();
-        } else if(mesh && !mesh->meshPath.empty()){
+        } else if(!mesh->meshPath.empty()){
             mesh = resourceManager.load<Mesh>(mesh->meshPath);
             createBoundingBox();
         }

@@ -1,7 +1,7 @@
 #ifndef _MODEL_LOADER_HPP
 #define _MODEL_LOADER_HPP
 
-#include "Mesh.hpp"
+#include "Object/Mesh.hpp"
 
 using namespace EngineObject;
 

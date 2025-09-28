@@ -1,4 +1,4 @@
-#include "CameraManager.hpp"
+#include "Camera/CameraManager.hpp"
 
 namespace EngineCamera{
     std::shared_ptr<Camera> CameraManager::getCurrentCamera(){

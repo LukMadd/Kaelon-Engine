@@ -1,9 +1,9 @@
 #ifndef _SCENE_HPP
 #define _SCENE_HPP
 
-#include "CameraManager.hpp"
-#include "Object.hpp"
-#include "RecourseManager.hpp"
+#include "Camera/CameraManager.hpp"
+#include "Object/Object.hpp"
+#include "Core/RecourseManager.hpp"
 
 using namespace EngineObject;
 

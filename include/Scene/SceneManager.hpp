@@ -3,7 +3,8 @@
 #define _SCENE_MANAGER_HPP
 
 #include "Scene.hpp"
-#include "RecourseManager.hpp"
+#include "Core/RecourseManager.hpp"
+#include "Spatial/Spatial_Partitioner.hpp"
 #include <cstdint>
 
 namespace EngineScene{
@@ -11,7 +12,8 @@ namespace EngineScene{
         public:
             SceneManager();
 
-            void init(EngineResource::ResourceManager &resourceManager);
+            void init(EngineResource::ResourceManager &resourceManager, 
+                     EnginePartitioning::Spacial_Partitioner *spatialPartitioner);
 
             void addDefaultScene();
             void changeScenes(int index);
@@ -32,6 +34,8 @@ namespace EngineScene{
 
         private:
             EngineResource::ResourceManager *resourceManager;
+
+            EnginePartitioning::Spacial_Partitioner *spatialPartitioner;
 
             std::unordered_map<int, std::unique_ptr<Scene>> scenes;
 

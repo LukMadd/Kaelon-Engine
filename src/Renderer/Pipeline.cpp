@@ -1,15 +1,15 @@
-#include "Pipeline.hpp"
+#include "Renderer/Pipeline.hpp"
 #include <cstdint>
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <vulkan/vulkan.hpp>
-#include "ObjectRegistry.hpp"
+#include "Core/ObjectRegistry.hpp"
 
-#include "Vertex.hpp"
-#include "DepthBuffer.hpp"
-#include "RendererGlobals.hpp"
-#include "ValidationLayers.hpp"
+#include "Renderer/Vertex.hpp"
+#include "Renderer/DepthBuffer.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Renderer/ValidationLayers.hpp"
 
 static std::vector<char> readFile(const std::string& filePath){
     std::ifstream inFile(filePath, std::ios::ate | std::ios::binary);

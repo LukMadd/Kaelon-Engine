@@ -1,11 +1,11 @@
-#include "UIManager.hpp"
+#include "UI/UIManager.hpp"
 
 #include "imgui.h"
 #include "backends/imgui_impl_vulkan.h"
 #include "backends/imgui_impl_glfw.h"
 
-#include "RendererGlobals.hpp"
-#include "RendererUtilities.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Renderer/RendererUtilities.hpp"
 #include <cassert>
 #include <iostream>
 

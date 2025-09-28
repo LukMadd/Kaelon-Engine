@@ -102,14 +102,6 @@ target_compile_definitions(Kaelon-Engine PUBLIC
 
 target_include_directories(Kaelon-Engine PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/Core
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/Camera
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/Input
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/Objects
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/Renderer
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/Scene
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/UI
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/Serialization
     ${Vulkan_INCLUDE_DIRS}
     ${GLFW_INCLUDE_DIRS}
     ${tinyobjloader_SOURCE_DIR}

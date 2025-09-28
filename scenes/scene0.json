@@ -39,6 +39,7 @@
                     "g": 0.800000011920929,
                     "r": 0.800000011920929
                 },
+                "is_static": true,
                 "mesh": "Crate1.obj",
                 "metallic": 0.0,
                 "name": "Base_Scene_Floor",
@@ -49,7 +50,7 @@
                 },
                 "textures": [],
                 "type": "Mesh_Object",
-                "uuid": "3afb025e755dfdbe5a7db24e141953d7"
+                "uuid": "9214d159d7d467f46c6129d6cc8151d5"
             },
             "transform": {
                 "position": [
@@ -79,6 +80,7 @@
                     "g": 0.20000000298023224,
                     "r": 0.20000000298023224
                 },
+                "is_static": false,
                 "mesh": "Crate1.obj",
                 "metallic": 0.0,
                 "name": "Base_Scene_Cube",
@@ -89,12 +91,12 @@
                 },
                 "textures": [],
                 "type": "Mesh_Object",
-                "uuid": "0b1fd6c2806153f5622cabcbb6b9afef"
+                "uuid": "f7a57639893480bb5288068ace62cc82"
             },
             "transform": {
                 "position": [
                     0.0,
-                    2.0,
+                    2.4790053367614746,
                     0.0
                 ],
                 "rotation": [

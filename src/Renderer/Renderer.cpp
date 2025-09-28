@@ -1,9 +1,10 @@
-#include "Renderer.hpp"
-#include "Instance.hpp"
-#include "RecourseManager.hpp"
-#include "ObjectGlobals.hpp"
-#include "RendererGlobals.hpp"
-#include "ValidationLayers.hpp"
+#include "Renderer/Renderer.hpp"
+#include "Renderer/Instance.hpp"
+#include "Core/RecourseManager.hpp"
+#include "Object/ObjectGlobals.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Renderer/ValidationLayers.hpp"
+#include "Spatial/Spatial_Partitioner.hpp"
 #include <cstdint>
 
 namespace EngineRenderer{
@@ -77,9 +78,10 @@ namespace EngineRenderer{
         createSyncObjects();
     }
 
-    void Renderer::initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager){
+    void Renderer::initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager, 
+                               EnginePartitioning::Spacial_Partitioner &spacialPartitioner){
         for(auto &obj : scene.objects){
-            obj->initVulkanResources(resourceManager);
+            obj->initVulkanResources(resourceManager, &spacialPartitioner);
         }
         scene.areObjectsInitialized = true;
     }

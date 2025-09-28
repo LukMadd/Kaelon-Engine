@@ -1,7 +1,7 @@
-#include "RecourseManager.hpp"
-#include "Scene.hpp"
-#include "Object.hpp"
-#include "SceneManager.hpp"
+#include "Core/RecourseManager.hpp"
+#include "Scene/Scene.hpp"
+#include "Object/Object.hpp"
+#include "Scene/SceneManager.hpp"
 
 namespace EngineUI{
     class EngineUI{

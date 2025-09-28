@@ -1,7 +1,7 @@
-#include "ObjectGlobals.hpp"
-#include "RendererGlobals.hpp"
-#include "RecourseManager.hpp"
-#include "ValidationLayers.hpp"
+#include "Object/ObjectGlobals.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Core/RecourseManager.hpp"
+#include "Renderer/ValidationLayers.hpp"
 #include <cstdint>
 
 using namespace EngineRenderer;

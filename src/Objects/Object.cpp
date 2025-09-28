@@ -1,4 +1,5 @@
-#include "Object.hpp"
+#include "Object/Object.hpp"
+#include "Spatial/Spatial_Partitioner.hpp"
 #include <iostream>
 
 namespace EngineObject{
@@ -37,6 +38,10 @@ namespace EngineObject{
 
         this->worldBoundingBox.min = worldMin;
         this->worldBoundingBox.max = worldMax;
+
+        this->worldBoundingBox.isInitialized = true;
+
+        this->spatialPartitioner->registerObject(this);
     }
 
     void Object::move(glm::vec3 position){

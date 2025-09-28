@@ -1,6 +1,6 @@
-#include "MipMap.hpp"
-#include "RendererUtilities.hpp"
-#include "RendererGlobals.hpp"
+#include "Renderer/MipMap.hpp"
+#include "Renderer/RendererUtilities.hpp"
+#include "Renderer/RendererGlobals.hpp"
 #include <cstdint>
 
 namespace EngineRenderer{

@@ -1,4 +1,4 @@
-#include "FPSManager.hpp"
+#include "UI/FPSManager.hpp"
 
 namespace EngineUI{
     //Smooths FPS counter so that it is readable

@@ -1,7 +1,7 @@
-#include "UniformBuffer.hpp"
-#include "RendererUtilities.hpp"
-#include "RendererGlobals.hpp"
-#include "ValidationLayers.hpp"
+#include "Renderer/UniformBuffer.hpp"
+#include "Renderer/RendererUtilities.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Renderer/ValidationLayers.hpp"
 #include <array>
 #include <cstdint>
 

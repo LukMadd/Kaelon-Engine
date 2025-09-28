@@ -1,6 +1,6 @@
-#include "RendererUtilities.hpp"
-#include "RendererGlobals.hpp"
-#include "ValidationLayers.hpp"
+#include "Renderer/RendererUtilities.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Renderer/ValidationLayers.hpp"
 #include <cstdint>
 
 namespace EngineRenderer{

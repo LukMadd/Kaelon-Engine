@@ -1,10 +1,9 @@
-#include "Camera.hpp"
-#include "Action.hpp"
-#include "Input.hpp"
+#include "Camera/Camera.hpp"
+#include "Input/Action.hpp"
+#include "Input/Input.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <array>
-#include "Action.hpp"
 
 constexpr float RENDER_DISTANCE = 100.0f;
 

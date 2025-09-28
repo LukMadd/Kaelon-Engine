@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <string>
 
-#include "Object.hpp"
+#include "Object/Object.hpp"
 #include "nlohmann/json.hpp"
 
 using namespace EngineScene;

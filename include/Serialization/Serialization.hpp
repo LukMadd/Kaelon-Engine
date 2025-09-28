@@ -1,5 +1,5 @@
-#include "Camera.hpp"
-#include "Scene.hpp"
+#include "Camera/Camera.hpp"
+#include "Scene/Scene.hpp"
 #include "nlohmann/json.hpp"
 
 using namespace nlohmann;

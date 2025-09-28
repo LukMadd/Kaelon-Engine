@@ -1,9 +1,9 @@
-#include "Window.hpp"
-#include "Renderer.hpp"
+#include "Renderer/Window.hpp"
+#include "Renderer/Renderer.hpp"
 #include <stdexcept>
 #include <glm/glm.hpp>
 
-#include "Input.hpp"
+#include "Input/Input.hpp"
 
 namespace Engine{
     void toggleFullscreen(GLFWwindow* window){

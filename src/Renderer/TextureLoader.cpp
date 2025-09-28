@@ -3,11 +3,11 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "TextureLoader.hpp"
-#include "Vertex.hpp"
-#include "RendererUtilities.hpp"
-#include "Renderer.hpp"
-#include "RendererGlobals.hpp"
+#include "Renderer/TextureLoader.hpp"
+#include "Renderer/Vertex.hpp"
+#include "Renderer/RendererUtilities.hpp"
+#include "Renderer/Renderer.hpp"
+#include "Renderer/RendererGlobals.hpp"
 
 namespace EngineRenderer{
     std::shared_ptr<Texture> TextureLoader::createTexture(const std::string &filePath){

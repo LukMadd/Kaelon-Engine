@@ -1,5 +1,5 @@
-#include "ModelLoader.hpp"
-#include "Vertex.hpp"
+#include "Renderer/ModelLoader.hpp"
+#include "Renderer/Vertex.hpp"
 #include <cstdint>
 #include <unordered_map>
 #include <stdexcept>

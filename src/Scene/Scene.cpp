@@ -1,7 +1,7 @@
-#include "Scene.hpp"
-#include "BaseObjects.hpp"
-#include "Object.hpp"
-#include "RendererGlobals.hpp"
+#include "Scene/Scene.hpp"
+#include "Object/BaseObjects.hpp"
+#include "Object/Object.hpp"
+#include "Renderer/RendererGlobals.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace EngineObject;
@@ -28,11 +28,12 @@ namespace EngineScene{
         floor->node = floorNode;
         floor->material->setBaseColor(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
         floor->name = "Base_Scene_Floor";
+        floor->isStatic = true;
 
         objects.push_back(std::move(floor));
         root.addChild(floorNode);   
 
-        auto cube = std::make_unique<MeshObject>(glm::vec3( 0, 2, 0), "Crate1.obj");
+        auto cube = std::make_unique<MeshObject>(glm::vec3( 0, 10, 0), "Crate1.obj");
 
         SceneNode* cubeNode = new SceneNode();
         cubeNode->object = cube.get();

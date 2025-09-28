@@ -3,7 +3,7 @@
 
 #include "Input.hpp"
 #include "Action.hpp"
-#include "SceneManager.hpp"
+#include "Scene/SceneManager.hpp"
 
 namespace EngineInput{
     class InputHandler{

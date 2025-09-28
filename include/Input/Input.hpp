@@ -1,9 +1,9 @@
 #ifndef _INPUT_HPP
 #define _INPUT_HPP
 
-#include "Camera.hpp"
-#include "Object.hpp"
-#include "Scene.hpp"
+#include "Camera/Camera.hpp"
+#include "Object/Object.hpp"
+#include "Scene/Scene.hpp"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 

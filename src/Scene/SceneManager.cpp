@@ -1,15 +1,15 @@
-#include "SceneManager.hpp"
+#include "Scene/SceneManager.hpp"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <memory>
 
-#include "Camera.hpp"
-#include "ObjectRegistry.hpp"
-#include "RecourseManager.hpp"
+#include "Camera/Camera.hpp"
+#include "Core/ObjectRegistry.hpp"
+#include "Core/RecourseManager.hpp"
 #include "nlohmann/json.hpp"
 
-#include "Serialization.hpp"
+#include "Serialization/Serialization.hpp"
 
 using namespace EngineObject;
 using namespace nlohmann;
@@ -35,10 +35,17 @@ namespace EngineScene{
         auto &scenePtr = scenes.at(newSceneID);
 
         currentSceneIndex = index;
+
+        spatialPartitioner->reset();
+        for(auto &object : getCurrentScene()->objects){
+            spatialPartitioner->registerObject(object.get());
+        }
     }
 
-    void SceneManager::init(EngineResource::ResourceManager &resourceManagerRef){
-        resourceManager = &resourceManagerRef;
+    void SceneManager::init(EngineResource::ResourceManager &resourceManager, 
+                            EnginePartitioning::Spacial_Partitioner *spatialPartitioner){
+        this->resourceManager = &resourceManager;
+        this->spatialPartitioner = spatialPartitioner;
 
         std::vector<std::filesystem::path> files;
         for(auto& entry : std::filesystem::directory_iterator(KAELON_SCENE_DIR))

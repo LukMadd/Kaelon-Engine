@@ -1,8 +1,8 @@
-#include "EngineUI.hpp"
-#include "Object.hpp"
-#include "RendererGlobals.hpp"
-#include "Scene.hpp"
-#include "SceneManager.hpp"
+#include "UI/EngineUI.hpp"
+#include "Object/Object.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Scene/Scene.hpp"
+#include "Scene/SceneManager.hpp"
 #include "imgui.h"
 
 namespace EngineUI{

@@ -1,6 +1,6 @@
-#include "Vertex.hpp"
-#include "RendererUtilities.hpp"
-#include "RendererGlobals.hpp"
+#include "Renderer/Vertex.hpp"
+#include "Renderer/RendererUtilities.hpp"
+#include "Renderer/RendererGlobals.hpp"
 #include <cstdint>
 
 namespace EngineRenderer{

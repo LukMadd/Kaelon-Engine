@@ -1,8 +1,8 @@
-#include "InputHandler.hpp"
-#include "SceneManager.hpp"
-#include "Action.hpp"
-#include "Input.hpp"
-#include "Window.hpp"
+#include "Input/InputHandler.hpp"
+#include "Scene/SceneManager.hpp"
+#include "Input/Action.hpp"
+#include "Input/Input.hpp"
+#include "Renderer/Window.hpp"
 
 namespace EngineInput{
     bool InputHandler::isPressed(Key key){

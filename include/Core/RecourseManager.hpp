@@ -4,10 +4,10 @@
 #include <type_traits>
 #include <any>
 #include <unordered_map>
-#include "Mesh.hpp"
-#include "Texture.hpp"
-#include "ModelLoader.hpp"
-#include "TextureLoader.hpp"
+#include "Object/Mesh.hpp"
+#include "Object/Texture.hpp"
+#include "Renderer/ModelLoader.hpp"
+#include "Renderer/TextureLoader.hpp"
 
 using namespace EngineObject;
 

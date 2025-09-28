@@ -1,9 +1,9 @@
 #include "Engine.hpp"
-#include "Input.hpp"
-#include "Renderer.hpp"
-#include "RendererGlobals.hpp"
-#include "ObjectRegistry.hpp"
-#include "ObjectGlobals.hpp"
+#include "Input/Input.hpp"
+#include "Renderer/Renderer.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Core/ObjectRegistry.hpp"
+#include "Object/ObjectGlobals.hpp"
 
 #include <chrono>
 
@@ -16,7 +16,7 @@ namespace Engine{
     void GameEngine::init(){
         renderer.initVulkan();
 
-        sceneManager.init(resourceManager);
+        sceneManager.init(resourceManager, &spatialPartitioner);
 
         for(auto &scene : sceneManager.getScenes()){
             scene->update();
@@ -41,7 +41,7 @@ namespace Engine{
         renderer.initObjectResources(totalObjects,resourceManager);
     
         for(auto &scene : sceneManager.getScenes()){
-            renderer.initObjects(*scene, resourceManager);
+            renderer.initObjects(*scene, resourceManager, spatialPartitioner);
         }
 
         renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
@@ -71,16 +71,13 @@ namespace Engine{
         Input::get().init(window);
         Input::get().setCallBacks();
         actionManager.setupBindings();
+        physicsEngine.init(&sceneManager, &spatialPartitioner);
     }
 
-    void GameEngine::RendererMainLoop(std::chrono::time_point<std::chrono::high_resolution_clock>& lastTime){
+    void GameEngine::RendererMainLoop(float deltaTime){
         glfwPollEvents();
         drawCallCountLastFrame = drawCallCount;
         drawCallCount = 0;
-
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastTime).count();
-        lastTime = currentTime;
 
         Input::get().inputCamera = sceneManager.getCurrentScene()->cameraManager.getCurrentCamera().get();
 
@@ -103,14 +100,14 @@ namespace Engine{
 
         if(sceneManager.getCurrentScene()->areObjectsInitialized == false){
             totalObjects+=sceneManager.getCurrentScene()->objects.size();
-            renderer.initObjects(*sceneManager.getCurrentScene(), resourceManager);
+            renderer.initObjects(*sceneManager.getCurrentScene(), resourceManager, spatialPartitioner);
             renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
         }
 
         if(sceneManager.getCurrentScene()->newObjects.empty() == false){
             while(sceneManager.getCurrentScene()->newObjects.empty() == false){
                 auto object = sceneManager.getCurrentScene()->newObjects.back();
-                object->initVulkanResources(resourceManager);
+                object->initVulkanResources(resourceManager, &spatialPartitioner);
                 sceneManager.getCurrentScene()->newObjects.pop_back();
             }    
         }
@@ -163,9 +160,24 @@ namespace Engine{
     void GameEngine::mainLoop(){
         auto lastTime = std::chrono::high_resolution_clock::now();
 
-        while(!glfwWindowShouldClose(window)){
-            RendererMainLoop(lastTime);
+        while(!glfwWindowShouldClose(window)){            
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - lastTime).count();
+            lastTime = currentTime;
+
             inputHandler.update(window, actionManager, sceneManager);
+
+            float accumulator;
+
+            float physicsStep = physicsEngine.getTickRate();
+
+            accumulator+=deltaTime;
+            while(accumulator >= physicsStep){
+                physicsEngine.tick(physicsStep);
+                accumulator-=physicsEngine.getTickRate();
+            }
+
+            RendererMainLoop(deltaTime); 
             
         }
         vkDeviceWaitIdle(EngineRenderer::device);

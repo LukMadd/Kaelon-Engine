@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <vulkan/vulkan.hpp>
 
-#include "Texture.hpp"
+#include "Object/Texture.hpp"
 
 using namespace EngineObject;
 

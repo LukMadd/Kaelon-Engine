@@ -1,11 +1,12 @@
-#include "RecourseManager.hpp"
-#include "SceneManager.hpp"
-#include "Renderer.hpp"
-#include "InputHandler.hpp"
-#include "Action.hpp"
-#include "Lighting.hpp"
-#include "UIManager.hpp"
-#include "FPSManager.hpp"
+#include "Core/RecourseManager.hpp"
+#include "Scene/SceneManager.hpp"
+#include "Renderer/Renderer.hpp"
+#include "Input/InputHandler.hpp"
+#include "Input/Action.hpp"
+#include "Renderer/Lighting.hpp"
+#include "UI/UIManager.hpp"
+#include "UI/FPSManager.hpp"
+#include "Physics/PhysicsEngine.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -16,6 +17,7 @@ namespace Engine{
         SceneManager sceneManager;
         EngineInput::ActionManager actionManager;
         EngineInput::InputHandler inputHandler;
+        EnginePhysics::PhysicsEngine physicsEngine;
         EngineUI::UIManager uiManager;
         EngineUI::FPSManager fpsManager; //Might just become debug manager in the future
 
@@ -23,7 +25,7 @@ namespace Engine{
     
         void init();
 
-        void RendererMainLoop(std::chrono::time_point<std::chrono::high_resolution_clock>& lastTime);
+        void RendererMainLoop(float deltaTime);
 
         void SaveScenes(){
             sceneManager.saveScenes();
@@ -38,6 +40,8 @@ namespace Engine{
             EngineRenderer::Renderer renderer;
             EngineRenderer::Lighting lights;
             VkDescriptorPool imguiPool;
+
+            EnginePartitioning::Spacial_Partitioner spatialPartitioner;
 
             uint32_t currentSceneIndex = 0;
             size_t totalObjects;

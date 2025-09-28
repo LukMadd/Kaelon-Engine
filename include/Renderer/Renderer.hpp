@@ -11,8 +11,8 @@
 #include "Vertex.hpp"
 #include "UniformBuffer.hpp"
 #include "RendererUtilities.hpp"
-#include "Object.hpp"
-#include "Scene.hpp"
+#include "Object/Object.hpp"
+#include "Scene/Scene.hpp"
 
 constexpr uint32_t MAX_FRAMES_IN_FLIGHT = 3;
 
@@ -80,7 +80,8 @@ namespace EngineRenderer {
 
                 void initVulkan();
                 void initObjectResources(uint32_t objectCount, EngineResource::ResourceManager &resourceManager);
-                void initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager);
+                void initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager, 
+                                 EnginePartitioning::Spacial_Partitioner &spacialPartitione);
                 void initSceneDescriptors(std::vector<std::unique_ptr<EngineObject::Object>>& objects);
                 void cleanup(Scene *scene);
                 void drawFrame(Scene* scene);

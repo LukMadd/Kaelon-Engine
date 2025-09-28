@@ -1,5 +1,5 @@
-#include "Serialization.hpp"
-#include "Object.hpp"
+#include "Serialization/Serialization.hpp"
+#include "Object/Object.hpp"
 
 json serializeObject(const EngineObject::Object &object){
     json jsonData;
@@ -12,6 +12,7 @@ json serializeObject(const EngineObject::Object &object){
     jsonData["uuid"] = object.uuid;
     jsonData["type"] = object.type;
     jsonData["mesh"] = object.mesh->meshPath;
+    jsonData["is_static"] = object.isStatic; 
         jsonData["base_color"] = {
             {"r", object.material->getBaseColor().x},
             {"g", object.material->getBaseColor().y},

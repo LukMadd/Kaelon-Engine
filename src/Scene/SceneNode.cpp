@@ -1,5 +1,5 @@
-#include "SceneNode.hpp"
-#include "Object.hpp"
+#include "Scene/SceneNode.hpp"
+#include "Object/Object.hpp"
 
 namespace EngineScene{
     SceneNode::SceneNode(){

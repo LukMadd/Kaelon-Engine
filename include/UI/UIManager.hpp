@@ -2,9 +2,9 @@
 #include <vulkan/vulkan.hpp>
 
 #include "EngineUI.hpp"
-#include "SceneManager.hpp"
-#include "CameraManager.hpp"
-#include "RecourseManager.hpp"
+#include "Scene/SceneManager.hpp"
+#include "Camera/CameraManager.hpp"
+#include "Core/RecourseManager.hpp"
 #include "imgui.h"
 
 namespace EngineUI{

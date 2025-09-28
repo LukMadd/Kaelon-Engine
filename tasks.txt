@@ -1,6 +1,7 @@
 Ongoing tasks:
-    - Add a ticking system & Basic physics
+    - Basic physics
     - Separate game engine and game
+    - Add spatial partitioning
 
 Future things:
     - Switch to texture atlas for textures

@@ -1,10 +1,10 @@
 #include <cstdint>
 #include <limits>
-#include "SwapChain.hpp"
-#include "MultiSampling.hpp"
-#include "RendererUtilities.hpp"
-#include "RendererGlobals.hpp"
-#include "ValidationLayers.hpp"
+#include "Renderer/SwapChain.hpp"
+#include "Renderer/MultiSampling.hpp"
+#include "Renderer/RendererUtilities.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Renderer/ValidationLayers.hpp"
 
 namespace EngineRenderer {
     SwapChainSupportDetails SwapChainSupportDetails::querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface){

@@ -1,9 +1,9 @@
-#include "Command.hpp"
-#include "RendererGlobals.hpp"
-#include "ValidationLayers.hpp"
+#include "Renderer/Command.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Renderer/ValidationLayers.hpp"
 #include "imgui.h"
 #include "backends/imgui_impl_vulkan.h"
-#include "UniformBuffer.hpp"
+#include "Renderer/UniformBuffer.hpp"
 #include <cstdint>
 
 

@@ -1,6 +1,6 @@
-#include "DepthBuffer.hpp"
-#include "RendererGlobals.hpp"
-#include "RendererUtilities.hpp"
+#include "Renderer/DepthBuffer.hpp"
+#include "Renderer/RendererGlobals.hpp"
+#include "Renderer/RendererUtilities.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE

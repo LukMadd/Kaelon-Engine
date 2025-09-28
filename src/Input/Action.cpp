@@ -1,5 +1,5 @@
-#include "Action.hpp"
-#include "InputHandler.hpp"
+#include "Input/Action.hpp"
+#include "Input/InputHandler.hpp"
 
 namespace EngineInput{    
     void ActionManager::bind(Action action, Key key){

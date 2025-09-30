@@ -1,17 +1,18 @@
 #include "Object/Object.hpp"
 #include "Spatial/Spatial_Partitioner.hpp"
+#include <cstdint>
 #include <iostream>
 
 namespace EngineObject{
     void Object::createBoundingBox(){
         for(const auto& v : this->mesh->vertexBuffer.vertices){
-            this->localBoundingBox.min.x = std::min(this->localBoundingBox.min.x, v.pos.x);
-            this->localBoundingBox.min.y = std::min(this->localBoundingBox.min.y, v.pos.y);
-            this->localBoundingBox.min.z = std::min(this->localBoundingBox.min.z, v.pos.z);
+            localBoundingBox.min.x = std::min(this->localBoundingBox.min.x, v.pos.x);
+            localBoundingBox.min.y = std::min(this->localBoundingBox.min.y, v.pos.y);
+            localBoundingBox.min.z = std::min(this->localBoundingBox.min.z, v.pos.z);
 
-            this->localBoundingBox.max.x = std::max(this->localBoundingBox.max.x, v.pos.x);
-            this->localBoundingBox.max.y = std::max(this->localBoundingBox.max.y, v.pos.y);
-            this->localBoundingBox.max.z = std::max(this->localBoundingBox.max.z, v.pos.z);    
+            localBoundingBox.max.x = std::max(this->localBoundingBox.max.x, v.pos.x);
+            localBoundingBox.max.y = std::max(this->localBoundingBox.max.y, v.pos.y);
+            localBoundingBox.max.z = std::max(this->localBoundingBox.max.z, v.pos.z);    
         }
 
         glm::mat4 model = glm::translate(glm::mat4(1.0f), this->node->transform.position)
@@ -36,17 +37,31 @@ namespace EngineObject{
             worldMax = glm::max(worldMax, transformed);
         }
 
-        this->worldBoundingBox.min = worldMin;
-        this->worldBoundingBox.max = worldMax;
+        worldBoundingBox.min = worldMin;
+        worldBoundingBox.max = worldMax;
 
-        this->worldBoundingBox.isInitialized = true;
+        worldBoundingBox.isInitialized = true;
 
-        this->spatialPartitioner->registerObject(this);
+        updateCells();
+    }
+
+    void Object::updateCells(){
+        std::vector<uint64_t> objectCellKeys = spatialPartitioner->getCellKeys(this);
+
+        if(objectCellKeys != cells){
+            if(this->assignedToCell == false){
+                spatialPartitioner->registerObject(this, objectCellKeys);
+            } else{
+                spatialPartitioner->reRegisterObject(this, objectCellKeys);
+            }
+        }
     }
 
     void Object::move(glm::vec3 position){
         this->node->transform.position = position;
-        this->modelMatrix = glm::translate(glm::mat4(1.0f), position);
+        this->modelMatrix[3].x = position.x;
+        this->modelMatrix[3].y = position.y;
+        this->modelMatrix[3].z = position.z;
         createBoundingBox();
     }
 

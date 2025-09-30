@@ -38,7 +38,7 @@ namespace EngineScene{
 
         spatialPartitioner->reset();
         for(auto &object : getCurrentScene()->objects){
-            spatialPartitioner->registerObject(object.get());
+            object->updateCells();
         }
     }
 

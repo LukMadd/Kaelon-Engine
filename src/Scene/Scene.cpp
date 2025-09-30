@@ -50,7 +50,7 @@ namespace EngineScene{
     }
 
     void Scene::addDefaultObject(){
-        auto object = std::make_unique<MeshObject>(glm::vec3(0, 0, 0), "sphere.obj");
+        auto object = std::make_unique<MeshObject>(glm::vec3(0, 10, 0), "sphere.obj");
 
         SceneNode* objectNode = new SceneNode();
         objectNode->object = object.get();

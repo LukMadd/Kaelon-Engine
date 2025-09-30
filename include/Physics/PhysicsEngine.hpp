@@ -14,7 +14,8 @@ namespace EnginePhysics{
 
             bool checkAABCollision(const AAB &a, const AAB &b);
 
-            void applyGravity(Object *object);
+            bool checkAABGroundUnderneath(const AAB &a, const AAB &b, float previousMinY, 
+                                          float epsilon);
 
             float getTickRate() {return tickRate;}
 

@@ -3,9 +3,9 @@
         {
             "fov": 35.0,
             "front": [
-                0.005646607838571072,
-                -0.32468003034591675,
-                0.9458070397377014
+                0.005629478022456169,
+                -0.33292147517204285,
+                0.9429378509521484
             ],
             "is_initialized": true,
             "name": "Generic_Camera",
@@ -15,7 +15,7 @@
                 -33.5
             ],
             "rotation": {
-                "pitch": -18.946189880371094,
+                "pitch": -19.446191787719727,
                 "yaw": 89.65794372558594
             },
             "sensitivity": 0.10000000149011612,
@@ -50,7 +50,7 @@
                 },
                 "textures": [],
                 "type": "Mesh_Object",
-                "uuid": "9214d159d7d467f46c6129d6cc8151d5"
+                "uuid": "83ba81f15c0a888ba0b235aedded3a6e"
             },
             "transform": {
                 "position": [
@@ -91,12 +91,12 @@
                 },
                 "textures": [],
                 "type": "Mesh_Object",
-                "uuid": "f7a57639893480bb5288068ace62cc82"
+                "uuid": "81b0a3639dffd03dd5eaba36848907ba"
             },
             "transform": {
                 "position": [
                     0.0,
-                    2.4790053367614746,
+                    2.5103249549865723,
                     0.0
                 ],
                 "rotation": [

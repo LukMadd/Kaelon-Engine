@@ -9,6 +9,7 @@
 #include "UUID.hpp"
 
 #include <cstddef>
+#include <cstdint>
 #include <vulkan/vulkan.hpp>
 #include <glm/glm.hpp>
 
@@ -26,12 +27,13 @@ using namespace EngineScene;
 
 namespace EnginePartitioning{
     class Spacial_Partitioner;
+    struct Cell;
 }
 
 namespace EngineObject{
     class Object{
         public:
-            Object() : uuid(generateUUID()){};
+            Object() : uuid(generateUUID()){velocity.y = -1.0f;};
             virtual ~Object() = default;
             virtual void draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout) = 0;
             virtual void initVulkanResources(EngineResource::ResourceManager &resourceManager, 
@@ -44,8 +46,9 @@ namespace EngineObject{
             uint32_t uniformIndex = 0;
 
             bool isStatic = false;
-            bool isStoppedByGround = false;
             glm::vec3 velocity = glm::vec3(0.0);
+
+            bool assignedToCell = false;
 
             int objectIndex = 0;
             
@@ -59,6 +62,7 @@ namespace EngineObject{
             AAB worldBoundingBox = AAB();
 
             void createBoundingBox();
+            void updateCells();
             void move(glm::vec3 position);
             void rotate(glm::vec3 rotation);
             void scale(glm::vec3 scale);
@@ -71,7 +75,7 @@ namespace EngineObject{
             std::shared_ptr<Material> material;
 
             EnginePartitioning::Spacial_Partitioner *spatialPartitioner;
-
+            std::vector<uint64_t> cells;
     };
 }
 

@@ -1,12 +1,12 @@
 #include "Scene/SceneManager.hpp"
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <memory>
 
 #include "Camera/Camera.hpp"
 #include "Core/ObjectRegistry.hpp"
 #include "Core/ResourceManager.hpp"
+#include "Debug/Debugger.hpp"
 #include "nlohmann/json.hpp"
 
 #include "Serialization/Serialization.hpp"
@@ -14,9 +14,13 @@
 using namespace EngineObject;
 using namespace nlohmann;
 
+constexpr const char* SUB_SYSTEM = "Scene_Manager";
+
 
 namespace EngineScene{
-    SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), resourceManager(nullptr){};
+    SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), resourceManager(nullptr){
+        Debugger::get().initDebugSystem(SUB_SYSTEM);
+    };
 
     void SceneManager::addDefaultScene(){
         auto scene = Scene::createScene(currentID, "Default_Scene");
@@ -124,7 +128,7 @@ namespace EngineScene{
 
     void SceneManager::deleteScene(Scene *scene){
         if(getScenes().size() == 1){
-            std::cerr << "Warning: Cannot delete a scene when only one scene is present" << std::endl;
+            DEBUGGER_LOG(WARNING, "Cannot delete a scene when only one scene is present", SUB_SYSTEM);
             return;
         }
         int sceneID = scene->index;
@@ -168,13 +172,13 @@ namespace EngineScene{
 
     Scene* SceneManager::getCurrentScene(){
         if(sceneOrder.empty()){
-            std::cerr << "(SceneManager::getCurrentScene()) Error: Scene order is empty! Returning nullptr" << std::endl;
+            DEBUGGER_LOG(ERROR, "Scene order is empty! Returning nullptr", SUB_SYSTEM);
             return nullptr;
         }
         int id = sceneOrder[currentSceneIndex];
         auto it = scenes.find(id);
         if(it == scenes.end()){
-            std::cerr << "(SceneManager::getCurrentScene()) Error invliad currentSceneIndex! Returning nullptr" << std::endl;
+            DEBUGGER_LOG(ERROR, "Invliad currentSceneIndex! Returning nullptr", SUB_SYSTEM);
             return nullptr;
         }
 

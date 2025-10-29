@@ -4,7 +4,6 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
 
 constexpr float BOUNDING_BOX_LINE_WIDTH = 0.20f;
 
@@ -124,7 +123,6 @@ void DebugRenderer::drawBoundingBox(AABB &worldBoundingBox){
             bool isSameZAxis = corners[i].z - corners[j].z == 0.0f;
 
             int sameAxisesCount = isSameXAxis + isSameYAxis + isSameZAxis;
-            std::cout << "SAME AXIS: " << sameAxisesCount << std::endl;
 
             if(sameAxisesCount < 1){
                 continue;

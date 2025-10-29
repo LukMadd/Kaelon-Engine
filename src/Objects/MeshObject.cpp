@@ -1,5 +1,5 @@
-#include "Object/BaseObjects.hpp"
-#include "Core/RecourseManager.hpp"
+#include "Object/MeshObject.hpp"
+#include "Core/ResourceManager.hpp"
 #include "Core/ObjectRegistry.hpp"
 #include "Spatial/Spatial_Partitioner.hpp"
 
@@ -61,7 +61,7 @@ namespace EngineObject{
         modelMatrix = glm::translate(glm::mat4(1.0f), position);
     }
 
-    void MeshObject::initVulkanResources(EngineResource::ResourceManager &resourceManager,
+    void MeshObject::initResources(EngineResource::ResourceManager &resourceManager,
                                          EnginePartitioning::Spacial_Partitioner *spacialPartitioner){
         this->spatialPartitioner = spacialPartitioner;
         if(!pendingMeshPath.empty()){
@@ -102,7 +102,7 @@ namespace EngineObject{
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, &mesh->vertexBuffer.buffer, offsets);
         vkCmdBindIndexBuffer(commandBuffer, mesh->indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
         
-        vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &modelMatrix);
+        vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(glm::mat4), &modelMatrix);
 
         vkCmdDrawIndexed(commandBuffer, mesh->indexCount, 1, 0, 0, 0);
     }

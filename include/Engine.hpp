@@ -1,4 +1,4 @@
-#include "Core/RecourseManager.hpp"
+#include "Core/ResourceManager.hpp"
 #include "Scene/SceneManager.hpp"
 #include "Renderer/Renderer.hpp"
 #include "Input/InputHandler.hpp"
@@ -7,6 +7,7 @@
 #include "UI/UIManager.hpp"
 #include "UI/FPSManager.hpp"
 #include "Physics/PhysicsEngine.hpp"
+#include "Debug/DebugRenderer.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -42,6 +43,7 @@ namespace Engine{
             VkDescriptorPool imguiPool;
 
             EnginePartitioning::Spacial_Partitioner spatialPartitioner;
+            DebugRenderer debugRenderer;
 
             uint32_t currentSceneIndex = 0;
             size_t totalObjects;

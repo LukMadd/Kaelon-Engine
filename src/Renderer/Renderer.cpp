@@ -1,6 +1,6 @@
 #include "Renderer/Renderer.hpp"
 #include "Renderer/Instance.hpp"
-#include "Core/RecourseManager.hpp"
+#include "Core/ResourceManager.hpp"
 #include "Object/ObjectGlobals.hpp"
 #include "Renderer/RendererGlobals.hpp"
 #include "Renderer/ValidationLayers.hpp"
@@ -11,7 +11,7 @@ namespace EngineRenderer{
     Renderer::Renderer() : appWindow(){}
 
     void Renderer::initVulkan(){
-        appWindow.initWindow(1000, 800, "My_Vulkan_Engine");
+        appWindow.initWindow(WINDOW_INIT_WIDTH, WINDOW_INIT_HEIGHT, "My_Vulkan_Engine");
         window = appWindow.getWindow();
         glfwSetWindowUserPointer(appWindow.getWindow(), this);
         appSwapChain.initSwapChain(window);
@@ -81,7 +81,7 @@ namespace EngineRenderer{
     void Renderer::initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager, 
                                EnginePartitioning::Spacial_Partitioner &spacialPartitioner){
         for(auto &obj : scene.objects){
-            obj->initVulkanResources(resourceManager, &spacialPartitioner);
+            obj->initResources(resourceManager, &spacialPartitioner);
         }
         scene.areObjectsInitialized = true;
     }
@@ -119,7 +119,7 @@ namespace EngineRenderer{
         }
     }
     
-    void Renderer::drawFrame(Scene* scene){
+    void Renderer::drawFrame(Scene *scene, FrameFlags frameFlags){
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex;
@@ -143,9 +143,15 @@ namespace EngineRenderer{
         vkResetCommandBuffer(commandbuffers[currentFrame], 0);
 
         if(!wireFrameModeEnabled){
-            appCommand.recordCommandBuffers(scene, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineFill, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, queryPool, objectUboStride);
+            appCommand.recordCommandBuffers(scene, commandbuffers[currentFrame], 
+                                            imageIndex, appSwapChain, appPipeline, 
+                                            currentFrame, vertexBuffer, indexBuffer, queryPool, 
+                    frameFlags.shouldDrawBoundingBoxes, objectUboStride);
         } else{
-            appCommand.recordCommandBuffers(scene, commandbuffers[currentFrame], imageIndex, appPipeline.renderPass, appSwapChain, appPipeline.graphicsPipelineWireFrame, appPipeline.pipelineLayout, currentFrame, vertexBuffer, indexBuffer, queryPool,objectUboStride);
+            appCommand.recordCommandBuffers(scene, commandbuffers[currentFrame], 
+                                            imageIndex, appSwapChain, appPipeline, 
+                                            currentFrame, vertexBuffer, indexBuffer, queryPool, 
+                    frameFlags.shouldDrawBoundingBoxes, objectUboStride);
         }
 
         VkSubmitInfo submitInfo{};

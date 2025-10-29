@@ -13,15 +13,21 @@ json serializeObject(const EngineObject::Object &object){
     jsonData["type"] = object.type;
     jsonData["mesh"] = object.mesh->meshPath;
     jsonData["is_static"] = object.isStatic; 
-        jsonData["base_color"] = {
-            {"r", object.material->getBaseColor().x},
-            {"g", object.material->getBaseColor().y},
-            {"b", object.material->getBaseColor().z},
-            {"a", object.material->getBaseColor().w},
-        };
-        jsonData["roughness"] = object.material->getRoughness();
-        jsonData["metallic"] = object.material->getMetallic();
-        jsonData["albedo"] = object.material->getAlbedo();
+    jsonData["base_color"] = {
+        {"r", object.material->getBaseColor().x},
+        {"g", object.material->getBaseColor().y},
+        {"b", object.material->getBaseColor().z},
+        {"a", object.material->getBaseColor().w},
+    };
+    jsonData["roughness"] = object.material->getRoughness();
+    jsonData["metallic"] = object.material->getMetallic();
+    jsonData["albedo"] = object.material->getAlbedo();
+
+    jsonData["velocity"] = {
+        object.velocity.x,
+        object.velocity.y,
+        object.velocity.z
+    };
 
     jsonData["textures"] = json::array();
     for(const auto &texture : object.material->getTextures()){

@@ -80,8 +80,6 @@ find_package(glm REQUIRED)
 #-----------------------------------------Set source files-----------------------------------------#
 file(GLOB_RECURSE ENGINE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
-list(FILTER ENGINE_SOURCES EXCLUDE REGEX ".*/main.cpp$")
-
 add_library(Kaelon-Engine STATIC ${ENGINE_SOURCES})
 
 target_compile_definitions(Kaelon-Engine PUBLIC

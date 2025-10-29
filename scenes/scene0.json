@@ -3,20 +3,20 @@
         {
             "fov": 35.0,
             "front": [
-                0.005629478022456169,
-                -0.33292147517204285,
-                0.9429378509521484
+                -0.019090848043560982,
+                -0.32797956466674805,
+                0.9444919228553772
             ],
             "is_initialized": true,
             "name": "Generic_Camera",
             "position": [
-                -0.20000000298023224,
-                11.5,
-                -33.5
+                0.7971474528312683,
+                10.333447456359863,
+                -33.47984313964844
             ],
             "rotation": {
-                "pitch": -19.446191787719727,
-                "yaw": 89.65794372558594
+                "pitch": -19.146190643310547,
+                "yaw": 91.15795135498047
             },
             "sensitivity": 0.10000000149011612,
             "speed": 10.0,
@@ -45,12 +45,17 @@
                 "name": "Base_Scene_Floor",
                 "roughness": 1.0,
                 "shader": {
-                    "frag": "shaders/base_frag_shader.spv",
-                    "vert": "shaders/base_vert_shader.spv"
+                    "frag": "base_frag_shader.spv",
+                    "vert": "base_vert_shader.spv"
                 },
                 "textures": [],
                 "type": "Mesh_Object",
-                "uuid": "83ba81f15c0a888ba0b235aedded3a6e"
+                "uuid": "def3d4867207dd5435c300832978e181",
+                "velocity": [
+                    0.0,
+                    -1.0,
+                    0.0
+                ]
             },
             "transform": {
                 "position": [
@@ -86,17 +91,22 @@
                 "name": "Base_Scene_Cube",
                 "roughness": 1.0,
                 "shader": {
-                    "frag": "shaders/base_frag_shader.spv",
-                    "vert": "shaders/base_vert_shader.spv"
+                    "frag": "base_frag_shader.spv",
+                    "vert": "base_vert_shader.spv"
                 },
                 "textures": [],
                 "type": "Mesh_Object",
-                "uuid": "81b0a3639dffd03dd5eaba36848907ba"
+                "uuid": "d85478e38bb641b2098ee3b28a2bc017",
+                "velocity": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
             },
             "transform": {
                 "position": [
                     0.0,
-                    2.5103249549865723,
+                    2.500243902206421,
                     0.0
                 ],
                 "rotation": [

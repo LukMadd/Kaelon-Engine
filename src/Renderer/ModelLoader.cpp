@@ -91,8 +91,8 @@ Mesh ModelLoader::loadMesh(std::string meshPath){
     mesh.indexCount = static_cast<uint32_t>(indices.size());
     mesh.meshPath = meshPath;
 
-    mesh.vertexBuffer.createVertexBuffer(vertices, mesh.vertexBuffer.buffer, mesh.vertexBuffer.bufferMemory);
-    mesh.indexBuffer.createIndexBuffer(indices, mesh.indexBuffer.buffer, mesh.indexBuffer.bufferMemory);
+    mesh.vertexBuffer.createVertexBuffer();
+    mesh.indexBuffer.createIndexBuffer();
 
     return mesh;
 }

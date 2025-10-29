@@ -3,7 +3,7 @@
 #define _SCENE_MANAGER_HPP
 
 #include "Scene.hpp"
-#include "Core/RecourseManager.hpp"
+#include "Core/ResourceManager.hpp"
 #include "Spatial/Spatial_Partitioner.hpp"
 #include <cstdint>
 

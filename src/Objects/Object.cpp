@@ -86,4 +86,10 @@ namespace EngineObject{
             std::cerr << "Failed to scale object: Invalid/Uninitialized node" << std::endl;
         }
     }
+
+    //Definitions of not pure virtual functions for linker
+    void Object::draw(VkCommandBuffer, VkPipelineLayout) {}
+    void Object::initResources(EngineResource::ResourceManager&, EnginePartitioning::Spacial_Partitioner*) {}
+    void Object::deserialize(const nlohmann::json&) {}
+    void Object::cleanup(VkDevice) {}
 }

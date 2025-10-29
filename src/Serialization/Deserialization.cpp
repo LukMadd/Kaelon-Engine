@@ -5,6 +5,7 @@ Object* deserializeObject(const nlohmann::json& objectJson){
     Object* obj = ObjectRegistry::get().create(objectJson["type"], objectJson);
     obj->uuid = objectJson.value("uuid", obj->uuid);
     obj->isStatic = objectJson["is_static"];
+    obj->velocity = glm::vec3(objectJson["velocity"][0], objectJson["velocity"][1],objectJson["velocity"][2]); 
 
     return obj;
 }

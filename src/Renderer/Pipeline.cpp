@@ -6,10 +6,14 @@
 #include <vulkan/vulkan.hpp>
 #include "Core/ObjectRegistry.hpp"
 
+#include "Debug/DebugRenderer.hpp"
 #include "Renderer/Vertex.hpp"
 #include "Renderer/DepthBuffer.hpp"
 #include "Renderer/RendererGlobals.hpp"
 #include "Renderer/ValidationLayers.hpp"
+
+constexpr int VERTEX_ATTRIBUTES_SHADER_POSITION_DESCRIPTION_INDEX = 0;
+constexpr int VERTEX_ATTRIBUTES_SHADER_COLOR_DESCRIPTION_INDEX = 1;
 
 static std::vector<char> readFile(const std::string& filePath){
     std::ifstream inFile(filePath, std::ios::ate | std::ios::binary);
@@ -45,29 +49,27 @@ VkShaderModule createShaderModule(const std::vector<char>& code, VkDevice device
 }
 
 
-
-
 namespace EngineRenderer {
-    void PipelineManager::createGraphicsPipeline(VkPipeline &pipeline, PipelineInfo pipelineInfo, std::string name, VkExtent2D swapChainExtent, VkDescriptorSetLayout descriptorSetLayout){
-        std::vector<char> vertShaderCode = readFile(std::string(KAELON_SHADER_DIR) + "base_vert_shader.spv");
-        std::vector<char> fragShaderCode = readFile(std::string(KAELON_SHADER_DIR) + "base_frag_shader.spv");
+    void PipelineManager::createGraphicsPipeline(VkPipeline &pipeline, PipelineInfo pipelineInfo, const char* name, VkExtent2D swapChainExtent){
+        std::vector<char> vertShaderCode = readFile(std::string(KAELON_SHADER_DIR) + pipelineInfo.vertShader);
+        std::vector<char> fragShaderCode = readFile(std::string(KAELON_SHADER_DIR) + pipelineInfo.fragShader);
 
         vertShaderModule = createShaderModule(vertShaderCode, device);
         fragShaderModule = createShaderModule(fragShaderCode, device);
 
-        VkPipelineShaderStageCreateInfo vertShadetageCreateInfo{};
-        vertShadetageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-        vertShadetageCreateInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
-        vertShadetageCreateInfo.module = vertShaderModule;
-        vertShadetageCreateInfo.pName = "main";
+        VkPipelineShaderStageCreateInfo vertShaderStageCreateInfo{};
+        vertShaderStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+        vertShaderStageCreateInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+        vertShaderStageCreateInfo.module = vertShaderModule;
+        vertShaderStageCreateInfo.pName = "main";
 
-        VkPipelineShaderStageCreateInfo fragShadetageCreateInfo{};
-        fragShadetageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-        fragShadetageCreateInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-        fragShadetageCreateInfo.module = fragShaderModule;
-        fragShadetageCreateInfo.pName = "main";
+        VkPipelineShaderStageCreateInfo fragShaderStageCreateInfo{};
+        fragShaderStageCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+        fragShaderStageCreateInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+        fragShaderStageCreateInfo.module = fragShaderModule;
+        fragShaderStageCreateInfo.pName = "main";
 
-        VkPipelineShaderStageCreateInfo shadetages[] = {vertShadetageCreateInfo, fragShadetageCreateInfo};
+        VkPipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageCreateInfo, fragShaderStageCreateInfo};
 
         std::vector<VkDynamicState> dynamicStates = {
             VK_DYNAMIC_STATE_VIEWPORT,
@@ -86,12 +88,20 @@ namespace EngineRenderer {
         vertexInputStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
         vertexInputStateCreateInfo.vertexBindingDescriptionCount = 1;
         vertexInputStateCreateInfo.pVertexBindingDescriptions = &bindingDescription;
-        vertexInputStateCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());;
-        vertexInputStateCreateInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+        if(pipelineInfo.minimalAttributeDescription == false){
+            vertexInputStateCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());;
+            vertexInputStateCreateInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+        } else{
+            std::array<VkVertexInputAttributeDescription, 2> minimalAttributeDescriptions;
+            minimalAttributeDescriptions[0] = attributeDescriptions[VERTEX_ATTRIBUTES_SHADER_POSITION_DESCRIPTION_INDEX];
+            minimalAttributeDescriptions[1] = attributeDescriptions[VERTEX_ATTRIBUTES_SHADER_COLOR_DESCRIPTION_INDEX];
+            vertexInputStateCreateInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(minimalAttributeDescriptions.size());;
+            vertexInputStateCreateInfo.pVertexAttributeDescriptions = minimalAttributeDescriptions.data();
+        }
 
         VkPipelineInputAssemblyStateCreateInfo inputAssemblyStateCreateInfo{};
         inputAssemblyStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-        inputAssemblyStateCreateInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+        inputAssemblyStateCreateInfo.topology = pipelineInfo.topology;
         inputAssemblyStateCreateInfo.primitiveRestartEnable = VK_FALSE;
 
         VkViewport viewport{};
@@ -123,7 +133,7 @@ namespace EngineRenderer {
             rasterizer.polygonMode = VK_POLYGON_MODE_LINE;
         }
         rasterizer.lineWidth = 1.0f;
-        rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+        rasterizer.cullMode = pipelineInfo.cullMode;
         rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
         rasterizer.depthBiasConstantFactor = 0.0f;
@@ -162,8 +172,13 @@ namespace EngineRenderer {
 
         VkPipelineDepthStencilStateCreateInfo depthStencil{};
         depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-        depthStencil.depthTestEnable = VK_TRUE;
-        depthStencil.depthWriteEnable = VK_TRUE;
+        if(pipelineInfo.depthEnabled == true){
+            depthStencil.depthTestEnable = VK_TRUE;
+            depthStencil.depthWriteEnable = VK_TRUE;
+        } else{
+            depthStencil.depthTestEnable = VK_FALSE;
+            depthStencil.depthWriteEnable = VK_FALSE;
+        }
         depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
         depthStencil.depthBoundsTestEnable = VK_FALSE;
         depthStencil.minDepthBounds = 0.0f;
@@ -175,7 +190,7 @@ namespace EngineRenderer {
         VkGraphicsPipelineCreateInfo pipelineCreateInfo{};
         pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         pipelineCreateInfo.stageCount = 2;
-        pipelineCreateInfo.pStages = shadetages;
+        pipelineCreateInfo.pStages = shaderStages;
         pipelineCreateInfo.pVertexInputState = &vertexInputStateCreateInfo;
         pipelineCreateInfo.pInputAssemblyState = &inputAssemblyStateCreateInfo;
         pipelineCreateInfo.pViewportState = &viewportStateCreateInfo;
@@ -185,7 +200,7 @@ namespace EngineRenderer {
         pipelineCreateInfo.pColorBlendState = &colorBlending;
         pipelineCreateInfo.pDynamicState = &dynamicStateCreationInfo;
 
-        pipelineCreateInfo.layout = pipelineLayout;
+        pipelineCreateInfo.layout = pipelineInfo.pipelineLayout;
         pipelineCreateInfo.renderPass = renderPass;
         pipelineCreateInfo.subpass = 0;
 
@@ -196,46 +211,74 @@ namespace EngineRenderer {
         if(result != VK_SUCCESS){
             throw std::runtime_error("Failed to create graphics pipeline error code " + std::to_string(result) + "!");
         }
-        setObjectName(device, (uint64_t)pipeline, VK_OBJECT_TYPE_PIPELINE, name + "_Pipeline");
+        setObjectName(device, (uint64_t)pipeline, VK_OBJECT_TYPE_PIPELINE, std::string(name) + "_Pipeline");
 
         vkDestroyShaderModule(device, vertShaderModule, nullptr);
         vkDestroyShaderModule(device, fragShaderModule, nullptr);
     }
 
 
-
-
     void PipelineManager::createPipelines(VkExtent2D swapChainExtent, VkDescriptorSetLayout globalDescriptorSetLayout){
+        if(pipelineLayout == VK_NULL_HANDLE){
+            VkPushConstantRange pushConstantRange{};
+            pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+            pushConstantRange.offset = 0;
+            pushConstantRange.size = sizeof(glm::mat4);
 
-        VkPushConstantRange pushConstantRange{};
-        pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-        pushConstantRange.offset = 0;
-        pushConstantRange.size = sizeof(glm::mat4);
+            VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
+            pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+            pipelineLayoutCreateInfo.setLayoutCount = 1;
+            pipelineLayoutCreateInfo.pSetLayouts = &globalDescriptorSetLayout;
+            pipelineLayoutCreateInfo.pushConstantRangeCount = 1;
+            pipelineLayoutCreateInfo.pPushConstantRanges = &pushConstantRange;
 
-        VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo{};
-        pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutCreateInfo.setLayoutCount = 1;
-        pipelineLayoutCreateInfo.pSetLayouts = &globalDescriptorSetLayout;
-        pipelineLayoutCreateInfo.pushConstantRangeCount = 1;
-        pipelineLayoutCreateInfo.pPushConstantRanges = &pushConstantRange;
+            VkResult pipelineLayoutCreateResult = vkCreatePipelineLayout(device, &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
+            if(pipelineLayoutCreateResult != VK_SUCCESS){
+                throw std::runtime_error("Failed to create pipeline layout error code " + std::to_string(pipelineLayoutCreateResult) + "!");
+            }
+            setObjectName(device,(uint64_t)pipelineLayout, VK_OBJECT_TYPE_PIPELINE_LAYOUT, "Main_Pipeline_Layout");
+        }
+        if(debugLayout == VK_NULL_HANDLE){
+            VkPushConstantRange pushConstantRange{};
+            pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+            pushConstantRange.offset = 0;
+            pushConstantRange.size = sizeof(Matricies);
 
-        VkResult pipelineLayoutCreateResult = vkCreatePipelineLayout(device, &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
-        if(pipelineLayoutCreateResult != VK_SUCCESS){
-            throw std::runtime_error("Failed to create pipeline layout error code " + std::to_string(pipelineLayoutCreateResult) + "!");
-        } 
-        setObjectName(device,(uint64_t)pipelineLayout, VK_OBJECT_TYPE_PIPELINE_LAYOUT, "Main_Pipeline_Layout");
+            VkPipelineLayoutCreateInfo debugLayoutCreateInfo{};
+            debugLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+            debugLayoutCreateInfo.setLayoutCount = 0;
+            debugLayoutCreateInfo.pSetLayouts = nullptr;
+            debugLayoutCreateInfo.pushConstantRangeCount = 1;
+            debugLayoutCreateInfo.pPushConstantRanges = &pushConstantRange;
+
+            VkResult pipelineLayoutCreateResult = vkCreatePipelineLayout(device, &debugLayoutCreateInfo, nullptr, &debugLayout);
+            if(pipelineLayoutCreateResult != VK_SUCCESS){
+                throw std::runtime_error("Failed to create pipeline layout error code " + std::to_string(pipelineLayoutCreateResult) + "!");
+            }
+            setObjectName(device,(uint64_t)debugLayout, VK_OBJECT_TYPE_PIPELINE_LAYOUT, "Debug_Pipeline_Layout");
+        }
 
         PipelineInfo pipelineInfo{};
         pipelineInfo.wireFrameMode = false;
-        createGraphicsPipeline(graphicsPipelineFill, pipelineInfo, "Main", swapChainExtent, globalDescriptorSetLayout);
+        pipelineInfo.fragShader = "base_frag_shader.spv";
+        pipelineInfo.vertShader = "base_vert_shader.spv";
+        pipelineInfo.pipelineLayout = pipelineLayout;
+        createGraphicsPipeline(graphicsPipelineFill, pipelineInfo, "Main", swapChainExtent);
+        pushPipeline(graphicsPipelineFill, pipelineInfo.fragShader.c_str());
+        
         pipelineInfo.wireFrameMode = true;
-        createGraphicsPipeline(graphicsPipelineWireFrame, pipelineInfo,"Wireframe", swapChainExtent, globalDescriptorSetLayout);
+        createGraphicsPipeline(graphicsPipelineWireFrame, pipelineInfo,"Wireframe", swapChainExtent);
+        pushPipeline(graphicsPipelineWireFrame, "WIRE_FRAME_PIPELINE");
 
-        pushPipeline(graphicsPipelineFill);
-        pushPipeline(graphicsPipelineWireFrame);
+        pipelineInfo.wireFrameMode = false;
+        pipelineInfo.pipelineLayout = debugLayout;
+        pipelineInfo.fragShader = "debug_frag_shader.spv";
+        pipelineInfo.vertShader = "debug_vert_shader.spv";
+        pipelineInfo.minimalAttributeDescription = true;
+        pipelineInfo.cullMode = VK_CULL_MODE_NONE;
+        createGraphicsPipeline(graphicsPipelineDebug, pipelineInfo, "Debug", swapChainExtent);
+        pushPipeline(graphicsPipelineDebug, "DEBUG_PIPELINE");
     }
-
-
 
 
     void PipelineManager::createRenderPass(VkFormat swapChainImageFormat){
@@ -316,13 +359,12 @@ namespace EngineRenderer {
     }
 
 
-
-
     void PipelineManager::cleanupPipelines(){
-        for(int i = 0; i < pipelines.size(); i++){
-            vkDestroyPipeline(device, *pipelines[i], nullptr);
+        for(auto &pipeline : pipelines){
+            vkDestroyPipeline(device, *pipeline.second, nullptr);
         }
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
+        vkDestroyPipelineLayout(device, debugLayout, nullptr);
         vkDestroyRenderPass(device, renderPass, nullptr);
     }
 };

@@ -4,6 +4,7 @@
 #include "Renderer/RendererGlobals.hpp"
 #include "Core/ObjectRegistry.hpp"
 #include "Object/ObjectGlobals.hpp"
+#include "Debug/Debugger.hpp"
 
 #include <chrono>
 
@@ -14,6 +15,10 @@ namespace Engine{
     GameEngine::GameEngine() : renderer(), sceneManager(){};
 
     void GameEngine::init(){
+        Debugger::get().initDebugSystem("Engine");
+
+        DEBUGGER_LOG(INFO, "SUCESSFULLY CREATED", "Engine");
+
         renderer.initVulkan();
 
         sceneManager.init(resourceManager, &spatialPartitioner);
@@ -72,6 +77,8 @@ namespace Engine{
         Input::get().setCallBacks();
         actionManager.setupBindings();
         physicsEngine.init(&sceneManager, &spatialPartitioner);
+
+        renderer.giveDebugRenderer(&debugRenderer);
     }
 
     void GameEngine::RendererMainLoop(float deltaTime){
@@ -107,7 +114,7 @@ namespace Engine{
         if(sceneManager.getCurrentScene()->newObjects.empty() == false){
             while(sceneManager.getCurrentScene()->newObjects.empty() == false){
                 auto object = sceneManager.getCurrentScene()->newObjects.back();
-                object->initVulkanResources(resourceManager, &spatialPartitioner);
+                object->initResources(resourceManager, &spatialPartitioner);
                 sceneManager.getCurrentScene()->newObjects.pop_back();
             }    
         }
@@ -150,10 +157,17 @@ namespace Engine{
             
             memcpy((char*)renderer.getObjectUniformBuffersMapped()[renderer.getCurrentFrame()] + i * renderer.getObjectUboStride(), &objectUbo, sizeof(ObjectUBO));
 
-            object->uniformIndex =  static_cast<uint32_t>(i);
+            object->uniformIndex = static_cast<uint32_t>(i);
         }
 
-        renderer.drawFrame(sceneManager.getCurrentScene());
+        if(uiManager.shouldDrawBoundingBoxes()){
+            sceneManager.getCurrentScene()->drawBoundingBoxes(&debugRenderer);
+        }
+
+        FrameFlags frameFlags{};
+        frameFlags.shouldDrawBoundingBoxes = uiManager.shouldDrawBoundingBoxes();
+
+        renderer.drawFrame(sceneManager.getCurrentScene(), frameFlags);
         rawFps = renderer.getGpuFPS();
     }
 

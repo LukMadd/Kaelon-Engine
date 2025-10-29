@@ -4,8 +4,8 @@
 #include <string>
 
 struct Shader{
-    std::string vertShader = ("shaders/base_vert_shader.spv");
-    std::string fragShader = ("shaders/base_frag_shader.spv");
+    std::string vertShader = "base_vert_shader.spv";
+    std::string fragShader = "base_frag_shader.spv";
 };
 
 #endif

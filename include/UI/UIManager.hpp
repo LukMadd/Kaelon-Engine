@@ -4,7 +4,7 @@
 #include "EngineUI.hpp"
 #include "Scene/SceneManager.hpp"
 #include "Camera/CameraManager.hpp"
-#include "Core/RecourseManager.hpp"
+#include "Core/ResourceManager.hpp"
 #include "imgui.h"
 
 namespace EngineUI{
@@ -30,6 +30,7 @@ namespace EngineUI{
 
             void shutDownImGui(VkDescriptorPool &imGuiDescriptorPool);
 
+            bool shouldDrawBoundingBoxes(){return engineUI.getValueofDrawBoundingBoxes();}
 
             private:
                 EngineUI engineUI;

@@ -4,7 +4,7 @@
 #include "Mesh.hpp"
 #include "Material.hpp"
 #include "Scene/SceneNode.hpp"
-#include "Core/RecourseManager.hpp"
+#include "Core/ResourceManager.hpp"
 #include "nlohmann/json.hpp"
 #include "UUID.hpp"
 
@@ -16,7 +16,7 @@
 using namespace EngineRenderer;
 using namespace EngineObject;
 
-struct AAB{
+struct AABB{
     glm::vec3 min = glm::vec3(FLT_MAX);
     glm::vec3 max = glm::vec3(-FLT_MAX);
 
@@ -35,11 +35,11 @@ namespace EngineObject{
         public:
             Object() : uuid(generateUUID()){velocity.y = -1.0f;};
             virtual ~Object() = default;
-            virtual void draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout) = 0;
-            virtual void initVulkanResources(EngineResource::ResourceManager &resourceManager, 
-                                             EnginePartitioning::Spacial_Partitioner *spacialPartitioner) = 0;
-            virtual void deserialize(const nlohmann::json& jsonData) = 0;
-            virtual void cleanup(VkDevice device) = 0;
+            virtual void draw(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout);
+            virtual void initResources(EngineResource::ResourceManager &resourceManager, 
+                                             EnginePartitioning::Spacial_Partitioner *spacialPartitioner);
+            virtual void deserialize(const nlohmann::json& jsonData);
+            virtual void cleanup(VkDevice device);
             std::string type;
             std::string name;
             
@@ -58,8 +58,8 @@ namespace EngineObject{
             std::string uuid;
             glm::mat4 modelMatrix{1.0f};
 
-            AAB localBoundingBox = AAB();
-            AAB worldBoundingBox = AAB();
+            AABB localBoundingBox = AABB();
+            AABB worldBoundingBox = AABB();
 
             void createBoundingBox();
             void updateCells();

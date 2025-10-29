@@ -1,6 +1,7 @@
 #ifndef _RENDERER_GLOBALS_HPP
 #define _RENDERER_GLOBALS_HPP
 
+#include <cstdint>
 #include <vulkan/vulkan.hpp>
 
 #include "ModelLoader.hpp"
@@ -11,6 +12,9 @@
 
 constexpr uint32_t MAX_TEXTURES = 16;
 constexpr uint32_t MAX_OBJECTS = 1750;
+
+constexpr uint32_t WINDOW_INIT_WIDTH = 1000;
+constexpr uint32_t WINDOW_INIT_HEIGHT = 800;
 
 namespace EngineRenderer{
     inline VkQueue graphicsQueue;

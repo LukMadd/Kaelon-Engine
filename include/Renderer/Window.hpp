@@ -21,6 +21,8 @@ namespace EngineRenderer {
 
             void createSurface(VkInstance instance, GLFWwindow *window, VkSurfaceKHR &surface);
 
+            std::array<int, 2> getWindowSize();
+
             static void framebuffersrResizeCallback(GLFWwindow* window, int width, int height);
 
             GLFWwindow* getWindow(){

@@ -1,5 +1,6 @@
 #include "Scene/Scene.hpp"
-#include "Object/BaseObjects.hpp"
+#include "Debug/DebugRenderer.hpp"
+#include "Object/MeshObject.hpp"
 #include "Object/Object.hpp"
 #include "Renderer/RendererGlobals.hpp"
 #include <glm/gtc/matrix_transform.hpp>
@@ -89,6 +90,14 @@ namespace EngineScene{
         });
         if(it != objects.end()){
             objects.erase(it);
+        }
+    }
+
+    void Scene::drawBoundingBoxes(DebugRenderer *debugRenderer){
+        for(auto &object : objects){
+            if(object->worldBoundingBox.isInitialized){
+                debugRenderer->drawBoundingBox(object->worldBoundingBox);
+            }
         }
     }
 

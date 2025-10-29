@@ -1,13 +1,44 @@
 #include "Renderer/Command.hpp"
+#include "Object/Object.hpp"
+#include "Renderer/Pipeline.hpp"
 #include "Renderer/RendererGlobals.hpp"
 #include "Renderer/ValidationLayers.hpp"
 #include "imgui.h"
 #include "backends/imgui_impl_vulkan.h"
 #include "Renderer/UniformBuffer.hpp"
+#include "Debug/DebugRenderer.hpp"
 #include <cstdint>
 
-
 namespace EngineRenderer{
+    void Command::drawLines(VkCommandBuffer commandBuffer, PipelineManager pipelineManager, EngineCamera::Camera *camera){
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, *pipelineManager.pipelines["DEBUG_PIPELINE"]);
+
+        debugRenderer->setupLines(vertexBuffer, indexBuffer, camera->getViewMatrix(), camera->getFront());
+
+        VkDeviceSize offsets[] = {0};
+
+        uint32_t indexCount = static_cast<uint32_t>(indexBuffer.indices.size());        
+
+        vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer.buffer, offsets);
+        vkCmdBindIndexBuffer(commandBuffer, indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+
+        glm::mat4 proj = camera->getProjection();
+        proj[1][1]*=-1;
+        glm::mat4 view = camera->getViewMatrix();
+
+        Matricies mats{};
+        mats.proj = proj;
+        mats.view = view;
+
+        vkCmdPushConstants(commandBuffer, pipelineManager.debugLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Matricies), 
+                  &mats);
+
+        vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+
+        vertexBuffer.vertices.clear();
+        indexBuffer.indices.clear();
+    }
+
     void Command::createCommandPool(VkSurfaceKHR surface, QueueFamilyIndices queueFamilyIndices){
         VkCommandPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -23,6 +54,11 @@ namespace EngineRenderer{
 
     void Command::cleanup(){
         vkDestroyCommandPool(device, commandPool, nullptr);
+
+        vkDestroyBuffer(device, vertexBuffer.buffer, nullptr);
+        vkDestroyBuffer(device, indexBuffer.buffer, nullptr);
+        vkFreeMemory(device, vertexBuffer.bufferMemory, nullptr);
+        vkFreeMemory(device, indexBuffer.bufferMemory, nullptr);
     }
 
     void Command::createCommandBuffers(std::vector<VkCommandBuffer> &commandBuffers, int MAX_FRAMES_IN_FLIGHT){
@@ -47,14 +83,13 @@ namespace EngineRenderer{
         EngineScene::Scene *scene, 
         VkCommandBuffer commandBuffer, 
         uint32_t imageIndex, 
-        VkRenderPass renderPass, 
         SwapChain swapChain, 
-        VkPipeline &graphicsPipeline,
-        VkPipelineLayout &pipelineLayout, 
+        PipelineManager &pipelineManager,
         uint32_t currentFrame, 
         VkBuffer &vertexBuffer, 
         VkBuffer &indexBuffer, 
         VkQueryPool &queryPool,
+        bool shouldDrawBoundingBoxes,
         VkDeviceSize objectUboStride){
 
         VkCommandBufferBeginInfo beginInfo{};
@@ -69,7 +104,7 @@ namespace EngineRenderer{
 
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = renderPass;
+        renderPassInfo.renderPass = pipelineManager.renderPass;
         renderPassInfo.framebuffer = swapChain.swapChainFramebuffers[imageIndex];
 
         renderPassInfo.renderArea.offset = {0, 0};
@@ -87,12 +122,15 @@ namespace EngineRenderer{
 
         vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-        if(graphicsPipeline == VK_NULL_HANDLE){
-            throw std::runtime_error("graphicsPipeline is null! Did pipeline creation fail?");
+        if(wireFrameModeEnabled){
+            vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineManager.graphicsPipelineWireFrame);
+        } else{
+            for(auto &object : scene->objects){
+                // MAKE IT NOT RE BIND A PIPELINE
+                vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, 
+                        *pipelineManager.pipelines[object->material->getShader().fragShader.c_str()]);
+            }
         }
-
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-
         VkViewport viewport{};
         viewport.x = 0.0f;
         viewport.y = 0.0f;
@@ -115,11 +153,11 @@ namespace EngineRenderer{
             uint32_t dynamicOffset = obj->uniformIndex * objectUboStride;
             vkCmdBindDescriptorSets(commandBuffer,
                                     VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                    pipelineLayout,
+                                    pipelineManager.pipelineLayout,
                                     0, 1, &scene->descriptorSets[currentFrame],
                                     1, &dynamicOffset);
            
-            obj->draw(commandBuffer, pipelineLayout);
+            obj->draw(commandBuffer, pipelineManager.pipelineLayout);
 
             drawCallCount++;
         }
@@ -127,6 +165,10 @@ namespace EngineRenderer{
         ImDrawData* imguiDrawData = ImGui::GetDrawData();
         if (imguiDrawData && imguiDrawData->CmdListsCount > 0) {
             ImGui_ImplVulkan_RenderDrawData(imguiDrawData, commandBuffer);
+        }
+
+        if(shouldDrawBoundingBoxes){
+            drawLines(commandBuffer, pipelineManager, scene->cameraManager.getCurrentCamera().get());
         }
         
         vkCmdEndRenderPass(commandBuffer);

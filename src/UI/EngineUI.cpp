@@ -1,4 +1,5 @@
 #include "UI/EngineUI.hpp"
+#include "Camera/CameraManager.hpp"
 #include "Object/Object.hpp"
 #include "Renderer/RendererGlobals.hpp"
 #include "Scene/Scene.hpp"
@@ -6,7 +7,8 @@
 #include "imgui.h"
 
 namespace EngineUI{
-    void EngineUI::drawMainLayout(EngineScene::SceneManager *sceneManager){
+    void EngineUI::drawMainLayout(EngineScene::SceneManager *sceneManager, 
+                                  EngineCamera::CameraManager *cameraManager){
             if(ImGui::BeginMenuBar()){
             if(ImGui::BeginMenu("Scene")){
                 ImGui::Checkbox("View Scenes", &m_showScenesWindow);
@@ -27,6 +29,13 @@ namespace EngineUI{
                 if(ImGui::Button("Add Object")){
                     sceneManager->getCurrentScene()->addDefaultObject();
                 }
+                if(ImGui::Button("Reset Camera")){
+                    cameraManager->getCurrentCamera()->resetCamera();
+                }
+                ImGui::EndMenu();
+            }
+            if(ImGui::BeginMenu("Debug")){
+                ImGui::Checkbox("Draw Bounding Boxes", &m_drawBoundingBoxes);
                 ImGui::EndMenu();
             }
 
@@ -206,13 +215,10 @@ namespace EngineUI{
             std::vector<std::string> recourseModels;
 
             //Get the textures & models from recource manager and put them in the vectors above
-            for(auto &recourse : recourseManager->getCache()){
-               
-                if(recourse.first.find("textures/") != std::string::npos){
+            for(auto &recourse : recourseManager->getCache()){                           
+                if(recourse.second.type() == typeid(std::shared_ptr<Texture>)){
                     recourseTextures.push_back(recourse.first);
-                }
-
-                if(recourse.first.find("models/") != std::string::npos){
+                } else if(recourse.second.type() == typeid(std::shared_ptr<Mesh>)){
                     recourseModels.push_back(recourse.first);
                 }
             }

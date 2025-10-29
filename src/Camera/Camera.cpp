@@ -10,7 +10,7 @@ constexpr float RENDER_DISTANCE = 100.0f;
 using namespace EngineInput;
 
 namespace EngineCamera{
-    void Camera::init(){
+    void Camera::setCameraDefault(){
         projection = glm::perspective(glm::radians(fov), 0.0f, 0.1f, RENDER_DISTANCE);
         position = glm::vec3(-0.2f, 11.5f, -33.5f);
         up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -22,6 +22,10 @@ namespace EngineCamera{
         pitch = glm::degrees(asin(direction.y));
 
         front = direction;
+    }
+
+    void Camera::init(){
+        setCameraDefault();
 
         name = "Generic_Camera";
         is_initialized = true;
@@ -104,6 +108,10 @@ namespace EngineCamera{
         if(is_scene_immersed || yaw != lastYawUpdate  || pitch != lastPitchUpdate){
             updateYawAndPitch();
         }
+    }
+
+    void Camera::resetCamera(){
+        setCameraDefault();
     }
 
     std::array<glm::vec4, 2> Camera::transformRay(glm::vec4 rayStartNDC, glm::vec4 rayEndNDC){

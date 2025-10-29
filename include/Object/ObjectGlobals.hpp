@@ -1,5 +1,5 @@
 #include <vulkan/vulkan.hpp>
-#include "Core/RecourseManager.hpp"
+#include "Core/ResourceManager.hpp"
 #include "Texture.hpp"
 
 namespace EngineObject{

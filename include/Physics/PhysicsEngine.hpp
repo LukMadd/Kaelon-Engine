@@ -12,10 +12,13 @@ namespace EnginePhysics{
 
             void tick(float deltaTime);
 
-            bool checkAABCollision(const AAB &a, const AAB &b);
+            bool checkAABBCollision(const AABB &a, const AABB &b);
 
-            bool checkAABGroundUnderneath(const AAB &a, const AAB &b, float previousMinY, 
-                                          float epsilon);
+            int checkAABBObjectCollisionYAxis(const AABB &a, const AABB &b, float previousMinY, 
+                                            float previousMaxY, float epsilon);
+
+            int checkAABBObjectCollisionXAxis(const AABB &a, const AABB &b, float previousMinX, 
+                                            float previousMaxX, float epsilon);
 
             float getTickRate() {return tickRate;}
 

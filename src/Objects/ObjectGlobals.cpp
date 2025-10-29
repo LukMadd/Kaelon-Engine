@@ -1,6 +1,6 @@
 #include "Object/ObjectGlobals.hpp"
 #include "Renderer/RendererGlobals.hpp"
-#include "Core/RecourseManager.hpp"
+#include "Core/ResourceManager.hpp"
 #include "Renderer/ValidationLayers.hpp"
 #include <cstdint>
 

@@ -43,6 +43,12 @@ namespace EngineRenderer {
         }
     }
 
+    std::array<int, 2> Window::getWindowSize(){
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        return {width, height};
+    }
+
     void Window::framebuffersrResizeCallback(GLFWwindow* window, int width, int height){
         if(width == 0 || height == 0) return;  
 

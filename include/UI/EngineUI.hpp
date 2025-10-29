@@ -1,4 +1,5 @@
-#include "Core/RecourseManager.hpp"
+#include "Camera/Camera.hpp"
+#include "Core/ResourceManager.hpp"
 #include "Scene/Scene.hpp"
 #include "Object/Object.hpp"
 #include "Scene/SceneManager.hpp"
@@ -6,7 +7,8 @@
 namespace EngineUI{
     class EngineUI{
         public:
-            void drawMainLayout(EngineScene::SceneManager *sceneManager);
+            void drawMainLayout(EngineScene::SceneManager *sceneManager, 
+                                EngineCamera::CameraManager *cameraManager);
 
             void drawSceneHierarchy(EngineScene::Scene *scene);
 
@@ -31,6 +33,8 @@ namespace EngineUI{
             bool m_showRenderStats = false;
             bool m_showScenesWindow = false;
 
+            bool m_drawBoundingBoxes = false;
+
             EngineObject::Object *selectedObject = nullptr;
             EngineCamera::Camera *selectedCamera = nullptr;
             EngineScene::Scene *selectedScene = nullptr;
@@ -39,6 +43,11 @@ namespace EngineUI{
 
         public:
             EngineObject::Object*& getSelectedObject(){return selectedObject;}
+            EngineCamera::Camera*& getSelectedCamera(){return selectedCamera;}
             EngineScene::Scene* getSelectedScene(){return selectedScene;}
+
+            bool getValueofDrawBoundingBoxes(){return m_drawBoundingBoxes;}
+
+            void setSelectedCamera(EngineCamera::Camera *camera){selectedCamera = camera;}
     };
 }

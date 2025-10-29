@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
+#include "Debug/DebugRenderer.hpp"
 #include "Window.hpp"
 #include "Instance.hpp"
 #include "Pipeline.hpp"
@@ -15,6 +16,10 @@
 #include "Scene/Scene.hpp"
 
 constexpr uint32_t MAX_FRAMES_IN_FLIGHT = 3;
+
+struct FrameFlags{
+    bool shouldDrawBoundingBoxes = false;
+};
 
 using namespace EngineScene;
 namespace EngineRenderer {
@@ -84,7 +89,7 @@ namespace EngineRenderer {
                                  EnginePartitioning::Spacial_Partitioner &spacialPartitione);
                 void initSceneDescriptors(std::vector<std::unique_ptr<EngineObject::Object>>& objects);
                 void cleanup(Scene *scene);
-                void drawFrame(Scene* scene);
+                void drawFrame(Scene *scene, FrameFlags frameFlags);
                 void createSceneDescriptorSets(Scene *scene);
 
                 void updateUniformBuffers(UniformBufferObject &ubo, float fov){
@@ -94,9 +99,11 @@ namespace EngineRenderer {
                 void updateObjectUniformBuffers(ObjectUBO &objectUBO){
                     uniformBufferCommand.updateObjectUniformBuffers(objectUBO, objectUniformBuffersMapped, currentFrame);
                 }
+                void giveDebugRenderer(DebugRenderer *debugRenderer){
+                    appCommand.giveDebugRenderer(debugRenderer);
+                }
 
                 float getGpuFPS();
-
                 VkInstance& getInstance(){return instance;}
                 VkDescriptorPool& getDescriptorPool(){return descriptorPool;}
                 VkRenderPass& getRenderPass(){return appPipeline.renderPass;}

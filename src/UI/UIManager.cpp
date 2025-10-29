@@ -16,6 +16,7 @@ namespace EngineUI{
         if(!uiInfo.sceneManager){
             throw std::runtime_error("INVALID SCENE MANAGER");
         }
+        engineUI.setSelectedCamera(uiInfo.cameraManager->getCurrentCamera().get());
 
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -136,7 +137,7 @@ namespace EngineUI{
         ImGuiID dockspaceID = ImGui::GetID("Dock_Space");
         ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags);
         
-        engineUI.drawMainLayout(uiInfo.sceneManager);
+        engineUI.drawMainLayout(uiInfo.sceneManager, uiInfo.cameraManager);
         engineUI.drawSceneHierarchy(uiInfo.sceneManager->getCurrentScene());
         engineUI.drawObjectInspector(uiInfo.sceneManager->getCurrentScene());
         engineUI.drawCameraInspector();
@@ -157,6 +158,7 @@ namespace EngineUI{
     }
 
     void UIManager::shutDownImGui(VkDescriptorPool &imGuiDescriptorPool){
+        vkDeviceWaitIdle(device);
         ImGui_ImplVulkan_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();

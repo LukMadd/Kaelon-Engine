@@ -60,6 +60,8 @@ namespace EngineCamera{
             void moveLeft(float velocity);
             void moveRight(float velocity);
 
+            void setCameraDefault();
+
         public:
             void updateCamera(float deltaTime, EngineInput::ActionManager &actionManager, bool is_scene_immersed);
 
@@ -68,6 +70,8 @@ namespace EngineCamera{
             glm::mat4 getViewMatrix() {return view;};
 
            inline  glm::mat4 getProjection() {return projection;}
+
+           void resetCamera();
     };
 }
 

@@ -6,7 +6,7 @@
 
 #include "Camera/Camera.hpp"
 #include "Core/ObjectRegistry.hpp"
-#include "Core/RecourseManager.hpp"
+#include "Core/ResourceManager.hpp"
 #include "nlohmann/json.hpp"
 
 #include "Serialization/Serialization.hpp"
@@ -38,6 +38,9 @@ namespace EngineScene{
 
         spatialPartitioner->reset();
         for(auto &object : getCurrentScene()->objects){
+            //Helps prevent collision issues when switching back to a previously visited scene
+            object->assignedToCell = false;
+            object->cells.clear();
             object->updateCells();
         }
     }

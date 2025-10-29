@@ -1,7 +1,6 @@
 #include "Renderer/Vertex.hpp"
 #include "Renderer/RendererUtilities.hpp"
 #include "Renderer/RendererGlobals.hpp"
-#include <cstdint>
 
 namespace EngineRenderer{
     VkVertexInputBindingDescription VertexBuffer::getBindingDescription(){
@@ -24,12 +23,12 @@ namespace EngineRenderer{
         attributeDescriptions[1].binding = 0;
         attributeDescriptions[1].location = 1;
         attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-        attributeDescriptions[1].offset = offsetof(Vertex, normal);
+        attributeDescriptions[1].offset = offsetof(Vertex, color);
 
         attributeDescriptions[2].binding = 0;
         attributeDescriptions[2].location = 2;
         attributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
-        attributeDescriptions[2].offset = offsetof(Vertex, color);
+        attributeDescriptions[2].offset = offsetof(Vertex, normal);
 
         attributeDescriptions[3].binding = 0;
         attributeDescriptions[3].location = 3;
@@ -39,7 +38,7 @@ namespace EngineRenderer{
         return attributeDescriptions;
     }
 
-    void VertexBuffer::createVertexBuffer(std::vector<Vertex> &vertices, VkBuffer &buffer,VkDeviceMemory &bufferMemory){
+    void VertexBuffer::createVertexBuffer(){
         VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
         
         VkBuffer stagingBuffer;
@@ -60,7 +59,7 @@ namespace EngineRenderer{
         vkFreeMemory(device, stagingBufferMemory, nullptr);
     }
 
-    void IndexBuffer::createIndexBuffer(std::vector<uint32_t> &indices, VkBuffer &buffer, VkDeviceMemory &bufferMemory){
+    void IndexBuffer::createIndexBuffer(){
         VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
         
         VkBuffer stagingBuffer;

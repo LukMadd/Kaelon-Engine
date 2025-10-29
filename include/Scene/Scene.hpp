@@ -3,9 +3,11 @@
 
 #include "Camera/CameraManager.hpp"
 #include "Object/Object.hpp"
-#include "Core/RecourseManager.hpp"
+#include "Core/ResourceManager.hpp"
 
 using namespace EngineObject;
+
+class DebugRenderer;
 
 namespace EngineScene{
     class Scene{
@@ -35,6 +37,8 @@ namespace EngineScene{
             void addDefaultObject();
 
             void removeObject(Object *object);
+
+            void drawBoundingBoxes(DebugRenderer *debugRenderer);
 
             int getIndex() const {return index;}
             std::string getName() const {return name;}

@@ -1,3 +1,6 @@
+#ifndef MATERIAL_HPP
+#define MATERIAL_HPP
+
 #include <vulkan/vulkan.hpp>
 #include <glm/glm.hpp>
 #include "Shader.hpp"
@@ -37,3 +40,5 @@ namespace EngineObject{
             float albedo{0.0f};
     };
 }
+
+#endif

@@ -7,6 +7,7 @@
 #include "Core/ResourceManager.hpp"
 #include "nlohmann/json.hpp"
 #include "UUID.hpp"
+#include "AABB.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -15,13 +16,6 @@
 
 using namespace EngineRenderer;
 using namespace EngineObject;
-
-struct AABB{
-    glm::vec3 min = glm::vec3(FLT_MAX);
-    glm::vec3 max = glm::vec3(-FLT_MAX);
-
-    bool isInitialized = false;
-};
 
 using namespace EngineScene;
 

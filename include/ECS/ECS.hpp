@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <sys/types.h>
 #include <vector>
 #include "Components.hpp"
@@ -15,6 +16,10 @@ struct ECS{
     void addComponents(Entity e){
         addComponent<First>(e);
         (addComponent<Rest>(e), ...);
+
+        uint32_t newHashKey = componentStorage.getHash<First>();
+        ((newHashKey |= componentStorage.getHash<Rest>()), ...);
+        componentStorage.componentMap[newHashKey].push_back(e);
     }
 
     template<typename Component>
@@ -36,18 +41,18 @@ struct ECS{
         return map.find(e) != map.end();
     }
 
-    template<typename First, typename... Rest>
+    template<typename... Components>
     std::vector<Entity> view(){
-        std::vector<Entity> results;
+        uint32_t hash = (componentStorage.getHash<Components>() | ...);
 
-        auto& baseIndices = componentStorage.getIndices<First>();
-        
-        for(const auto& [entity, _] : baseIndices){
-            if((hasComponent<Rest>(entity) && ...)){
-                results.push_back(entity);
-            }
+        return componentStorage.componentMap[hash];
+    }
+
+    template<typename... Components, typename Func>
+    void foreach(Func func){
+        for(auto entity : view<Components...>()){
+            func(getComponent<Components>(entity)...);
         }
-        return results;
     }
 
     private:

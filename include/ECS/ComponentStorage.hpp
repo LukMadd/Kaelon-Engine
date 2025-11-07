@@ -1,8 +1,11 @@
 #include "Components.hpp"
+#include <algorithm>
 #include <cstdint>
 #include <sys/types.h>
 #include <unordered_map>
 #include "vector"
+
+
 
 //Component Accessor 
 template<typename T>
@@ -45,21 +48,66 @@ struct ComponentStorage{
 
         vec.emplace_back(std::forward<Args>(args)...);
         map[e] = vec.size() - 1;
+
+        uint32_t hashKey = ComponentAccessor<T>::hash;
+        auto &entities = componentMap[hashKey];
+        auto it = std::lower_bound(entities.begin(), entities.end(), e);
+        if(it == entities.end() || *it != e){
+            entities.insert(it, e);
+        }
     }
 
     template<typename T>
-    auto& getIndices(){
+    auto& getIndices() const {
         return ComponentAccessor<T>::getMap(*this);
     }
 
     template<typename T>
-    auto &getVector(){
+    auto &getVector() const {
         return ComponentAccessor<T>::getVector(*this);
     }
 
     template<typename... Components>
-    uint32_t getHash(){
+    uint32_t getHash() const {
        return (ComponentAccessor<Components>::hash | ...);
+    }
+
+    template<typename... Components>
+    std::vector<Entity> getEntitiesWith() const {
+        std::vector<const std::vector<Entity>*> lists;
+
+        bool missingComponent = false;
+
+        (..., ([&] {
+            auto it = componentMap.find(ComponentAccessor<Components>::hash);
+            if(it != componentMap.end()){
+                lists.push_back(&it->second);
+            } else {
+                missingComponent = true;
+            }
+        }()));
+
+        if (missingComponent) return {}; 
+
+        auto smallest = *std::min_element(lists.begin(), lists.end(),
+        [](auto a, auto b){ return a->size() < b->size(); });
+
+        std::vector<Entity> result = *smallest;
+        std::vector<Entity> temp;
+
+        for(auto list : lists){
+            if(list == smallest) continue;
+
+            temp.clear();
+            std::set_intersection(result.begin(), result.end(),
+                                  list->begin(), list->end(),
+                                  std::back_inserter(temp));
+        
+            result.swap(temp);
+            if(result.empty()) break;
+        }
+
+        return result;
     }
 };
 
@@ -71,7 +119,6 @@ struct ComponentAccessor<TransformComponent>{
     static auto &getMap(ComponentStorage &storage){return storage.transformIndices;}
     static inline uint32_t hash = 1u << 0;
 };
-
 
 template<>
 struct ComponentAccessor<MeshComponent>{

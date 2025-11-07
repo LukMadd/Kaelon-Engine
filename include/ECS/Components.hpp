@@ -4,9 +4,11 @@
 #include "Object/Mesh.hpp"
 #include "Object/Material.hpp"
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <memory>
 #include "Object/AABB.hpp"
 
-using Entity = uint32_t;
+typedef uint32_t Entity;
 constexpr int nullEntity = std::numeric_limits<uint32_t>::max();
 
 using namespace EngineObject;

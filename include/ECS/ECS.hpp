@@ -16,10 +16,6 @@ struct ECS{
     void addComponents(Entity e){
         addComponent<First>(e);
         (addComponent<Rest>(e), ...);
-
-        uint32_t newHashKey = componentStorage.getHash<First>();
-        ((newHashKey |= componentStorage.getHash<Rest>()), ...);
-        componentStorage.componentMap[newHashKey].push_back(e);
     }
 
     template<typename Component>
@@ -42,10 +38,13 @@ struct ECS{
     }
 
     template<typename... Components>
-    std::vector<Entity> view(){
-        uint32_t hash = (componentStorage.getHash<Components>() | ...);
-
-        return componentStorage.componentMap[hash];
+    std::vector<Entity> view() {
+        if constexpr (sizeof...(Components) == 1) {
+            uint32_t hash = (componentStorage.getHash<Components>() | ...);
+            return componentStorage.componentMap[hash];
+        } else {
+            return componentStorage.getEntitiesWith<Components...>();
+        }
     }
 
     template<typename... Components, typename Func>
@@ -55,7 +54,8 @@ struct ECS{
         }
     }
 
+    ComponentStorage componentStorage;
+
     private:
         std::vector<Entity> entities;
-        ComponentStorage componentStorage;
 };

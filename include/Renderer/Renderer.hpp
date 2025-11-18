@@ -12,7 +12,7 @@
 #include "Vertex.hpp"
 #include "UniformBuffer.hpp"
 #include "RendererUtilities.hpp"
-#include "Object/Object.hpp"
+
 #include "Scene/Scene.hpp"
 
 constexpr uint32_t MAX_FRAMES_IN_FLIGHT = 3;
@@ -84,13 +84,12 @@ namespace EngineRenderer {
                 bool framebuffersrResized = false;
 
                 void initVulkan();
-                void initObjectResources(uint32_t objectCount, EngineResource::ResourceManager &resourceManager);
-                void initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager, 
-                                 EnginePartitioning::Spacial_Partitioner &spacialPartitione);
-                void initSceneDescriptors(std::vector<std::unique_ptr<EngineObject::Object>>& objects);
+                void initObjectResources(EngineResource::ResourceManager &resourceManager);
+                void initEntities(Scene &scene, EngineResource::ResourceManager &resourceManager, 
+                                 EnginePartitioning::Spatial_Partitioner &SpatialPartitioner, ECS& ecs);
                 void cleanup(Scene *scene);
-                void drawFrame(Scene *scene, FrameFlags frameFlags);
-                void createSceneDescriptorSets(Scene *scene);
+                void drawFrame(Scene *scene, ECS& ecs, FrameFlags frameFlags);
+                void createSceneDescriptorSets(Scene *scene, ECS& ecs);
 
                 void updateUniformBuffers(UniformBufferObject &ubo, float fov){
                     uniformBufferCommand.updateUniformBuffers(ubo, fov, currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);

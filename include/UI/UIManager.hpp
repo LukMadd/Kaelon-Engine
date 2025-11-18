@@ -17,6 +17,8 @@ namespace EngineUI{
         EngineScene::SceneManager *sceneManager;
         EngineCamera::CameraManager *cameraManager;
         EngineResource::ResourceManager *recourseManager;
+        std::vector<Entity>* changedBoundingBoxes;
+        ECS* ecs = nullptr;
     };
 
     class UIManager{
@@ -42,7 +44,7 @@ namespace EngineUI{
                 ImGuiStyle baseStyle;
             
             public:
-                EngineObject::Object*& getSelectedObject(){return engineUI.getSelectedObject();}
+                Entity getSelectedEntity(){return engineUI.getSelectedEntity();}
                 EngineScene::Scene* getSelectedScene(){return engineUI.getSelectedScene();}
     };
 }

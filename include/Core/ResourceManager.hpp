@@ -4,12 +4,10 @@
 #include <type_traits>
 #include <any>
 #include <unordered_map>
-#include "Object/Mesh.hpp"
-#include "Object/Texture.hpp"
+#include "Misc/Mesh.hpp"
+#include "Misc/Texture.hpp"
 #include "Renderer/ModelLoader.hpp"
 #include "Renderer/TextureLoader.hpp"
-
-using namespace EngineObject;
 
 template<class>
 inline constexpr bool always_false = false;

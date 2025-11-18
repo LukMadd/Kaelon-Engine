@@ -2,10 +2,12 @@
 #define _SCENE_HPP
 
 #include "Camera/CameraManager.hpp"
-#include "Object/Object.hpp"
-#include "Core/ResourceManager.hpp"
 
-using namespace EngineObject;
+#include "Core/ResourceManager.hpp"
+#include "ECS/ComponentStorage.hpp"
+#include "Scene/SceneNode.hpp"
+
+;
 
 class DebugRenderer;
 
@@ -19,35 +21,34 @@ namespace EngineScene{
 
             int index;
             std::string name;
-            std::vector<std::unique_ptr<EngineObject::Object>> objects; 
-            std::vector<EngineObject::Object*> newObjects;
+            std::vector<Entity> newEntities;
             std::vector<VkDescriptorSet> descriptorSets;
-            SceneNode root;
+            ComponentStorage componentStorage;
+            SceneNode sceneNode;
 
-            bool areObjectsInitialized = false;
+            bool areEntitiesInitialized = false;
             bool areDescriptorSetsInitialized = false;
+            bool isInitialized = false;
 
             bool selected = false;
 
             static std::unique_ptr<Scene> createScene(int id, const std::string &name);
-            void initBaseScene(EngineResource::ResourceManager &resourceManager);
+            void initBaseScene(EngineResource::ResourceManager &resourceManager, ECS& ecs);
 
-            void pushObject(std::unique_ptr<Object> object) {objects.push_back(std::move(object));};
+            void addDefaultEntity(ECS& ecs);
 
-            void addDefaultObject();
+            void removeEntity(Entity e, ECS& ecs);
 
-            void removeObject(Object *object);
-
-            void drawBoundingBoxes(DebugRenderer *debugRenderer);
+            void drawBoundingBoxes(ECS& ecs, DebugRenderer *debugRenderer);
 
             int getIndex() const {return index;}
             std::string getName() const {return name;}
 
-            std::vector<std::shared_ptr<Texture>> getSceneTextures();
+            std::vector<std::shared_ptr<Texture>> getSceneTextures(ECS& ecs);
 
-            void update();
+            void update(ECS& ecs);
 
-            void cleanupObjects();
+            void cleanupEntities();
     };
 }
 

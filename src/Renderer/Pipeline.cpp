@@ -4,7 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <vulkan/vulkan.hpp>
-#include "Core/ObjectRegistry.hpp"
+
 
 #include "Debug/DebugRenderer.hpp"
 #include "Renderer/Vertex.hpp"

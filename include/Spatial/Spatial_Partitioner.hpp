@@ -1,34 +1,45 @@
 #ifndef _SPATIAL_PARTITIONER
 #define _SPATIAL_PARTITIONER
 
-#include "Object/Object.hpp"
+
 #include <cstdint>
 #include <unordered_map>
 #include <unordered_set>
+#include "ECS/Components.hpp"
+#include "ECS/ECS.hpp"
 
 constexpr int CELL_SIZE = 10;
 
 namespace EnginePartitioning{
     struct Cell{
-        std::unordered_set<EngineObject::Object*> objects;
+        std::unordered_set<Entity> entities;
     };
 
-    class Spacial_Partitioner{
+    class Spatial_Partitioner{
         private:
             std::unordered_map<uint64_t, Cell> grid;
 
-            void removeObject(Object *object);
+            void removeEntity(Entity entity);
         
         public:
-            void registerObject(Object *object, std::vector<uint64_t> &cellKeys);
+            void init(ECS* ecs){this->ecs = ecs;};
 
-            std::vector<uint64_t> getCellKeys(Object *object);
+            void addEntity(Entity e);
 
-            std::vector<Cell*> getCells(Object *object);
+            void registerEntity(Entity entity, std::vector<uint64_t> &cellKeys);
 
-            void reRegisterObject(Object *object, std::vector<uint64_t> &cellKeys);
+            void updateEntityCells(Entity entity);
+
+            std::vector<uint64_t> getCellKeys(Entity entity);
+
+            std::vector<Cell*> getCells(Entity entity);
+
+            void reRegisterEntity(Entity entity, std::vector<uint64_t> &cellKeys);
 
             void reset() {grid.clear();}
+
+            private:
+                ECS* ecs;
     };
 }
 

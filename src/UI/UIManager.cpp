@@ -137,14 +137,15 @@ namespace EngineUI{
         ImGuiID dockspaceID = ImGui::GetID("Dock_Space");
         ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspace_flags);
         
-        engineUI.drawMainLayout(uiInfo.sceneManager, uiInfo.cameraManager);
-        engineUI.drawSceneHierarchy(uiInfo.sceneManager->getCurrentScene());
-        engineUI.drawObjectInspector(uiInfo.sceneManager->getCurrentScene());
+        assert(uiInfo.ecs != nullptr);
+        engineUI.drawMainLayout(uiInfo.sceneManager, uiInfo.cameraManager, *uiInfo.ecs);
+        engineUI.drawSceneHierarchy(uiInfo.sceneManager->getCurrentScene(), *uiInfo.ecs);
+        engineUI.drawObjectInspector(uiInfo.sceneManager->getCurrentScene(), *uiInfo.changedBoundingBoxes,*uiInfo.ecs);
         engineUI.drawCameraInspector();
         engineUI.drawRecourses(uiInfo.recourseManager);
-        engineUI.drawRenderStats(uiInfo.sceneManager->getCurrentScene() ,fps);
+        engineUI.drawRenderStats(uiInfo.sceneManager->getCurrentScene() ,fps, *uiInfo.ecs);
         engineUI.drawScenes(uiInfo.sceneManager);
-        engineUI.drawSceneInspector(uiInfo.sceneManager);
+        engineUI.drawSceneInspector(uiInfo.sceneManager, *uiInfo.ecs);
 
         ImGui::End();
         ImGui::PopStyleVar(2);

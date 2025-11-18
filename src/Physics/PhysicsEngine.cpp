@@ -1,5 +1,5 @@
 #include "Physics/PhysicsEngine.hpp"
-#include "Scene/SceneManager.hpp"
+#include "ECS/Components.hpp"
 #include <cassert>
 #include <unordered_set>
 
@@ -23,10 +23,12 @@ struct PairHash {
 using namespace EnginePartitioning;
 
 namespace EnginePhysics{
-    void PhysicsEngine::init(SceneManager *sceneManager, 
-                             EnginePartitioning::Spacial_Partitioner *spatialPartitioner){
+    void PhysicsEngine::init(EngineScene::SceneManager *sceneManager, 
+                             EnginePartitioning::Spatial_Partitioner *spatialPartitioner,
+                             ECS* ecs){
         this->sceneManager = sceneManager;
         this->spatialPartitioner = spatialPartitioner;
+        this->ecs = ecs;
     }
 
     bool PhysicsEngine::checkAABBCollision(const AABB &a, const AABB &b){
@@ -109,42 +111,53 @@ namespace EnginePhysics{
         tickCount++;
 
         std::unordered_set<std::pair<std::string, std::string>, PairHash> checkedPairs;
+        for(auto& changedBoundingBox : changedBoundingBoxes){
+            spatialPartitioner->updateEntityCells(changedBoundingBox);
+        }
 
-        for(auto &object : sceneManager->getCurrentScene()->objects){
-            if(!object->isStatic){
+        for(auto entity : ecs->view<TransformComponent, BoundingBoxComponent, PhysicsComponent, SpatialPartitioningComponent>()){
+            auto* transform = ecs->getComponent<TransformComponent>(entity);
+            auto* boundingBox = ecs->getComponent<BoundingBoxComponent>(entity);
+            auto* physics = ecs->getComponent<PhysicsComponent>(entity);
+            auto* spatial = ecs->getComponent<SpatialPartitioningComponent>(entity);
+            auto* metadata = ecs->getComponent<MetadataComponent>(entity);
+
+            if(!physics->isStatic){
                 //Applies gravity
-                object->velocity += (gravity * deltaTime) / 10.0f;
-                if(object->velocity.y >= 10.0f){
-                    object->velocity.y = 10.0f;
+                physics->velocity += (gravity * deltaTime) / 10.0f;
+                if(physics->velocity.y >= 10.0f){
+                    physics->velocity.y = 10.0f;
                 }
             }
-            glm::vec3 movement = object->isStatic ? glm::vec3(0.0f) : object->velocity * deltaTime;
-            glm::vec3 newPos = object->getPosition();
+            glm::vec3 movement = physics->isStatic ? glm::vec3(0.0f) : physics->velocity * deltaTime;
+            glm::vec3 newPos = transform->position;
 
-            AABB predictedBox = object->worldBoundingBox;
+            AABB predictedBox = boundingBox->worldBoundingBox;
             predictedBox.min += movement;
             predictedBox.max += movement;
             
-            float previousMinY = object->worldBoundingBox.min.y;
-            float previousMaxY = object->worldBoundingBox.max.y;
+            float previousMinY = boundingBox->worldBoundingBox.min.y;
+            float previousMaxY = boundingBox->worldBoundingBox.max.y;
 
-            std::vector<Cell*> cells = spatialPartitioner->getCells(object.get());
+            std::vector<Cell*> cells = spatialPartitioner->getCells(entity);
             for(int i = 0; i < cells.size(); i++){
-                for(auto *other : cells[i]->objects){
-                    if(object.get() == other) continue;
+                for(auto other : cells[i]->entities){
+                    if(entity == other) continue;
 
-                    std::pair<std::string, std::string> dirKey{object->uuid, other->uuid};
+                    BoundingBoxComponent otherBoundingBox = *ecs->getComponent<BoundingBoxComponent>(other);
+
+                    std::pair<std::string, std::string> dirKey{metadata->uuid, ecs->getComponent<MetadataComponent>(other)->uuid};
                     if(!checkedPairs.insert(dirKey).second) continue;
 
                     float epsilon = 0.00001f;
-                    if(!checkAABBCollision(predictedBox, other->worldBoundingBox)){
+                    if(!checkAABBCollision(predictedBox, otherBoundingBox.worldBoundingBox)){
                         continue;
                     }
 
-                    int collisionDirectionY = checkAABBObjectCollisionYAxis(predictedBox, other->worldBoundingBox, previousMinY, previousMaxY, epsilon);
+                    int collisionDirectionY = checkAABBObjectCollisionYAxis(predictedBox, otherBoundingBox.worldBoundingBox, previousMinY, previousMaxY, epsilon);
                     if(collisionDirectionY != OBJECT_COLLISION_NONE){
                         handleCollisionYAxis(predictedBox, 
-                            other->worldBoundingBox, object->velocity.y, movement.y, 
+                            otherBoundingBox.worldBoundingBox, physics->velocity.y, movement.y, 
                                            previousMinY, previousMaxY, collisionDirectionY, 
                                      epsilon);
                     }
@@ -152,8 +165,8 @@ namespace EnginePhysics{
                 }
             } 
         newPos += glm::vec3(movement.x, movement.y, movement.z);
-        if(newPos != object->getPosition() && !object->isStatic){
-            object->move(newPos);
+        if(newPos != transform->position && !physics->isStatic){
+            move(newPos, entity, *ecs);
         }
         }
     }

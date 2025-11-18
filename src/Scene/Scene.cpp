@@ -1,125 +1,102 @@
 #include "Scene/Scene.hpp"
 #include "Debug/DebugRenderer.hpp"
-#include "Object/MeshObject.hpp"
-#include "Object/Object.hpp"
-#include "Renderer/RendererGlobals.hpp"
+#include "ECS/Components.hpp"
+#include "ECS/ECS.hpp"
+#include "Misc/Material.hpp"
+#include "Misc/UUID.hpp"
+
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace EngineObject;
+;
 
 namespace EngineScene{
-    Scene::Scene(const std::string &name, int index) : name(name), index(index){
-        root = SceneNode();
-        root.transform.position = glm::vec3(0.0f);
-        root.transform.rotation = glm::quat(1.0f, 0, 0, 0);
-        root.transform.scale = glm::vec3(1.0f);
-        root.transform.localMatrix = glm::mat4(1.0f);
-        root.transform.worldMatrix = glm::mat4(1.0f);
-    }
+    Scene::Scene(const std::string &name, int index) : componentStorage(), name(name), index(index){};
 
-    void Scene::initBaseScene(EngineResource::ResourceManager &resourceManager){
+    void Scene::initBaseScene(EngineResource::ResourceManager &resourceManager, ECS& ecs){
         cameraManager.checkIfCamerasEmpty();
-        auto floor = std::make_unique<MeshObject>(glm::vec3( 0, 0, 0), "Crate1.obj");
 
-        SceneNode* floorNode = new SceneNode();
-        floorNode->object = floor.get();
-        floorNode->transform.position = floor->getPosition();
-        floorNode->transform.scale = glm::vec3(10.0f);
-        floorNode->transform.scale.y = 0.5f;
-        floor->node = floorNode;
-        floor->material->setBaseColor(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
-        floor->name = "Base_Scene_Floor";
-        floor->isStatic = true;
+        Entity floor = ecs.createEntity("Crate1.obj", "", "Base_Scene_Floor", "");
+        ecs.addComponents<RenderableComponent, BoundingBoxComponent, SceneNodeComponent, SpatialPartitioningComponent, PhysicsComponent>(floor);
+        auto* flloor_node = ecs.getComponent<SceneNodeComponent>(floor);
+        flloor_node->node = floor;
+        auto* floor_tranform = ecs.getComponent<TransformComponent>(floor);
+        floor_tranform->position = glm::vec3(0,0, 0);
+        floor_tranform->scale = glm::vec3(10.0f);
+        floor_tranform->scale.y = 0.5f;
+        auto* floor_material = ecs.getComponent<MaterialComponent>(floor);
+        floor_material->material->setBaseColor(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
+        auto* floor_physics = ecs.getComponent<PhysicsComponent>(floor);
+        floor_physics->isStatic = true;
+        scale(floor_tranform->scale, floor, ecs);
 
-        objects.push_back(std::move(floor));
-        root.addChild(floorNode);   
-
-        auto cube = std::make_unique<MeshObject>(glm::vec3( 0, 10, 0), "Crate1.obj");
-
-        SceneNode* cubeNode = new SceneNode();
-        cubeNode->object = cube.get();
-        cubeNode->transform.position = cube->modelMatrix[3];
-        cubeNode->transform.scale = glm::vec3(2.0f);
-        cube->node = cubeNode;
-        cube->material->setBaseColor(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
-        cube->name = "Base_Scene_Cube";
-
-        objects.push_back(std::move(cube));
-        root.addChild(cubeNode);   
-
-        root.update();
+        Entity cube = ecs.createEntity("Crate1.obj", "", "Base_Scene_Cube", "");
+        ecs.addComponents<RenderableComponent, BoundingBoxComponent, SceneNodeComponent, SpatialPartitioningComponent, PhysicsComponent>(cube);
+        auto* cube_node = ecs.getComponent<SceneNodeComponent>(cube);
+        cube_node->node = cube;
+        auto* cube_tranform = ecs.getComponent<TransformComponent>(cube);
+        cube_tranform->position = glm::vec3(0,10, 0);
+        auto* cube_material = ecs.getComponent<MaterialComponent>(cube);
+        cube_material->material->setBaseColor(glm::vec4(0.2f, 0.8f, 0.2f, 0.3f));
+        auto* cube_physics = ecs.getComponent<PhysicsComponent>(cube);
+        cube_physics->isStatic = false;
     }
 
-    void Scene::addDefaultObject(){
-        auto object = std::make_unique<MeshObject>(glm::vec3(0, 10, 0), "sphere.obj");
-
-        SceneNode* objectNode = new SceneNode();
-        objectNode->object = object.get();
-
-        objectNode->transform.position = object->modelMatrix[3];
-        objectNode->transform.scale = glm::vec3(0.1f);
+    void Scene::addDefaultEntity(ECS& ecs){
+        Entity object = ecs.getAvailableEntityID();
         
-        object->node = objectNode;
-        object->material->setBaseColor(glm::vec4(1.0f, 1.0f, 1.0f, 0.6f));
-        object->name = "Default_Object";
+        ecs.addEntity(object);
+        ecs.addComponents<MeshComponent, RenderableComponent, TransformComponent, BoundingBoxComponent, SceneNodeComponent, 
+                          SpatialPartitioningComponent, PhysicsComponent, MaterialComponent, MetadataComponent>(object);
+        auto object_mesh = ecs.getComponent<MeshComponent>(object);
+        object_mesh->mesh->meshPath = "sphere.obj";
+        auto object_transform = ecs.getComponent<TransformComponent>(object);
+        object_transform->position = glm::vec3(0, 10, 0);
+        object_transform->scale = glm::vec3(0.1f);
+        auto object_material = ecs.getComponent<MaterialComponent>(object);
+        if(!object_material->material){
+            object_material->material = std::make_shared<Material>();
+        }
+        object_material->material->setBaseColor(glm::vec4(1.0f, 1.0f, 1.0f, 0.6f));
+        auto object_metadata = ecs.getComponent<MetadataComponent>(object);
+        object_metadata->name = "Default_Object";
+        object_metadata->uuid = generateUUID();
 
-        newObjects.push_back(object.get());
-
-        objects.push_back(std::move(object));
-        root.addChild(objectNode);
-
-        root.update();
+        newEntities.push_back(object);
     }
 
-    void Scene::removeObject(Object *object){
-        auto nodeIt = std::find(object->node->parent->children.begin(), object->node->parent->children.end(), object->node);
-        if(nodeIt != object->node->parent->children.end()){ //Don't think this is necessary but oh well
-            object->node->parent->children.erase(nodeIt);
-            object->node = nullptr;
+    void Scene::removeEntity(Entity e, ECS& ecs){
+        auto newIt = std::find(newEntities.begin(), newEntities.end(), e);
+        if(newIt != newEntities.end()){
+            newEntities.erase(newIt);
         }
-
-        auto newIt = std::find(newObjects.begin(), newObjects.end(), object);
-        if(newIt != newObjects.end()){
-            newObjects.erase(newIt);
-        }
-
-        object->cleanup(device);
         
-        auto it = std::find_if(objects.begin(), objects.end(), [&](const std::unique_ptr<Object> &obj){
-            return obj.get() == object;
-        });
-        if(it != objects.end()){
-            objects.erase(it);
-        }
+        ecs.removeEntity(e);
     }
 
-    void Scene::drawBoundingBoxes(DebugRenderer *debugRenderer){
-        for(auto &object : objects){
-            if(object->worldBoundingBox.isInitialized){
-                debugRenderer->drawBoundingBox(object->worldBoundingBox);
+    void Scene::drawBoundingBoxes(ECS& ecs, DebugRenderer *debugRenderer){
+        ecs.foreach<RenderableComponent, BoundingBoxComponent>([&debugRenderer](RenderableComponent* r,BoundingBoxComponent* b){
+            if(b->worldBoundingBox.isInitialized){
+                debugRenderer->drawBoundingBox(b->worldBoundingBox);
             }
-        }
+        });
     }
 
-    std::vector<std::shared_ptr<Texture>> Scene::getSceneTextures(){
+    std::vector<std::shared_ptr<Texture>> Scene::getSceneTextures(ECS& ecs){
         std::vector<std::shared_ptr<Texture>> sceneTextures;
-        for(auto &object : objects){
-            for(auto &texture : object->material->getTextures()){
+
+        ecs.foreach<MaterialComponent>([&sceneTextures](MaterialComponent* m){
+            for(auto& texture : m->material->getTextures()){
                 if(texture->isValid()){
                     sceneTextures.push_back(texture);
                 }
             }
-        }
+        });
+
         return sceneTextures;
     }
 
-    void Scene::cleanupObjects(){
-        for(auto& obj : objects){
-            obj->cleanup(device);
-        }
-        objects.clear();
-
-        root.children.clear();
+    void Scene::cleanupEntities(){
+        componentStorage.entities.clear();
     }
 
     std::unique_ptr<Scene> Scene::createScene(int id, const std::string &name){
@@ -127,7 +104,11 @@ namespace EngineScene{
         return scene;
     }
 
-     void Scene::update(){
-        root.update();
+     void Scene::update(ECS& ecs){
+        ecs.foreach<SceneNodeComponent>([this, &ecs](SceneNodeComponent* n){
+            if(n->parent == nullEntity){
+                sceneNode.update(n->node, glm::mat4(1.0f), ecs);
+            }
+        });
      }
 }

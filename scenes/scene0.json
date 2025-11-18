@@ -3,20 +3,20 @@
         {
             "fov": 35.0,
             "front": [
-                -0.019090848043560982,
-                -0.32797956466674805,
-                0.9444919228553772
+                0.005647017154842615,
+                -0.3244801163673401,
+                0.9458756446838379
             ],
             "is_initialized": true,
             "name": "Generic_Camera",
             "position": [
-                0.7971474528312683,
-                10.333447456359863,
-                -33.47984313964844
+                -0.20000000298023224,
+                11.5,
+                -33.5
             ],
             "rotation": {
-                "pitch": -19.146190643310547,
-                "yaw": 91.15795135498047
+                "pitch": -18.934080123901367,
+                "yaw": 89.65794372558594
             },
             "sensitivity": 0.10000000149011612,
             "speed": 10.0,
@@ -27,100 +27,183 @@
             ]
         }
     ],
-    "index": 0,
-    "name": "Default_Scene",
-    "objects": [
+    "entities": [
         {
-            "object": {
-                "albedo": 0.0,
-                "base_color": {
-                    "a": 1.0,
-                    "b": 0.800000011920929,
-                    "g": 0.800000011920929,
-                    "r": 0.800000011920929
-                },
-                "is_static": true,
-                "mesh": "Crate1.obj",
-                "metallic": 0.0,
-                "name": "Base_Scene_Floor",
-                "roughness": 1.0,
-                "shader": {
-                    "frag": "base_frag_shader.spv",
-                    "vert": "base_vert_shader.spv"
-                },
-                "textures": [],
-                "type": "Mesh_Object",
-                "uuid": "def3d4867207dd5435c300832978e181",
-                "velocity": [
-                    0.0,
-                    -1.0,
-                    0.0
+            "entity": {
+                "components": [
+                    {
+                        "component_type": "renderable",
+                        "uniform_index": 0
+                    },
+                    {
+                        "component_type": "transform",
+                        "transform": {
+                            "position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "rotation": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                10.0,
+                                0.5,
+                                10.0
+                            ]
+                        }
+                    },
+                    {
+                        "component_type": "mesh",
+                        "mesh_path": "Crate1.obj"
+                    },
+                    {
+                        "albedo": 0.0,
+                        "base_color": [
+                            [
+                                0.800000011920929
+                            ],
+                            [
+                                0.800000011920929
+                            ],
+                            [
+                                0.800000011920929
+                            ],
+                            [
+                                1.0
+                            ]
+                        ],
+                        "component_type": "material",
+                        "metallic": 0.0,
+                        "roughness": 1.0,
+                        "shader": {
+                            "frag": "base_frag_shader.spv",
+                            "vert": "base_vert_shader.spv"
+                        },
+                        "textures": []
+                    },
+                    {
+                        "component_type": "physics",
+                        "is_static": true,
+                        "velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "component_type": "bounding_box"
+                    },
+                    {
+                        "component_type": "spatial_partitioning"
+                    },
+                    {
+                        "component_type": "scene_node",
+                        "node": 1,
+                        "parent": 4294967295
+                    },
+                    {
+                        "component_type": "metadata",
+                        "name": "Base_Scene_Floor",
+                        "type": "",
+                        "uuid": "dbd9f64b0877dd0e61602b4b745fef79"
+                    }
                 ]
             },
-            "transform": {
-                "position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    10.0,
-                    0.5,
-                    10.0
-                ]
-            }
+            "id": 1
         },
         {
-            "object": {
-                "albedo": 0.0,
-                "base_color": {
-                    "a": 1.0,
-                    "b": 0.20000000298023224,
-                    "g": 0.20000000298023224,
-                    "r": 0.20000000298023224
-                },
-                "is_static": false,
-                "mesh": "Crate1.obj",
-                "metallic": 0.0,
-                "name": "Base_Scene_Cube",
-                "roughness": 1.0,
-                "shader": {
-                    "frag": "base_frag_shader.spv",
-                    "vert": "base_vert_shader.spv"
-                },
-                "textures": [],
-                "type": "Mesh_Object",
-                "uuid": "d85478e38bb641b2098ee3b28a2bc017",
-                "velocity": [
-                    0.0,
-                    0.0,
-                    0.0
+            "entity": {
+                "components": [
+                    {
+                        "component_type": "renderable",
+                        "uniform_index": 1
+                    },
+                    {
+                        "component_type": "transform",
+                        "transform": {
+                            "position": [
+                                0.0,
+                                1.5001685619354248,
+                                0.0
+                            ],
+                            "rotation": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    },
+                    {
+                        "component_type": "mesh",
+                        "mesh_path": "Crate1.obj"
+                    },
+                    {
+                        "albedo": 0.0,
+                        "base_color": [
+                            [
+                                0.20000000298023224
+                            ],
+                            [
+                                0.800000011920929
+                            ],
+                            [
+                                0.20000000298023224
+                            ],
+                            [
+                                0.30000001192092896
+                            ]
+                        ],
+                        "component_type": "material",
+                        "metallic": 0.0,
+                        "roughness": 1.0,
+                        "shader": {
+                            "frag": "base_frag_shader.spv",
+                            "vert": "base_vert_shader.spv"
+                        },
+                        "textures": []
+                    },
+                    {
+                        "component_type": "physics",
+                        "is_static": false,
+                        "velocity": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "component_type": "bounding_box"
+                    },
+                    {
+                        "component_type": "spatial_partitioning"
+                    },
+                    {
+                        "component_type": "scene_node",
+                        "node": 2,
+                        "parent": 4294967295
+                    },
+                    {
+                        "component_type": "metadata",
+                        "name": "Base_Scene_Cube",
+                        "type": "",
+                        "uuid": "8be58ef938505d353544a8a27b058eff"
+                    }
                 ]
             },
-            "transform": {
-                "position": [
-                    0.0,
-                    2.500243902206421,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "scale": [
-                    2.0,
-                    2.0,
-                    2.0
-                ]
-            }
+            "id": 2
         }
-    ]
+    ],
+    "index": 0,
+    "name": "Default_Scene",
+    "next_entity": 3
 }

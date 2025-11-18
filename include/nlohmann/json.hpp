@@ -10091,7 +10091,7 @@ class binary_reader
     @warning Not all BSON element types are supported yet. An unsupported
              @a element_type will give rise to a parse_error.114:
              Unsupported BSON record type 0x...
-    @return whether a valid BSON-object/array was passed to the SAX parser
+    @return whether a valid BSON-Misc/array was passed to the SAX parser
     */
     bool parse_bson_element_internal(const char_int_type element_type,
                                      const std::size_t element_type_parse_position)
@@ -10177,7 +10177,7 @@ class binary_reader
     @param[in] is_array Determines if the element list being read is to be
                         treated as an object (@a is_array == false), or as an
                         array (@a is_array == true).
-    @return whether a valid BSON-object/array was passed to the SAX parser
+    @return whether a valid BSON-Misc/array was passed to the SAX parser
     */
     bool parse_bson_element_list(const bool is_array)
     {
@@ -21120,7 +21120,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     }
 
     /// @brief explicitly create an object from an initializer list
-    /// @sa https://json.nlohmann.me/api/basic_json/object/
+    /// @sa https://json.nlohmann.me/api/basic_json/Misc/
     JSON_HEDLEY_WARN_UNUSED_RESULT
     static basic_json object(initializer_list_t init = {})
     {
@@ -21484,7 +21484,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     }
 
     /// @brief return whether value is an object
-    /// @sa https://json.nlohmann.me/api/basic_json/is_object/
+    /// @sa https://json.nlohmann.me/api/basic_json/is_Misc/
     constexpr bool is_object() const noexcept
     {
         return m_data.m_type == value_t::object;

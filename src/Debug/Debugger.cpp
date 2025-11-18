@@ -55,8 +55,6 @@ subsystem) == false){
 
     displayLog(logSeverity, logMessage, subsystem, FILE, LINE, FUNC);
 
-    std::cout << std::endl;
-
     LogInfo logInfo{};
     logInfo.logSeverity = logSeverity;
     logInfo.logMessage = logMessage;

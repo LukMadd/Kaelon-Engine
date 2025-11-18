@@ -2,9 +2,9 @@
 #include <glm/glm.hpp>
 #include <vulkan/vulkan.hpp>
 
-#include "Object/Texture.hpp"
+#include "Misc/Texture.hpp"
 
-using namespace EngineObject;
+;
 
 namespace EngineRenderer{
     struct DummyRecources{

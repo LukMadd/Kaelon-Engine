@@ -1,49 +1,81 @@
+#ifndef ECS_HPP
+#define ECS_HPP
+
 #include <cstdint>
 #include <sys/types.h>
 #include <vector>
 #include "Components.hpp"
 #include "ComponentStorage.hpp"
+#include "EntityFunctions.hpp"
+
+#define DebugSystem "ECS";
 
 struct ECS{
-    void addEntity(Entity e){entities.push_back(e);}
-
-    template<typename T, typename... Args>
-    void addComponent(Entity e, Args&&... args){
-        componentStorage.addComponent<T>(e, std::forward<Args>(args)...);
+    void addEntity(Entity e){
+        componentStorage->entities.push_back(e);
     }
 
-    template<typename First, typename... Rest>
-    void addComponents(Entity e){
-        addComponent<First>(e);
-        (addComponent<Rest>(e), ...);
+    template<typename Component, typename... Args>
+    Component* addComponent(Entity e, Args&&... args){
+        return componentStorage->addComponent<Component>(e, std::forward<Args>(args)...);
     }
 
-    template<typename Component>
-    auto &getComponent(Entity e){
-        auto &map = componentStorage.getIndices<Component>();
-        auto &vec = componentStorage.getVector<Component>();
+    void removeEntity(Entity e){
+        componentStorage->entities.erase(std::remove(componentStorage->entities.begin(), componentStorage->entities.end(), e), 
+                                                     componentStorage->entities.end());
 
-        return vec[map[e]];
+        //There is definetly a better way to do this, I just don't know what it is
+        if(hasComponent<TransformComponent>(e)) componentStorage->removeComponent<TransformComponent>(e);
+        if(hasComponent<MeshComponent>(e)) componentStorage->removeComponent<MeshComponent>(e);
+        if(hasComponent<MaterialComponent>(e)) componentStorage->removeComponent<MaterialComponent>(e);
+        if(hasComponent<PhysicsComponent>(e)) componentStorage->removeComponent<PhysicsComponent>(e);
+        if(hasComponent<BoundingBoxComponent>(e)) componentStorage->removeComponent<BoundingBoxComponent>(e);
+        if(hasComponent<SpatialPartitioningComponent>(e)) componentStorage->removeComponent<SpatialPartitioningComponent>(e);
+        if(hasComponent<RenderableComponent>(e)) componentStorage->removeComponent<RenderableComponent>(e);
+        if(hasComponent<SceneNodeComponent>(e)) componentStorage->removeComponent<SceneNodeComponent>(e);
+        if(hasComponent<MetadataComponent>(e)) componentStorage->removeComponent<MetadataComponent>(e);
     }
 
     template<typename... Components>
-    auto getComponents(Entity e) {
+    void addComponents(Entity e){
+        (addComponent<Components>(e), ...);
+    }
+
+    template<typename Component>
+    Component* getComponent(Entity e){
+        auto& vec = ComponentAccessor<Component>::getVector(componentStorage);
+        auto& map = ComponentAccessor<Component>::getMap(componentStorage);
+        
+        auto it = map.find(e);
+        if(it != map.end()){
+            return &vec.at(it->second);
+        }
+        return nullptr;
+    }
+
+    template<typename... Components>
+    auto& getComponents(Entity e) {
         return std::tie(getComponent<Components>(e)...);
     }
 
     template<typename T>
     bool hasComponent(Entity e){
-        auto &map = componentStorage.getIndices<T>();
+        auto& map = componentStorage->getIndices<T>();
         return map.find(e) != map.end();
     }
 
     template<typename... Components>
-    std::vector<Entity> view() {
+    std::vector<Entity> view(){
         if constexpr (sizeof...(Components) == 1) {
-            uint32_t hash = (componentStorage.getHash<Components>() | ...);
-            return componentStorage.componentMap[hash];
+            uint32_t hash = (componentStorage->getHash<Components>() | ...);
+            auto it = componentStorage->componentMap.find(hash);
+            if(it != componentStorage->componentMap.end()){
+                return it->second;
+            } else{
+                return {};
+            }
         } else {
-            return componentStorage.getEntitiesWith<Components...>();
+            return componentStorage->getEntitiesWith<Components...>();
         }
     }
 
@@ -54,8 +86,44 @@ struct ECS{
         }
     }
 
-    ComponentStorage componentStorage;
+    Entity createEntity(std::string meshPath = "", std::string texturePath = "", std::string name = "", std::string type = ""){
+        return initEntity(*this, meshPath, texturePath, name, type);
+    }
+
+    void setComponentStorage(ComponentStorage* storage){
+        componentStorage = storage;
+    }
+
+    uint32_t getAvailableEntityID(){
+        uint32_t entityID;
+        if(!availableIDs.empty()){
+            entityID = availableIDs[0];
+        } else{
+            entityID = componentStorage->nextEntity;
+            componentStorage->nextEntity++;
+        }
+        return entityID;
+    }
+
+    uint32_t& getNextEntity(){
+        return componentStorage->nextEntity;
+    }
+
+    bool isComponentStorageSet(){
+        if(componentStorage){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    uint32_t getTotalEntities(){
+        return componentStorage->entities.size();
+    }
 
     private:
-        std::vector<Entity> entities;
-};
+        ComponentStorage* componentStorage = nullptr; //A bit dangerous but a pretty easy fix if it comes to it
+        std::vector<uint32_t> availableIDs;
+    };
+
+#endif

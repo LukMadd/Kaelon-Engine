@@ -2,7 +2,7 @@
 #define _INPUT_HPP
 
 #include "Camera/Camera.hpp"
-#include "Object/Object.hpp"
+
 #include "Scene/Scene.hpp"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -42,7 +42,7 @@ namespace Engine{
                 bool firstMouse = true;
 
                 static EngineCamera::Camera *inputCamera;
-                static EngineObject::Object** selectedObject;
+                static Entity selectedEntity;
                 static EngineScene::Scene *inputScene;
 
                 static std::unordered_map<int, bool> keyStates;
@@ -57,6 +57,8 @@ namespace Engine{
                 void resetMouse();
 
                 void setCallBacks();
+
+                void setECS(ECS* ecs){this->ecs = ecs;}
                 
                 static Input& get(){
                     static Input instance;
@@ -65,6 +67,9 @@ namespace Engine{
 
                 static bool isKeyPressed(int key);
                 static bool isButtonPressed(int button);
+
+            private:
+                static ECS* ecs;
         };
 
     }

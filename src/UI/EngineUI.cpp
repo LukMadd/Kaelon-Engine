@@ -1,14 +1,16 @@
 #include "UI/EngineUI.hpp"
 #include "Camera/CameraManager.hpp"
-#include "Object/Object.hpp"
+
+#include "ECS/Components.hpp"
 #include "Renderer/RendererGlobals.hpp"
 #include "Scene/Scene.hpp"
 #include "Scene/SceneManager.hpp"
+#include "ECS/EntityFunctions.hpp"
 #include "imgui.h"
 
 namespace EngineUI{
     void EngineUI::drawMainLayout(EngineScene::SceneManager *sceneManager, 
-                                  EngineCamera::CameraManager *cameraManager){
+                                  EngineCamera::CameraManager *cameraManager, ECS& ecs){
             if(ImGui::BeginMenuBar()){
             if(ImGui::BeginMenu("Scene")){
                 ImGui::Checkbox("View Scenes", &m_showScenesWindow);
@@ -27,7 +29,7 @@ namespace EngineUI{
                     sceneManager->addDefaultScene();
                 }
                 if(ImGui::Button("Add Object")){
-                    sceneManager->getCurrentScene()->addDefaultObject();
+                    sceneManager->getCurrentScene()->addDefaultEntity(ecs);
                 }
                 if(ImGui::Button("Reset Camera")){
                     cameraManager->getCurrentCamera()->resetCamera();
@@ -43,28 +45,42 @@ namespace EngineUI{
         }
     }
 
-    void EngineUI::drawSceneHierarchy(EngineScene::Scene *scene){
+    void EngineUI::drawSceneHierarchy(EngineScene::Scene *scene, ECS& ecs){
         if(m_showSceneHierarchyWindow){
             ImGui::Begin("Scene Hierarchy");
-            const char* object_preview_text = selectedObject ? selectedObject->name.c_str() : "Select an object";
-            if(ImGui::BeginCombo("Objects", object_preview_text)){
-                for(auto &object : scene->objects){
-                    ImGui::PushID(object.get());
-                    bool is_object_selected = (selectedObject == object.get());
-                    if(ImGui::Selectable(object->name.c_str(), is_object_selected)){
-                        if(selectedObject) selectedObject->selected = false;
-                        selectedObject = object.get();
-                        selectedObject->selected = true;
+            const char* entity_preview_text;
 
+            if(selectedEntity != nullEntity){
+                auto* selected_metadata = ecs.getComponent<MetadataComponent>(selectedEntity);
+                entity_preview_text = selected_metadata->name.c_str();
+            } else{
+                entity_preview_text = "Select an object";
+            }
+
+            if(ImGui::BeginCombo("Entities", entity_preview_text)){
+                for(auto& entity : ecs.view<MetadataComponent>()){
+                    ImGui::PushID(entity);
+                    bool is_entity_selected = (selectedEntity == entity);
+                    auto* entity_metadata = ecs.getComponent<MetadataComponent>(entity);
+                    if(ImGui::Selectable(entity_metadata->name.c_str(), is_entity_selected)){
+                        auto* selected_entity_metadata = ecs.getComponent<MetadataComponent>(selectedEntity);
+                        if(selectedEntity != nullEntity) selected_entity_metadata->selected = false;
+                        
+                        selectedEntity = entity;
+                        
+                        selected_entity_metadata = ecs.getComponent<MetadataComponent>(entity);
+                        
+                        selected_entity_metadata->selected = true;
                         m_showObjectInspector = true;
                     }
-                    if(is_object_selected){
+                    if(is_entity_selected){
                         ImGui::SetItemDefaultFocus();
                     }
                     ImGui::PopID();
                 }
                 ImGui::EndCombo();
             }
+            
 
             uint32_t cameraIndex = 0;
             const char* camera_preview_text = selectedCamera ? selectedCamera->name.c_str() : "Select an camera";
@@ -94,62 +110,75 @@ namespace EngineUI{
         }
     }
 
-    void EngineUI::drawObjectInspector(EngineScene::Scene *scene){
-        if(m_showObjectInspector && selectedObject || previousObject != selectedObject){
-            previousObject = selectedObject;
+    void EngineUI::drawObjectInspector(EngineScene::Scene *scene, std::vector<Entity> &changedBoundingBoxes, ECS& ecs){
+        if(m_showObjectInspector && selectedEntity || previousEntity != selectedEntity){
+            previousEntity = selectedEntity;
             m_showObjectInspector = true;
 
-            ImGui::Begin("Object Inspector");
+            auto* metadata = ecs.getComponent<MetadataComponent>(selectedEntity);
+            auto* transform = ecs.getComponent<TransformComponent>(selectedEntity);
 
-            ImGui::Text("UUID: %s", selectedObject->uuid.c_str());
+            ImGui::Begin("Entity Inspector");
 
-            ImGui::Text("Name: %s", selectedObject->name.c_str());
-            if(ImGui::TreeNode("Position")){
-                float positionX = selectedObject->node->transform.position.x;
-                float positionY = selectedObject->node->transform.position.y;
-                float positionZ = selectedObject->node->transform.position.z;
-                ImGui::InputFloat("X: ", &positionX);
-                ImGui::InputFloat("Y: ", &positionY);
-                ImGui::InputFloat("Z: ", &positionZ);
-                if(glm::vec3(positionX, positionY, positionZ) != selectedObject->node->transform.position){
-                    selectedObject->move(glm::vec3(positionX, positionY, positionZ));
-                }
-                ImGui::TreePop();
+            if(metadata){
+                ImGui::Text("UUID: %s", metadata->uuid.c_str());
+            } else{
+                ImGui::Text("UUID: %s", "N/A");
             }
 
-            if(ImGui::TreeNode("Rotation")){
-                float rotationX = selectedObject->node->transform.rotation.x;
-                float rotationY = selectedObject->node->transform.rotation.y;
-                float rotationZ = selectedObject->node->transform.rotation.z;
-                ImGui::InputFloat("X: ", &rotationX);
-                ImGui::InputFloat("Y: ", &rotationY);
-                ImGui::InputFloat("Z: ", &rotationZ);
-                glm::vec3 currentRotation = glm::vec3(selectedObject->node->transform.rotation.x, 
-                                                      selectedObject->node->transform.rotation.y,
-                                                      selectedObject->node->transform.rotation.z);
-                if(glm::vec3(rotationX, rotationY, rotationZ) != currentRotation){
-                    selectedObject->rotate(glm::vec3(rotationX, rotationY, rotationZ));
-                }
-                ImGui::TreePop();
+            if(metadata){
+                ImGui::Text("Name: %s", metadata->name.c_str());
+            } else{
+                ImGui::Text("Name: %s", "N/A");
             }
-
-            if(ImGui::TreeNode("Scale")){
-                float scaleX = selectedObject->node->transform.scale.x;
-                float scaleY = selectedObject->node->transform.scale.y;
-                float scaleZ = selectedObject->node->transform.scale.z;
-                ImGui::InputFloat("X: ", &scaleX);
-                ImGui::InputFloat("Y: ", &scaleY);
-                ImGui::InputFloat("Z: ", &scaleZ);
-                if(glm::vec3(scaleX, scaleY, scaleZ) != selectedObject->node->transform.scale){
-                    selectedObject->scale(glm::vec3(scaleX, scaleY, scaleZ));
+            if(transform){
+                if(ImGui::TreeNode("Position")){
+                    float positionX = transform->position.x;
+                    float positionY = transform->position.y;
+                    float positionZ = transform->position.z;
+                    ImGui::InputFloat("X: ", &positionX);
+                    ImGui::InputFloat("Y: ", &positionY);
+                    ImGui::InputFloat("Z: ", &positionZ);
+                    if(glm::vec3(positionX, positionY, positionZ) != transform->position){
+                        move(glm::vec3(positionX, positionY, positionZ), selectedEntity, ecs);
+                    }
+                    ImGui::TreePop();
                 }
-                ImGui::TreePop();
+
+                if(ImGui::TreeNode("Rotation")){
+                    float& rotationX = transform->rotation.x;
+                    float& rotationY = transform->rotation.y;
+                    float& rotationZ = transform->rotation.z;
+                    ImGui::InputFloat("X: ", &rotationX);
+                    ImGui::InputFloat("Y: ", &rotationY);
+                    ImGui::InputFloat("Z: ", &rotationZ);
+                    glm::vec3 currentRotation = glm::vec3(transform->rotation.x, 
+                                                        transform->rotation.y,
+                                                        transform->rotation.z);
+                    if(glm::vec3(rotationX, rotationY, rotationZ) != currentRotation){
+                        rotate(glm::vec3(rotationX, rotationY, rotationZ), selectedEntity, ecs);
+                    }
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Scale")){
+                    float scaleX = transform->scale.x;
+                    float scaleY = transform->scale.y;
+                    float scaleZ = transform->scale.z;
+                    ImGui::InputFloat("X: ", &scaleX);
+                    ImGui::InputFloat("Y: ", &scaleY);
+                    ImGui::InputFloat("Z: ", &scaleZ);
+                    if(glm::vec3(scaleX, scaleY, scaleZ) != transform->scale){
+                        scale(glm::vec3(scaleX, scaleY, scaleZ), selectedEntity, ecs);
+                    }
+                    ImGui::TreePop();
+                }
             }
 
             if(ImGui::Button("Delete")){
-                scene->removeObject(selectedObject);
-                selectedObject = nullptr;
-                previousObject = nullptr;
+                scene->removeEntity(selectedEntity, ecs);
+                selectedEntity = nullEntity;
+                previousEntity = nullEntity;
                 m_showObjectInspector = false;
             }
 
@@ -186,13 +215,13 @@ namespace EngineUI{
         }
     }
 
-    void EngineUI::drawSceneInspector(SceneManager *sceneManager){
+    void EngineUI::drawSceneInspector(EngineScene::SceneManager *sceneManager, ECS& ecs){
         if(m_showSceneInspector && selectedScene){
             ImGui::Begin("Scene Inspector");
 
             ImGui::Text("Id: %d", selectedScene->index);
             ImGui::Text("Name: %s", selectedScene->name.c_str());
-            ImGui::Text("Object Count: %d", (int)selectedScene->objects.size());
+            ImGui::Text("Entity Count: %d", (int)ecs.getTotalEntities());
 
             if(ImGui::Button("Delete")){
                 sceneManager->deleteScene(selectedScene);
@@ -210,7 +239,7 @@ namespace EngineUI{
             ImGui::Begin("Recourses");
 
             //Can optimize this by finding textures and models by pushing into the vectors if the cache type name is the same 
-            //as the desired(recourse.second.type().name() ==) though it will require refactoring if there is a change of stored type 
+            //as the desired(recourse.second->type()->name() ==) though it will require refactoring if there is a change of stored type 
             std::vector<std::string> recourseTextures;
             std::vector<std::string> recourseModels;
 
@@ -242,14 +271,13 @@ namespace EngineUI{
         }
     }
 
-    void EngineUI::drawRenderStats(EngineScene::Scene *scene, float fps){
+    void EngineUI::drawRenderStats(EngineScene::Scene *scene, float fps, ECS& ecs){
         if(m_showRenderStats){
             int triangleCount = 0;
-            for(auto &object : scene->objects){
-                if(object->mesh){
-                    triangleCount+=object->mesh->indexCount / 3;
-                }
-            }
+
+            ecs.foreach<MeshComponent>([&triangleCount](MeshComponent* m){
+                triangleCount += m->mesh->indexCount /3;
+            });
 
             ImGui::Begin("Render Stats");
             ImGui::Text("FPS: %.1f", fps);

@@ -1,10 +1,12 @@
 #include "Renderer/Renderer.hpp"
+#include "ECS/Components.hpp"
 #include "Renderer/Instance.hpp"
 #include "Core/ResourceManager.hpp"
-#include "Object/ObjectGlobals.hpp"
+#include "Misc/ObjectGlobals.hpp"
 #include "Renderer/RendererGlobals.hpp"
 #include "Renderer/ValidationLayers.hpp"
 #include "Spatial/Spatial_Partitioner.hpp"
+#include "ECS/EntityFunctions.hpp"
 #include <cstdint>
 
 namespace EngineRenderer{
@@ -64,7 +66,7 @@ namespace EngineRenderer{
         return fps;
     }
     
-    void Renderer::initObjectResources(uint32_t objectCount, EngineResource::ResourceManager &resourceManager){
+    void Renderer::initObjectResources(EngineResource::ResourceManager &resourceManager){
         defaultResources.init(resourceManager);
         uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
         appPipeline.createPipelines(appSwapChain.swapChainExtent, descriptorSetLayout);
@@ -78,19 +80,20 @@ namespace EngineRenderer{
         createSyncObjects();
     }
 
-    void Renderer::initObjects(Scene &scene, EngineResource::ResourceManager &resourceManager, 
-                               EnginePartitioning::Spacial_Partitioner &spacialPartitioner){
-        for(auto &obj : scene.objects){
-            obj->initResources(resourceManager, &spacialPartitioner);
+    void Renderer::initEntities(Scene &scene, EngineResource::ResourceManager &resourceManager, 
+                               EnginePartitioning::Spatial_Partitioner &spatialPartitioner, ECS& ecs){
+        for(auto& e : ecs.view<RenderableComponent>()){
+            initResources(e, ecs,resourceManager, &spatialPartitioner);
         }
-        scene.areObjectsInitialized = true;
+
+        scene.areEntitiesInitialized = true;
     }
 
-    void Renderer::createSceneDescriptorSets(Scene *scene){
+    void Renderer::createSceneDescriptorSets(Scene *scene, ECS& ecs){
         if(!descriptorSetLayout){
             uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
         }
-        uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, objectUniformBuffers, descriptorSetLayout, descriptorPool, scene->descriptorSets, scene->getSceneTextures());
+        uniformBufferCommand.createDescriptorSets(MAX_FRAMES_IN_FLIGHT, uniformBuffers, objectUniformBuffers, descriptorSetLayout, descriptorPool, scene->descriptorSets, scene->getSceneTextures(ecs));
         scene->areDescriptorSetsInitialized = true;
     }
 
@@ -119,7 +122,7 @@ namespace EngineRenderer{
         }
     }
     
-    void Renderer::drawFrame(Scene *scene, FrameFlags frameFlags){
+    void Renderer::drawFrame(Scene *scene, ECS& ecs, FrameFlags frameFlags){
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex;
@@ -143,12 +146,12 @@ namespace EngineRenderer{
         vkResetCommandBuffer(commandbuffers[currentFrame], 0);
 
         if(!wireFrameModeEnabled){
-            appCommand.recordCommandBuffers(scene, commandbuffers[currentFrame], 
+            appCommand.recordCommandBuffers(ecs, scene, commandbuffers[currentFrame], 
                                             imageIndex, appSwapChain, appPipeline, 
                                             currentFrame, vertexBuffer, indexBuffer, queryPool, 
                     frameFlags.shouldDrawBoundingBoxes, objectUboStride);
         } else{
-            appCommand.recordCommandBuffers(scene, commandbuffers[currentFrame], 
+            appCommand.recordCommandBuffers(ecs, scene, commandbuffers[currentFrame], 
                                             imageIndex, appSwapChain, appPipeline, 
                                             currentFrame, vertexBuffer, indexBuffer, queryPool, 
                     frameFlags.shouldDrawBoundingBoxes, objectUboStride);

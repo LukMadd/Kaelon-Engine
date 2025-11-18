@@ -1,67 +1,125 @@
 #include "Serialization/Serialization.hpp"
-#include "Object/Object.hpp"
+#include "ECS/Components.hpp"
 
-json serializeObject(const EngineObject::Object &object){
+json serializeEntityData(const Entity e, ECS& ecs){
+    auto* sceneNode = ecs.getComponent<SceneNodeComponent>(e);
+
+    json entityData;
     json jsonData;
-    if(!object.name.empty()){
-        jsonData["name"] = object.name;
-    } else{
-        jsonData["name"] = "Generic";
-     }
+    json components = json::array();
 
-    jsonData["uuid"] = object.uuid;
-    jsonData["type"] = object.type;
-    jsonData["mesh"] = object.mesh->meshPath;
-    jsonData["is_static"] = object.isStatic; 
-    jsonData["base_color"] = {
-        {"r", object.material->getBaseColor().x},
-        {"g", object.material->getBaseColor().y},
-        {"b", object.material->getBaseColor().z},
-        {"a", object.material->getBaseColor().w},
-    };
-    jsonData["roughness"] = object.material->getRoughness();
-    jsonData["metallic"] = object.material->getMetallic();
-    jsonData["albedo"] = object.material->getAlbedo();
-
-    jsonData["velocity"] = {
-        object.velocity.x,
-        object.velocity.y,
-        object.velocity.z
-    };
-
-    jsonData["textures"] = json::array();
-    for(const auto &texture : object.material->getTextures()){
-        jsonData["textures"].push_back(texture->texturePath);
-    }
-    jsonData["shader"] = {
-        {"vert", object.material->getShader().vertShader},
-        {"frag", object.material->getShader().fragShader}
-    };
-
-    return jsonData; 
-}
-
-json serializeNode(SceneNode* node){
-    json jsonData = json::object();
-
-    jsonData["transform"] = {
-        {"position",{node->transform.position.x, node->transform.position.y, node->transform.position.z }},
-        {"rotation",{node->transform.rotation.x, node->transform.rotation.y, node->transform.rotation.z, node->transform.rotation.w }}, // x,y,z,w
-        {"scale", {node->transform.scale.x,    node->transform.scale.y,    node->transform.scale.z }}
-    };
-
-    if(node->object){
-        jsonData["object"] = serializeObject(*node->object);
+    if(ecs.hasComponent<RenderableComponent>(e)){
+        auto* renderable = ecs.getComponent<RenderableComponent>(e);
+        json json_renderable = json::object();
+        json_renderable["component_type"] = "renderable";
+        json_renderable["uniform_index"] = renderable->uniformIndex;
+        components.push_back(json_renderable);
     }
 
-    if(!node->children.empty()){
-        jsonData["children"] = json::array();
-        for(auto &child : node->children){
-            jsonData["children"].push_back(serializeNode(child));
+    if(ecs.hasComponent<TransformComponent>(e)){
+        auto* transform = ecs.getComponent<TransformComponent>(e);
+        json json_transform = json::object();
+        json_transform["component_type"] = "transform";
+        json_transform["transform"] = {
+            {"position",{transform->position.x,  transform->position.y, transform->position.z}},
+            {"rotation",{transform->rotation.w, transform->rotation.x, transform->rotation.y, transform->rotation.z}}, // w,x,y,z
+            {"scale", {transform->scale.x, transform->scale.y, transform->scale.z}}
+        };
+        components.push_back(json_transform);
+    }
+
+    if(ecs.hasComponent<MeshComponent>(e)){
+        auto* mesh = ecs.getComponent<MeshComponent>(e);
+        json json_mesh = json::object();
+        json_mesh["component_type"] = "mesh";
+        json_mesh["mesh_path"] = mesh->mesh->meshPath;
+        components.push_back(json_mesh);
+    }
+
+    if(ecs.hasComponent<MaterialComponent>(e)){
+        auto* material = ecs.getComponent<MaterialComponent>(e);
+        json json_material = json::object();
+        json_material["component_type"] = "material";
+        json_material["base_color"] = {
+            {material->material->getBaseColor().x},
+            {material->material->getBaseColor().y},
+            {material->material->getBaseColor().z},
+            {material->material->getBaseColor().w},
+        };
+        json_material["roughness"] = material->material->getRoughness();
+        json_material["metallic"] = material->material->getMetallic();
+        json_material["albedo"] = material->material->getAlbedo();
+
+        json_material["textures"] = json::array();
+        for(const auto &texture : material->material->getTextures()){
+            json_material["textures"].push_back(texture->texturePath);
         }
+        json_material["shader"] = {
+            {"vert", material->material->getShader().vertShader},
+            {"frag", material->material->getShader().fragShader}
+        };
+
+        components.push_back(json_material);
     }
-    return jsonData;
+
+    if(ecs.hasComponent<PhysicsComponent>(e)){
+        auto* physics = ecs.getComponent<PhysicsComponent>(e);
+        json json_physics = json::object();
+        json_physics["component_type"] = "physics";
+        json_physics["is_static"] = physics->isStatic; 
+        json_physics["velocity"] = {
+            physics->velocity.x,
+            physics->velocity.y,
+            physics->velocity.z
+        };
+        components.push_back(json_physics);
+    }
+
+    if(ecs.hasComponent<BoundingBoxComponent>(e)){
+        auto* boundingBox = ecs.getComponent<BoundingBoxComponent>(e);
+        json json_bounding_box = json::object();
+        json_bounding_box["component_type"] = "bounding_box";
+        components.push_back(json_bounding_box);
+    }
+    
+    if(ecs.hasComponent<SpatialPartitioningComponent>(e)){
+        json json_partitioning = json::object();
+        json_partitioning["component_type"] = "spatial_partitioning";
+        components.push_back(json_partitioning);
+    }
+
+    if(ecs.hasComponent<SceneNodeComponent>(e)){
+        auto* sceneNode = ecs.getComponent<SceneNodeComponent>(e);
+        json json_scene_node = json::object();
+        json_scene_node["component_type"] = "scene_node";
+        json_scene_node["node"] = sceneNode->node;
+        json_scene_node["parent"] = sceneNode->parent;
+        components.push_back(json_scene_node);
+    }
+
+    if(ecs.hasComponent<MetadataComponent>(e)){
+        auto* metadata = ecs.getComponent<MetadataComponent>(e);
+        json json_metadata = json::object();
+        json_metadata["component_type"] = "metadata";
+        if(!metadata->name.empty()){
+            json_metadata["name"] = metadata->name;
+        } else{
+            json_metadata["name"] = "Generic";
+        }
+        json_metadata["uuid"] = metadata->uuid;
+        json_metadata["type"] = metadata->type;
+        components.push_back(json_metadata);
+    }
+
+    jsonData["components"] = components;
+    
+
+    entityData["entity"] = jsonData;
+    entityData["id"] = e;
+
+    return entityData;
 }
+
 
 json serialzeCamera(std::shared_ptr<EngineCamera::Camera> camera){
     if(!camera->is_initialized){

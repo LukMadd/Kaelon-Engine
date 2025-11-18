@@ -8,6 +8,7 @@
 #include "UI/FPSManager.hpp"
 #include "Physics/PhysicsEngine.hpp"
 #include "Debug/DebugRenderer.hpp"
+#include "ECS/ECS.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -42,10 +43,12 @@ namespace Engine{
             EngineRenderer::Lighting lights;
             VkDescriptorPool imguiPool;
 
-            EnginePartitioning::Spacial_Partitioner spatialPartitioner;
+            EnginePartitioning::Spatial_Partitioner spatialPartitioner;
             DebugRenderer debugRenderer;
 
             uint32_t currentSceneIndex = 0;
             size_t totalObjects;
+
+            ECS ecs;
     };
 }

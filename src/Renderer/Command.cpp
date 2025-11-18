@@ -1,5 +1,5 @@
 #include "Renderer/Command.hpp"
-#include "Object/Object.hpp"
+#include "ECS/Components.hpp"
 #include "Renderer/Pipeline.hpp"
 #include "Renderer/RendererGlobals.hpp"
 #include "Renderer/ValidationLayers.hpp"
@@ -80,7 +80,8 @@ namespace EngineRenderer{
     }
 
     void Command::recordCommandBuffers(
-        EngineScene::Scene *scene, 
+        ECS& ecs, 
+        Scene* scene,
         VkCommandBuffer commandBuffer, 
         uint32_t imageIndex, 
         SwapChain swapChain, 
@@ -99,7 +100,7 @@ namespace EngineRenderer{
         
         VkResult beginResult = vkBeginCommandBuffer(commandBuffer, &beginInfo);
         if(beginResult != VK_SUCCESS){
-            throw std::runtime_error("Failed to begin command buffersr error code " + std::to_string(beginResult) + "!");
+            throw std::runtime_error("Failed to begin command buffers error code " + std::to_string(beginResult) + "!");
         }
 
         VkRenderPassBeginInfo renderPassInfo{};
@@ -125,10 +126,11 @@ namespace EngineRenderer{
         if(wireFrameModeEnabled){
             vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineManager.graphicsPipelineWireFrame);
         } else{
-            for(auto &object : scene->objects){
+            for(auto& entity : ecs.view<RenderableComponent, MaterialComponent>()){
+                auto entity_material = ecs.getComponent<MaterialComponent>(entity);
                 // MAKE IT NOT RE BIND A PIPELINE
                 vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, 
-                        *pipelineManager.pipelines[object->material->getShader().fragShader.c_str()]);
+                        *pipelineManager.pipelines[entity_material->material->getShader().fragShader.c_str()]);
             }
         }
         VkViewport viewport{};
@@ -145,19 +147,22 @@ namespace EngineRenderer{
         scissor.extent = swapChain.swapChainExtent;
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-        for(auto& obj : scene->objects){
+        for(auto& entity : ecs.view<RenderableComponent>()){
             if(!scene->descriptorSets[0]){
                 throw std::runtime_error("Invalid descriptor sets for binding!");
             }
 
-            uint32_t dynamicOffset = obj->uniformIndex * objectUboStride;
+            uint32_t uniformIndex = ecs.getComponent<RenderableComponent>(entity)->uniformIndex;
+
+
+            uint32_t dynamicOffset = uniformIndex * objectUboStride;
             vkCmdBindDescriptorSets(commandBuffer,
                                     VK_PIPELINE_BIND_POINT_GRAPHICS,
                                     pipelineManager.pipelineLayout,
                                     0, 1, &scene->descriptorSets[currentFrame],
                                     1, &dynamicOffset);
            
-            obj->draw(commandBuffer, pipelineManager.pipelineLayout);
+            draw(entity ,ecs, commandBuffer, pipelineManager.pipelineLayout);
 
             drawCallCount++;
         }

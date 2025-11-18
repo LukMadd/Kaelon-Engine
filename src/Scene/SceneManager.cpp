@@ -4,32 +4,37 @@
 #include <memory>
 
 #include "Camera/Camera.hpp"
-#include "Core/ObjectRegistry.hpp"
+
 #include "Core/ResourceManager.hpp"
 #include "Debug/Debugger.hpp"
+#include "ECS/Components.hpp"
+#include "ECS/EntityFunctions.hpp"
 #include "nlohmann/json.hpp"
 
 #include "Serialization/Serialization.hpp"
 
-using namespace EngineObject;
+;
 using namespace nlohmann;
 
 constexpr const char* SUB_SYSTEM = "Scene_Manager";
 
 
 namespace EngineScene{
-    SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), resourceManager(nullptr){
+    SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), resourceManager(nullptr), ecs(nullptr){
         Debugger::get().initDebugSystem(SUB_SYSTEM);
     };
 
     void SceneManager::addDefaultScene(){
         auto scene = Scene::createScene(currentID, "Default_Scene");
-        scene->initBaseScene(*resourceManager);
+        ecs->setComponentStorage(&scene->componentStorage);
+        scene->initBaseScene(*resourceManager, *ecs);
         sceneOrder.push_back(currentID); //Pushes the scenes ID into sceneOrder to be used for current scene tracking
-        scene->update();
+        scene->update(*ecs);
         scenes[currentID] = std::move(scene);
 
         currentID++;
+
+        ecs->setComponentStorage(&scenes[0]->componentStorage);
     }
 
     void SceneManager::changeScenes(int index){
@@ -41,18 +46,23 @@ namespace EngineScene{
         currentSceneIndex = index;
 
         spatialPartitioner->reset();
-        for(auto &object : getCurrentScene()->objects){
+        for(auto& entity : ecs->view<SpatialPartitioningComponent, BoundingBoxComponent>()){
+            auto* spatial = ecs->getComponent<SpatialPartitioningComponent>(entity);
             //Helps prevent collision issues when switching back to a previously visited scene
-            object->assignedToCell = false;
-            object->cells.clear();
-            object->updateCells();
+            spatial->assignedToCell = false;
+            spatial->cells.clear();
+            spatialPartitioner->updateEntityCells(entity);
         }
+        
+        ecs->setComponentStorage(&scenePtr->componentStorage);
     }
 
     void SceneManager::init(EngineResource::ResourceManager &resourceManager, 
-                            EnginePartitioning::Spacial_Partitioner *spatialPartitioner){
+                            EnginePartitioning::Spatial_Partitioner *spatialPartitioner,
+                            ECS *ecs){
         this->resourceManager = &resourceManager;
         this->spatialPartitioner = spatialPartitioner;
+        this->ecs = ecs;
 
         std::vector<std::filesystem::path> files;
         for(auto& entry : std::filesystem::directory_iterator(KAELON_SCENE_DIR))
@@ -69,6 +79,8 @@ namespace EngineScene{
             }
         }
 
+        ecs->setComponentStorage(&scenes[0]->componentStorage);
+
         if(!sceneOrder.empty()) currentSceneIndex = 0; 
     }
 
@@ -76,17 +88,19 @@ namespace EngineScene{
         json sceneData;
         sceneData["name"] = scene.name;
         sceneData["index"] = scene.index;
-        sceneData["objects"] = json::array();
+        sceneData["entities"] = json::array();
         sceneData["cameras"] = json::array();
 
         //Loops through the scenes children and serializes them
-        for(auto &node : scene.root.children){
-            sceneData["objects"].push_back(serializeNode(node));
+        for(auto& entity : scene.componentStorage.entities){
+            sceneData["entities"].push_back(serializeEntityData(entity, *ecs));
         }
 
         for(auto camera : scene.cameraManager.getCameras()){
             sceneData["cameras"].push_back(serialzeCamera(camera));
         }
+
+        sceneData["next_entity"] = ecs->getNextEntity();
 
         std::filesystem::create_directories((KAELON_SCENE_DIR));
         std::ofstream file(std::string(KAELON_SCENE_DIR) + "/scene" + std::to_string(sceneIndex) + ".json");
@@ -106,12 +120,19 @@ namespace EngineScene{
         file >> sceneData;
 
         std::unique_ptr<Scene> scene = Scene::createScene(sceneData["index"], sceneData["name"]);
+        ecs->setComponentStorage(&scene->componentStorage);
+        ecs->getNextEntity() = sceneData["next_entity"];
 
-        scene->objects.clear();
-
-        for(auto &jsonObj : sceneData["objects"]){
-            SceneNode* node = deserializeNode(*scene, jsonObj);
-            scene->root.addChild(node);
+        for(auto &jsonObj : sceneData["entities"]){
+            Entity e = deserializeEntity(jsonObj, *ecs);
+            initResources(e, *ecs, *resourceManager, spatialPartitioner);
+            if(ecs->hasComponent<TransformComponent>(e)){
+                auto* transform = ecs->getComponent<TransformComponent>(e);
+                move(transform->position, e, *ecs);
+                rotate(glm::quat(transform->rotation[0], transform->rotation[1], transform->rotation[2], transform->rotation[3]), e, *ecs);
+                scale(transform->scale, e, *ecs);
+            }
+            
         }
 
         for(auto &jsonCam : sceneData["cameras"]){

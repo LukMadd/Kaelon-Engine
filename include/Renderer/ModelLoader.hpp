@@ -1,9 +1,9 @@
 #ifndef _MODEL_LOADER_HPP
 #define _MODEL_LOADER_HPP
 
-#include "Object/Mesh.hpp"
+#include "Misc/Mesh.hpp"
 
-using namespace EngineObject;
+;
 
 namespace EngineRenderer{
     class ModelLoader{

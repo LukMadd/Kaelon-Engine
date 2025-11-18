@@ -38,7 +38,7 @@ class DebugRenderer{
         void cleanup();
 
     private:
-        SceneManager *sceneManager = nullptr;;
+        EngineScene::SceneManager *sceneManager = nullptr;;
 };
 
 #endif

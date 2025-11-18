@@ -1,37 +1,32 @@
 #include "Scene/SceneNode.hpp"
-#include "Object/Object.hpp"
+#include "ECS/Components.hpp"
 
 namespace EngineScene{
-    SceneNode::SceneNode(){
-        transform.position = glm::vec3(0.0f);
-        transform.rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-        transform.scale    = glm::vec3(1.0f);
-        transform.localMatrix = glm::mat4(1.0f);
-        transform.worldMatrix = glm::mat4(1.0f);
-        object = nullptr;
+    void SceneNode::addChild(SceneNodeComponent& childNode, Entity parent){
+        childNode.parent = parent;
     }
 
-    void SceneNode::addChild(SceneNode *child){
-        child->parent = this;
-        children.push_back(child);
+    void SceneNode::removeChild(SceneNodeComponent& childNode){
+        childNode.parent = nullEntity;
     }
 
-    void SceneNode::removeChild(SceneNode* child){
-        children.erase(std::remove(children.begin(), children.end(), child), children.end());
-        child->parent = nullptr;
+    void updateMatrix(TransformComponent& transform, const glm::mat4& parentMatrix = glm::mat4(1.0f)){
+        transform.localMatrix = glm::translate(glm::mat4(1.0f), transform.position)
+            * glm::mat4_cast(transform.rotation)
+            * glm::scale(glm::mat4(1.0f), transform.scale);
+
+        transform.worldMatrix = parentMatrix * transform.localMatrix;
     }
 
-    void SceneNode::update(const glm::mat4 &parentMatrix){
-        transform.updateMatrix(parentMatrix);
-        if(object) {
-            object->modelMatrix = transform.worldMatrix;
+    void SceneNode::update(Entity e, const glm::mat4& parentMatrix, ECS& ecs){
+        auto* t = ecs.getComponent<TransformComponent>(e); 
+        if(!t) return;
+        updateMatrix(*t, parentMatrix);
+        for(auto& child : ecs.view<SceneNodeComponent>()){
+            auto* node = ecs.getComponent<SceneNodeComponent>(child);
+            if(node->parent == e){
+                update(child, t->worldMatrix, ecs);
+            }
         }
-        for(auto* child : children) {
-            child->update(transform.worldMatrix);
-        }
-    }
-
-    glm::vec3 SceneNode::getWorldPosition() const{
-        return glm::vec3(transform.worldMatrix[3]);
     }
 }

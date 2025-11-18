@@ -1,26 +1,27 @@
 #include "Camera/Camera.hpp"
 #include "Core/ResourceManager.hpp"
+#include "ECS/Components.hpp"
 #include "Scene/Scene.hpp"
-#include "Object/Object.hpp"
+
 #include "Scene/SceneManager.hpp"
 
 namespace EngineUI{
     class EngineUI{
         public:
             void drawMainLayout(EngineScene::SceneManager *sceneManager, 
-                                EngineCamera::CameraManager *cameraManager);
+                                EngineCamera::CameraManager *cameraManager, ECS& ecs);
 
-            void drawSceneHierarchy(EngineScene::Scene *scene);
+            void drawSceneHierarchy(EngineScene::Scene *scene, ECS& ecs);
 
-            void drawObjectInspector(EngineScene::Scene *scene);
+            void drawObjectInspector(EngineScene::Scene *scene, std::vector<Entity> &changedBoundingBoxes, ECS& ecs);
 
             void drawCameraInspector();
 
-            void drawSceneInspector(SceneManager *sceneManager);
+            void drawSceneInspector(EngineScene::SceneManager *sceneManager, ECS& ecs);
 
             void drawRecourses(EngineResource::ResourceManager *recourseManager);
 
-            void drawRenderStats(EngineScene::Scene *scene, float fps);
+            void drawRenderStats(EngineScene::Scene *scene, float fps, ECS& ecs);
 
             void drawScenes(EngineScene::SceneManager *sceneManager);
         
@@ -35,14 +36,14 @@ namespace EngineUI{
 
             bool m_drawBoundingBoxes = false;
 
-            EngineObject::Object *selectedObject = nullptr;
+            Entity selectedEntity = nullEntity;
             EngineCamera::Camera *selectedCamera = nullptr;
             EngineScene::Scene *selectedScene = nullptr;
 
-            EngineObject::Object *previousObject = nullptr;
+            Entity previousEntity = nullEntity;
 
         public:
-            EngineObject::Object*& getSelectedObject(){return selectedObject;}
+            Entity getSelectedEntity(){return selectedEntity;}
             EngineCamera::Camera*& getSelectedCamera(){return selectedCamera;}
             EngineScene::Scene* getSelectedScene(){return selectedScene;}
 

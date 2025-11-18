@@ -5,6 +5,7 @@
 #include "Scene.hpp"
 #include "Core/ResourceManager.hpp"
 #include "Spatial/Spatial_Partitioner.hpp"
+#include "ECS/ECS.hpp"
 #include <cstdint>
 
 namespace EngineScene{
@@ -13,7 +14,8 @@ namespace EngineScene{
             SceneManager();
 
             void init(EngineResource::ResourceManager &resourceManager, 
-                     EnginePartitioning::Spacial_Partitioner *spatialPartitioner);
+                     EnginePartitioning::Spatial_Partitioner *spatialPartitioner,
+                     ECS *ecs);
 
             void addDefaultScene();
             void changeScenes(int index);
@@ -35,7 +37,7 @@ namespace EngineScene{
         private:
             EngineResource::ResourceManager *resourceManager;
 
-            EnginePartitioning::Spacial_Partitioner *spatialPartitioner;
+            EnginePartitioning::Spatial_Partitioner *spatialPartitioner;
 
             std::unordered_map<int, std::unique_ptr<Scene>> scenes;
 
@@ -44,6 +46,8 @@ namespace EngineScene{
             int currentSceneIndex = 0;
 
             int currentID = 0;
+
+            ECS* ecs;
     };
 }
 

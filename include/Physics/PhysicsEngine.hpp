@@ -1,14 +1,16 @@
 
 #include <cstdint>
-#include "Object/Object.hpp"
+#include "ECS/Components.hpp"
+
 #include "Scene/SceneManager.hpp"
 #include "Spatial/Spatial_Partitioner.hpp"
 
 namespace EnginePhysics{
     class PhysicsEngine{
         public:
-            void init(SceneManager *sceneManager, 
-                      EnginePartitioning::Spacial_Partitioner *spatialPartitioner);
+            void init(EngineScene::SceneManager *sceneManager, 
+                      EnginePartitioning::Spatial_Partitioner *spatialPartitioner,
+                      ECS* ecs);
 
             void tick(float deltaTime);
 
@@ -24,6 +26,8 @@ namespace EnginePhysics{
 
             uint64_t getTickCount() {return tickCount;}
 
+            std::vector<Entity>& getChangedBoundingBoxes(){return changedBoundingBoxes;}
+
         private:
             uint64_t currentTick;
 
@@ -33,8 +37,12 @@ namespace EnginePhysics{
 
             uint64_t tickCount = 0;
 
-            SceneManager *sceneManager;
+            EngineScene::SceneManager *sceneManager;
 
-            EnginePartitioning::Spacial_Partitioner *spatialPartitioner;
+            EnginePartitioning::Spatial_Partitioner *spatialPartitioner;
+
+            ECS* ecs;
+
+            std::vector<Entity> changedBoundingBoxes;
     };
 }

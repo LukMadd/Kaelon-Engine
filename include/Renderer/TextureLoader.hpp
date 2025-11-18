@@ -3,10 +3,10 @@
 
 #include <vulkan/vulkan.hpp>
 
-#include "Object/Texture.hpp"
+#include "Misc/Texture.hpp"
 
 
-using namespace EngineObject;
+;
 namespace EngineRenderer{
     struct TextureLoader{
         static std::shared_ptr<Texture> createTexture(const std::string &filePath);

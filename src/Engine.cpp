@@ -1,14 +1,15 @@
 #include "Engine.hpp"
+#include "ECS/Components.hpp"
 #include "Input/Input.hpp"
 #include "Renderer/Renderer.hpp"
 #include "Renderer/RendererGlobals.hpp"
-#include "Core/ObjectRegistry.hpp"
-#include "Object/ObjectGlobals.hpp"
+#include "Misc/ObjectGlobals.hpp"
 #include "Debug/Debugger.hpp"
+#include "ECS/EntityFunctions.hpp"
 
 #include <chrono>
 
-using namespace EngineObject;
+;
 using namespace EngineInput;
 
 namespace Engine{
@@ -21,16 +22,8 @@ namespace Engine{
 
         renderer.initVulkan();
 
-        sceneManager.init(resourceManager, &spatialPartitioner);
-
-        for(auto &scene : sceneManager.getScenes()){
-            scene->update();
-        }
-
-        for(auto &scene : sceneManager.getScenes()){
-            totalObjects += scene->objects.size();
-        }
-        totalObjects = std::max(totalObjects, size_t(1));
+        spatialPartitioner.init(&ecs);
+        sceneManager.init(resourceManager, &spatialPartitioner, &ecs);
 
         VkPhysicalDeviceProperties deviceProperties;
         vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
@@ -43,13 +36,13 @@ namespace Engine{
 
         renderer.setObjectUboStride(stride);
 
-        renderer.initObjectResources(totalObjects,resourceManager);
+        renderer.initObjectResources(resourceManager);
     
         for(auto &scene : sceneManager.getScenes()){
-            renderer.initObjects(*scene, resourceManager, spatialPartitioner);
+            renderer.initEntities(*scene, resourceManager, spatialPartitioner, ecs);
         }
 
-        renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
+        renderer.createSceneDescriptorSets(sceneManager.getCurrentScene(), ecs);
 
         window = renderer.window;
 
@@ -70,13 +63,16 @@ namespace Engine{
         uiInfo.sceneManager = &sceneManager;
         uiInfo.cameraManager = &sceneManager.getScenes()[0]->cameraManager;
         uiInfo.recourseManager = &resourceManager;
+        uiInfo.changedBoundingBoxes = &physicsEngine.getChangedBoundingBoxes();
+        uiInfo.ecs = &ecs;
 
         uiManager.initImGui(uiInfo);
 
+        Input::get().setECS(&ecs);
         Input::get().init(window);
         Input::get().setCallBacks();
         actionManager.setupBindings();
-        physicsEngine.init(&sceneManager, &spatialPartitioner);
+        physicsEngine.init(&sceneManager, &spatialPartitioner, &ecs);
 
         renderer.giveDebugRenderer(&debugRenderer);
     }
@@ -92,7 +88,7 @@ namespace Engine{
 
         sceneManager.getCurrentScene()->cameraManager.getCurrentCamera()->updateCamera(deltaTime, actionManager, inputHandler.isSceneImmersed());
 
-        sceneManager.getCurrentScene()->update(); //Updates the current frame's children with it's matrix and so forth
+        sceneManager.getCurrentScene()->update(ecs); //Updates the current frame's children with it's matrix and so forth
 
         static float rawFps = 0.0f;
         static float smoothFPS = 0.0f;
@@ -100,27 +96,26 @@ namespace Engine{
             smoothFPS = fpsManager.smoothFPS(rawFps);
         }
 
-        Input::get().selectedObject = &uiManager.getSelectedObject();
+        Input::get().selectedEntity = uiManager.getSelectedEntity();
         Input::get().inputScene = sceneManager.getCurrentScene();
 
         uiManager.renderUI(smoothFPS);
 
-        if(sceneManager.getCurrentScene()->areObjectsInitialized == false){
-            totalObjects+=sceneManager.getCurrentScene()->objects.size();
-            renderer.initObjects(*sceneManager.getCurrentScene(), resourceManager, spatialPartitioner);
-            renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
+        if(sceneManager.getCurrentScene()->areEntitiesInitialized == false){
+            renderer.initEntities(*sceneManager.getCurrentScene(), resourceManager, spatialPartitioner, ecs);
+            renderer.createSceneDescriptorSets(sceneManager.getCurrentScene(), ecs);
         }
 
-        if(sceneManager.getCurrentScene()->newObjects.empty() == false){
-            while(sceneManager.getCurrentScene()->newObjects.empty() == false){
-                auto object = sceneManager.getCurrentScene()->newObjects.back();
-                object->initResources(resourceManager, &spatialPartitioner);
-                sceneManager.getCurrentScene()->newObjects.pop_back();
+        if(sceneManager.getCurrentScene()->newEntities.empty() == false){
+            while(sceneManager.getCurrentScene()->newEntities.empty() == false){
+                auto entity = sceneManager.getCurrentScene()->newEntities.back();
+                initResources(entity, ecs, resourceManager, &spatialPartitioner);
+                sceneManager.getCurrentScene()->newEntities.pop_back();
             }    
         }
 
         if(sceneManager.getCurrentScene()->areDescriptorSetsInitialized == false){
-            renderer.createSceneDescriptorSets(sceneManager.getCurrentScene());
+            renderer.createSceneDescriptorSets(sceneManager.getCurrentScene(), ecs);
         }
 
         EngineRenderer::UniformBufferObject ubo{};
@@ -137,16 +132,18 @@ namespace Engine{
         
         auto* mappedBuffer = reinterpret_cast<ObjectUBO*>(renderer.getObjectUniformBuffersMapped()[renderer.getCurrentFrame()]);
 
-        for(size_t i = 0; i < sceneManager.getCurrentScene()->objects.size(); i++){
-            auto &object = sceneManager.getCurrentScene()->objects[i];
+        uint32_t i = 0;
+        for(auto entity : ecs.view<RenderableComponent, MaterialComponent>()){
+            auto* entity_material = ecs.getComponent<MaterialComponent>(entity);
+            auto* entity_renderable = ecs.getComponent<RenderableComponent>(entity);
 
             ObjectUBO objectUbo{};
-            objectUbo.hasTexture = object->material->getTextures().empty() ? 0 : 1;
-            objectUbo.baseColor  = object->material->getBaseColor();
+            objectUbo.hasTexture = entity_material->material->getTextures().empty() ? 0 : 1;
+            objectUbo.baseColor  = entity_material->material->getBaseColor();
             int index = 0;
-            if(!object->material->getTextures().empty()){
-                auto sceneTextures = sceneManager.getCurrentScene()->getSceneTextures();
-                auto it = std::find(sceneTextures.begin(), sceneTextures.end(), object->material->getTextures()[0]);
+            if(!entity_material->material->getTextures().empty()){
+                auto sceneTextures = sceneManager.getCurrentScene()->getSceneTextures(ecs);
+                auto it = std::find(sceneTextures.begin(), sceneTextures.end(), entity_material->material->getTextures()[0]);
                 if(it != sceneTextures.end()){
                     index = static_cast<int>(std::distance(sceneTextures.begin(), it));
                 } else{
@@ -157,17 +154,19 @@ namespace Engine{
             
             memcpy((char*)renderer.getObjectUniformBuffersMapped()[renderer.getCurrentFrame()] + i * renderer.getObjectUboStride(), &objectUbo, sizeof(ObjectUBO));
 
-            object->uniformIndex = static_cast<uint32_t>(i);
+            entity_renderable->uniformIndex = static_cast<uint32_t>(i);
+
+            i++;
         }
 
         if(uiManager.shouldDrawBoundingBoxes()){
-            sceneManager.getCurrentScene()->drawBoundingBoxes(&debugRenderer);
+            sceneManager.getCurrentScene()->drawBoundingBoxes(ecs, &debugRenderer);
         }
 
         FrameFlags frameFlags{};
         frameFlags.shouldDrawBoundingBoxes = uiManager.shouldDrawBoundingBoxes();
 
-        renderer.drawFrame(sceneManager.getCurrentScene(), frameFlags);
+        renderer.drawFrame(sceneManager.getCurrentScene(), ecs, frameFlags);
         rawFps = renderer.getGpuFPS();
     }
 
@@ -201,10 +200,10 @@ namespace Engine{
         vkDeviceWaitIdle(device);
         sceneManager.saveScenes(); //Serializes all the scenes loaded
         for(auto &scene :  sceneManager.getScenes()){
-            scene->cleanupObjects();
+            scene->cleanupEntities();
         }
         resourceManager.cleanup(device);
-        EngineObject::defaultResources.cleanupDefault(); //Destroys the default recourses
+        defaultResources.cleanupDefault(); //Destroys the default recourses
         uiManager.shutDownImGui(imguiPool);
         renderer.cleanup(sceneManager.getCurrentScene());
     }

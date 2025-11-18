@@ -1,4 +1,5 @@
 #include "Input/Input.hpp"
+#include "ECS/Components.hpp"
 #include "imgui_impl_glfw.h"
 #include "EngineUtility.hpp"
 #include <glm/glm.hpp>
@@ -13,8 +14,9 @@ using namespace EngineUtility;
 
 namespace EngineInput{
     EngineCamera::Camera* Input::inputCamera = nullptr;
-    EngineObject::Object** Input::selectedObject = nullptr;
+    Entity Input::selectedEntity = nullEntity;
     EngineScene::Scene* Input::inputScene = nullptr;
+    ECS* EngineInput::Input::ecs = nullptr;
 
     std::unordered_map<int, bool> Input::keyStates;
     std::unordered_map<int, bool> Input::mouseButtonStates;
@@ -43,7 +45,6 @@ namespace EngineInput{
         glm::vec4 rayEndNDC  (ndcX, ndcY, 1.0f, 1.0f);
 
         std::array<glm::vec4, 2> worldRays;
-
         
         worldRays = inputCamera->transformRay(rayStartNDC, rayEndNDC);
 
@@ -53,20 +54,25 @@ namespace EngineInput{
 
         float closestDistance = FLT_MAX;
         const float MAX_DISTANCE = 100.0f;
-        for(auto &object : inputScene->objects){
+
+        for(auto& entity : ecs->view<RenderableComponent, BoundingBoxComponent, MetadataComponent>()){
+            auto* boundingBox = ecs->getComponent<BoundingBoxComponent>(entity);
+            auto* metadata = ecs->getComponent<MetadataComponent>(entity);
+            auto* selected_metadata = ecs->getComponent<MetadataComponent>(selectedEntity);
+           
             float t;
-            glm::vec3 worldMin = object->worldBoundingBox.min;
-            glm::vec3 worldMax = object->worldBoundingBox.max;
+            glm::vec3 worldMin = boundingBox->worldBoundingBox.min;
+            glm::vec3 worldMax = boundingBox->worldBoundingBox.max;
             if(rayIntersectsAABB(rayOrigin, rayDir, worldMin, worldMax, t)){
                 if(t < closestDistance && t > 0.0f && t < MAX_DISTANCE){
                     closestDistance = t;
 
-                    if(*selectedObject != object.get()){
-                        if(*selectedObject){
-                            (*selectedObject)->selected = false;
+                    if(selectedEntity != entity){
+                        if(selectedEntity != nullEntity){
+                            selected_metadata->selected = false;
                         }
-                        *selectedObject = object.get();
-                        (*selectedObject)->selected = true;
+                        selectedEntity = entity;
+                        metadata->selected = true;
                     }
                 }
             }

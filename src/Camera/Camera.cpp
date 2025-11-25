@@ -80,32 +80,36 @@ namespace EngineCamera{
     }
 
     void Camera::updateCamera(float deltaTime, EngineInput::ActionManager &actionManager, bool is_scene_immersed){
-        view = glm::lookAt(position, position + front, up);
-        
         projection = glm::perspective(glm::radians(fov), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, RENDER_DISTANCE);
 
         velocity = speed * deltaTime;
 
-        if(actionManager.isActionActive(Action::PLAYER_JUMP)){
-            moveUp(velocity);
-        }
-        if(actionManager.isActionActive(Action::PLAYER_CROUCH)){
-            moveDown(velocity);
-        }
-        if(actionManager.isActionActive(Action::PLAYER_MOVE_FORWARD)){
-            moveForward(velocity);
-        } 
-        if(actionManager.isActionActive(Action::PLAYER_MOVE_BACKWARD)){
-            moveBackward(velocity);
-        } 
-        if(actionManager.isActionActive(Action::PLAYER_MOVE_LEFT)){
-            moveLeft(velocity);
-        } 
-        if(actionManager.isActionActive(Action::PLAYER_MOVE_RIGHT)){
-            moveRight(velocity);
+        view = glm::lookAt(position, position + front, up);
+
+        if(target_transform != nullptr){
+            position = target_transform->position + target_offset;
+        } else{
+            if(actionManager.isActionActive(Action::PLAYER_JUMP)){
+                moveUp(velocity);
+            }
+            if(actionManager.isActionActive(Action::PLAYER_CROUCH)){
+                moveDown(velocity);
+            }
+            if(actionManager.isActionActive(Action::PLAYER_MOVE_FORWARD)){
+                moveForward(velocity);
+            } 
+            if(actionManager.isActionActive(Action::PLAYER_MOVE_BACKWARD)){
+                moveBackward(velocity);
+            } 
+            if(actionManager.isActionActive(Action::PLAYER_MOVE_LEFT)){
+                moveLeft(velocity);
+            } 
+            if(actionManager.isActionActive(Action::PLAYER_MOVE_RIGHT)){
+                moveRight(velocity);
+            }
         }
 
-        if(is_scene_immersed || yaw != lastYawUpdate  || pitch != lastPitchUpdate){
+        if(!isFixed && is_scene_immersed || yaw != lastYawUpdate  || pitch != lastPitchUpdate){
             updateYawAndPitch();
         }
     }

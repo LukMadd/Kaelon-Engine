@@ -1,6 +1,7 @@
 #ifndef _CAMERA_HPP
 #define _CAMERA_HPP
 
+#include "ECS/Components.hpp"
 #include <glm/glm.hpp>
 #include <vulkan/vulkan.h>
 
@@ -51,6 +52,10 @@ namespace EngineCamera{
             float lastYawUpdate = 0.0f; //To allow for yaw & pitch editing while the camera is locked
             float lastPitchUpdate = 0.0f;
 
+            Entity target_entity = nullEntity;
+            TransformComponent* target_transform = nullptr;
+            glm::vec3 target_offset = {FLT_MAX, FLT_MAX, FLT_MAX};
+
             VkExtent2D swapChainExtent;
 
             void moveUp(float velocity);
@@ -63,6 +68,8 @@ namespace EngineCamera{
             void setCameraDefault();
 
         public:
+            bool isFixed = false;
+
             void updateCamera(float deltaTime, EngineInput::ActionManager &actionManager, bool is_scene_immersed);
 
             void updateYawAndPitch();
@@ -70,6 +77,22 @@ namespace EngineCamera{
             glm::mat4 getViewMatrix() {return view;};
 
            inline  glm::mat4 getProjection() {return projection;}
+
+            void setTarget(Entity e, TransformComponent* transform){
+                target_entity = e;
+                target_transform = transform;
+            }
+            void setTargetOffset(glm::vec3 offset){target_offset = offset;}
+
+            Entity getTarget(){return target_entity;}
+            glm::vec3& getTargetOffset(){return target_offset;}
+
+            void resetTarget(){
+                target_entity = nullEntity;
+                target_transform = nullptr;
+                target_offset = {FLT_MAX, FLT_MAX, FLT_MAX};;
+            }
+
 
            void resetCamera();
     };

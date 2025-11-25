@@ -1,4 +1,5 @@
 #include "Serialization/Serialization.hpp"
+#include "Camera/Camera.hpp"
 #include "ECS/Components.hpp"
 
 json serializeEntityData(const Entity e, ECS& ecs){
@@ -135,6 +136,21 @@ json serialzeCamera(std::shared_ptr<EngineCamera::Camera> camera){
     cameraData["position"] = {
         camera->position.x, camera->position.y, camera->position.z
     };
+
+    glm::vec3 target_offset = camera->getTargetOffset();
+    json target_info = json::object();
+    target_info["target_entity"] = camera->getTarget();
+    if(target_offset.x != FLT_MAX){
+        target_info["target_offset"] = {
+            target_offset.x, target_offset.y, target_offset.z
+        };
+    } else {
+        target_info["target_offset"] = {
+            0.0f, 2.0f, -10.0f    
+        };
+    }
+
+    cameraData["target"] = target_info;
 
     glm::vec3 front = camera->getFront();
     glm::vec3 up = camera->getUp();

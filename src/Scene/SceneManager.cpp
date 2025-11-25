@@ -136,7 +136,7 @@ namespace EngineScene{
         }
 
         for(auto &jsonCam : sceneData["cameras"]){
-            EngineCamera::Camera *camera = deserializeCamera(jsonCam);
+            EngineCamera::Camera *camera = deserializeCamera(jsonCam, *ecs);
             scene->cameraManager.pushCamera(std::shared_ptr<EngineCamera::Camera>(camera));
         }
 
@@ -168,11 +168,12 @@ namespace EngineScene{
             }
         }
 
-
         std::string filename = std::string(KAELON_SCENE_DIR) + "scene" + std::to_string(sceneID) + ".json";
         if(std::filesystem::exists(filename)){
             std::filesystem::remove(filename);
         }
+
+        ecs->setComponentStorage(&scenes[currentSceneIndex]->componentStorage);
     }
 
     void SceneManager::saveScenes(){

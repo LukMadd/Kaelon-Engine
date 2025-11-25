@@ -113,7 +113,7 @@ SceneNodeComponent* deserializeNode(Scene &scene, const json& jsonNode, ECS& ecs
     return node;
 }
 
-Camera* deserializeCamera(const nlohmann::json& jsonData){
+Camera* deserializeCamera(const nlohmann::json& jsonData, ECS& ecs){
     EngineCamera::Camera* camera = new EngineCamera::Camera();
 
     camera->is_initialized = jsonData["is_initialized"];
@@ -129,6 +129,18 @@ Camera* deserializeCamera(const nlohmann::json& jsonData){
     camera->getUp().x = jsonData["up"][0];
     camera->getUp().y = jsonData["up"][1];
     camera->getUp().z = jsonData["up"][2];
+
+    if(jsonData["target"]["target_entity"] != nullEntity){
+        Entity entity = jsonData["target"]["target_entity"];
+        if(ecs.hasComponent<TransformComponent>(entity)){
+            auto* transform = ecs.getComponent<TransformComponent>(entity);
+            glm::vec3 offset = {jsonData["target"]["target_offset"][0], jsonData["target"]["target_offset"][1], 
+                             jsonData["target"]["target_offset"][2]};
+
+            camera->setTarget(entity, transform);
+            camera->setTargetOffset({offset});
+        }
+    }
 
     camera->position.x = jsonData["position"][0];
     camera->position.y = jsonData["position"][1];

@@ -7,6 +7,7 @@
 #include "Scene/SceneManager.hpp"
 #include "ECS/EntityFunctions.hpp"
 #include "imgui.h"
+#include <iostream>
 
 namespace EngineUI{
     void EngineUI::drawMainLayout(EngineScene::SceneManager *sceneManager, 
@@ -146,9 +147,9 @@ namespace EngineUI{
                 }
 
                 if(ImGui::TreeNode("Rotation")){
-                    float& rotationX = transform->rotation.x;
-                    float& rotationY = transform->rotation.y;
-                    float& rotationZ = transform->rotation.z;
+                    float rotationX = transform->rotation.x;
+                    float rotationY = transform->rotation.y;
+                    float rotationZ = transform->rotation.z;
                     ImGui::InputFloat("X: ", &rotationX);
                     ImGui::InputFloat("Y: ", &rotationY);
                     ImGui::InputFloat("Z: ", &rotationZ);
@@ -156,6 +157,7 @@ namespace EngineUI{
                                                         transform->rotation.y,
                                                         transform->rotation.z);
                     if(glm::vec3(rotationX, rotationY, rotationZ) != currentRotation){
+                        std::cout << "Rotated\n";
                         rotate(glm::vec3(rotationX, rotationY, rotationZ), selectedEntity, ecs);
                     }
                     ImGui::TreePop();
@@ -173,6 +175,12 @@ namespace EngineUI{
                     }
                     ImGui::TreePop();
                 }
+            }
+
+            if(ImGui::Button("Set As Target")){
+                auto* transform = ecs.getComponent<TransformComponent>(selectedEntity);
+                selectedCamera->setTarget(selectedEntity, transform);
+                selectedCamera->setTargetOffset(glm::vec3(0.0f, 7.5f, -30.0f));
             }
 
             if(ImGui::Button("Delete")){
@@ -208,6 +216,26 @@ namespace EngineUI{
                 ImGui::InputFloat("FOV: ", &selectedCamera->getFov());
                 ImGui::InputFloat("Speed: ", &selectedCamera->getSpeed());
                 ImGui::InputFloat("Sensitivity: ", &selectedCamera->getSensitivity());
+                ImGui::TreePop();
+            }
+
+            if(ImGui::TreeNode("Target")){
+                if(selectedCamera->getTarget() != nullEntity){
+                    glm::vec3& offset = selectedCamera->getTargetOffset();
+                    if(ImGui::TreeNode("Offset")){
+                        ImGui::InputFloat("X", &offset.x);
+                        ImGui::InputFloat("Y", &offset.y);
+                        ImGui::InputFloat("Z", &offset.z);
+
+                        ImGui::TreePop();
+                    }
+                    if(ImGui::Button("Reset Target")){
+                        selectedCamera->resetTarget();
+                    }
+                } else{
+                    ImGui::Text("No selected target");
+                }
+
                 ImGui::TreePop();
             }
 

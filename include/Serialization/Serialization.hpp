@@ -12,4 +12,4 @@ json serializeEntityData(const Entity e, ECS& ecs);
 json serialzeCamera(std::shared_ptr<EngineCamera::Camera> Camera);
 Entity deserializeEntity(const nlohmann::json& jsonData, ECS& ecs);
 SceneNodeComponent* deserializeNode(Scene &scene, const json& jsonNode, ECS& ecs);
-Camera* deserializeCamera(const nlohmann::json& jsonData);
+Camera* deserializeCamera(const nlohmann::json& jsonData, ECS& ecs);

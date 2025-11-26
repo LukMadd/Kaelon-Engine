@@ -18,7 +18,8 @@ namespace EnginePartitioning{
         return key;
     }
 
-    std::array<int, 6> getObjectCellCoordinates(BoundingBoxComponent* boundingBox){
+
+    std::array<int, 6> getCellCoordinates(BoundingBoxComponent* boundingBox){
         glm::vec3 worldMin = boundingBox->worldBoundingBox.min;
         glm::vec3 worldMax = boundingBox->worldBoundingBox.max;
 
@@ -39,6 +40,24 @@ namespace EnginePartitioning{
         coords[MAX_CELL_Z_INDEX] = maxCellZ;
 
         return coords;
+    }
+
+    [[nodiscard]] std::vector<Cell*> Spatial_Partitioner::getCellsFromAABB(BoundingBoxComponent* boundingBox){
+        std::array<int, 6> cellCoords = getCellCoordinates(boundingBox);
+
+        std::vector<Cell*> cells;
+
+        for(int x = cellCoords[MIN_CELL_X_INDEX]; x <= cellCoords[MAX_CELL_X_INDEX]; x++){
+            for(int y = cellCoords[MIN_CELL_Y_INDEX]; y <= cellCoords[MAX_CELL_Y_INDEX]; y++){
+                for(int z = cellCoords[MIN_CELL_Z_INDEX]; z <= cellCoords[MAX_CELL_Z_INDEX]; z++){
+                    if(grid[hash(x, y, z)].entities.size() > 0){
+                        cells.push_back(&grid[hash(x, y, z)]);
+                    }
+                }
+            }
+        }
+
+        return cells;
     }
 
     void Spatial_Partitioner::addEntity(Entity e){
@@ -67,7 +86,7 @@ namespace EnginePartitioning{
         }
         std::vector<uint64_t> cellKeys;
 
-        std::array<int, 6> objectCellCoords = getObjectCellCoordinates(boundingBox);
+        std::array<int, 6> objectCellCoords = getCellCoordinates(boundingBox);
 
         for(int x = objectCellCoords[MIN_CELL_X_INDEX]; x <= objectCellCoords[MAX_CELL_X_INDEX]; x++){
             for(int y = objectCellCoords[MIN_CELL_Y_INDEX]; y <= objectCellCoords[MAX_CELL_Y_INDEX]; y++){

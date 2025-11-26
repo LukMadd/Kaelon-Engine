@@ -34,6 +34,8 @@ namespace EnginePartitioning{
 
             std::vector<Cell*> getCells(Entity entity);
 
+            std::vector<Cell*> getCellsFromAABB(BoundingBoxComponent* boundingBox);
+
             void reRegisterEntity(Entity entity, std::vector<uint64_t> &cellKeys);
 
             void reset() {grid.clear();}

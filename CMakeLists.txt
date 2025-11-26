@@ -3,7 +3,7 @@ include(FetchContent)
 
 cmake_minimum_required(VERSION 3.28.0)
 
-project(Kaelon-Engine)
+project(Grapple-Engine)
 
 set(CMAKE_CXX_STANDARD 20)
 cmake_policy(SET CMP0169 OLD)
@@ -80,25 +80,25 @@ find_package(glm REQUIRED)
 #-----------------------------------------Set source files-----------------------------------------#
 file(GLOB_RECURSE ENGINE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
-add_library(Kaelon-Engine STATIC ${ENGINE_SOURCES})
+add_library(Grapple-Engine STATIC ${ENGINE_SOURCES})
 
-target_compile_definitions(Kaelon-Engine PUBLIC
-    KAELON_SCENE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/scenes/"
+target_compile_definitions(Grapple-Engine PUBLIC
+    GRAPPLE_SCENE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/scenes/"
 )
-target_compile_definitions(Kaelon-Engine PUBLIC
-    KAELON_TEXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/textures/"
+target_compile_definitions(Grapple-Engine PUBLIC
+    GRAPPLE_TEXTURE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/textures/"
 )
-target_compile_definitions(Kaelon-Engine PUBLIC
-    KAELON_MODEL_DIR="${CMAKE_CURRENT_SOURCE_DIR}/models/"
+target_compile_definitions(Grapple-Engine PUBLIC
+    GRAPPLE_MODEL_DIR="${CMAKE_CURRENT_SOURCE_DIR}/models/"
 )
-target_compile_definitions(Kaelon-Engine PUBLIC
-    KAELON_SHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/bin/shaders/"
+target_compile_definitions(Grapple-Engine PUBLIC
+    GRAPPLE_SHADER_DIR="${CMAKE_CURRENT_SOURCE_DIR}/bin/shaders/"
 )
-target_compile_definitions(Kaelon-Engine PUBLIC
-    KAELON_FONT_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fonts/"
+target_compile_definitions(Grapple-Engine PUBLIC
+    GRAPPLE_FONT_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fonts/"
 )
 
-target_include_directories(Kaelon-Engine PUBLIC
+target_include_directories(Grapple-Engine PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${Vulkan_INCLUDE_DIRS}
     ${GLFW_INCLUDE_DIRS}
@@ -173,7 +173,7 @@ target_include_directories(imgui PUBLIC
 target_link_libraries(imgui PUBLIC Vulkan::Vulkan glfw glm::glm)
 
 message(STATUS "GLFW LIB PATH: ${GLFW_LIB_DIR}")
-target_link_libraries(Kaelon-Engine PUBLIC
+target_link_libraries(Grapple-Engine PUBLIC
     glfw
     glm::glm
     "${Vulkan_LIB_DIR}/libvulkan.dylib"
@@ -183,7 +183,7 @@ target_link_libraries(Kaelon-Engine PUBLIC
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
-target_link_libraries(Kaelon-Engine PRIVATE
+target_link_libraries(Grapple-Engine PRIVATE
     "${Vulkan_LIB_DIR}/libMoltenVK.dylib"
     "-framework QuartzCore"
     "-framework CoreFoundation"

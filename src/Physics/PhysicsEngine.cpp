@@ -1,5 +1,6 @@
 #include "Physics/PhysicsEngine.hpp"
 #include "ECS/Components.hpp"
+#include "EngineContext.hpp"
 #include "Physics/Collision.hpp"
 #include <cassert>
 #include <unordered_set>
@@ -16,12 +17,10 @@ struct PairHash {
 using namespace EnginePartitioning;
 
 namespace EnginePhysics{
-    void PhysicsEngine::init(EngineScene::SceneManager *sceneManager, 
-                             EnginePartitioning::Spatial_Partitioner *spatialPartitioner,
-                             ECS* ecs){
-        this->sceneManager = sceneManager;
+    void PhysicsEngine::init(EnginePartitioning::Spatial_Partitioner *spatialPartitioner,
+                             EngineContext* engineContext){
         this->spatialPartitioner = spatialPartitioner;
-        this->ecs = ecs;
+        this->context = engineContext;
     }
   
     void PhysicsEngine::tick(float deltaTime){
@@ -32,12 +31,12 @@ namespace EnginePhysics{
             spatialPartitioner->updateEntityCells(changedBoundingBox);
         }
 
-        for(auto entity : ecs->view<TransformComponent, BoundingBoxComponent, PhysicsComponent, SpatialPartitioningComponent>()){
-            auto* transform = ecs->getComponent<TransformComponent>(entity);
-            auto* boundingBox = ecs->getComponent<BoundingBoxComponent>(entity);
-            auto* physics = ecs->getComponent<PhysicsComponent>(entity);
-            auto* spatial = ecs->getComponent<SpatialPartitioningComponent>(entity);
-            auto* metadata = ecs->getComponent<MetadataComponent>(entity);
+        for(auto entity : context->ecs.view<TransformComponent, BoundingBoxComponent, PhysicsComponent, SpatialPartitioningComponent>()){
+            auto* transform = context->ecs.getComponent<TransformComponent>(entity);
+            auto* boundingBox = context->ecs.getComponent<BoundingBoxComponent>(entity);
+            auto* physics = context->ecs.getComponent<PhysicsComponent>(entity);
+            auto* spatial = context->ecs.getComponent<SpatialPartitioningComponent>(entity);
+            auto* metadata = context->ecs.getComponent<MetadataComponent>(entity);
 
             if(!physics->isStatic){
                 //Applies gravity
@@ -61,9 +60,9 @@ namespace EnginePhysics{
                 for(auto other : cells[i]->entities){
                     if(entity == other) continue;
 
-                    BoundingBoxComponent otherBoundingBox = *ecs->getComponent<BoundingBoxComponent>(other);
+                    BoundingBoxComponent otherBoundingBox = *context->ecs.getComponent<BoundingBoxComponent>(other);
 
-                    std::pair<std::string, std::string> dirKey{metadata->uuid, ecs->getComponent<MetadataComponent>(other)->uuid};
+                    std::pair<std::string, std::string> dirKey{metadata->uuid, context->ecs.getComponent<MetadataComponent>(other)->uuid};
                     if(!checkedPairs.insert(dirKey).second) continue;
 
                     float epsilon = 0.0000001f;
@@ -78,7 +77,7 @@ namespace EnginePhysics{
             } 
         newPos += glm::vec3(movement.x, movement.y, movement.z);
         if(newPos != transform->position && !physics->isStatic){
-            move(newPos, entity, *ecs);
+          EntityFunctions::move(newPos, entity, &context->ecs);
         }
         }
     }

@@ -1,12 +1,19 @@
-
 #ifndef _SCENE_MANAGER_HPP
 #define _SCENE_MANAGER_HPP
 
 #include "Scene.hpp"
 #include "Core/ResourceManager.hpp"
-#include "Spatial/Spatial_Partitioner.hpp"
-#include "ECS/ECS.hpp"
 #include <cstdint>
+#include <memory>
+
+//Forward declaration to prevent circular reference errors from EngineContext.hpp including Spatial_Partitioner.hpp
+//and Spatial_Partitioner.hpp including SceneManager.hpp
+namespace EnginePartitioning{
+  class Spatial_Partitioner;
+}
+
+//Also here to prevent circular references
+class EngineContext;
 
 namespace EngineScene{
     class SceneManager{
@@ -15,7 +22,7 @@ namespace EngineScene{
 
             void init(EngineResource::ResourceManager &resourceManager, 
                      EnginePartitioning::Spatial_Partitioner *spatialPartitioner,
-                     ECS *ecs);
+                     ECS* _ecs);
 
             void addDefaultScene();
             void changeScenes(int index);
@@ -33,6 +40,25 @@ namespace EngineScene{
 
             void saveScenes();
             void cleanup();
+
+            SceneManager& operator=(const SceneManager& other){
+              if(this == &other){
+                return *this;
+              }
+
+              resourceManager = other.resourceManager;
+              spatialPartitioner = other.spatialPartitioner;
+              sceneOrder = other.sceneOrder;
+              currentSceneIndex = other.currentSceneIndex;
+              currentID = other.currentID;
+              //Deep copies scenes, some scene managers may have to be revisited at some point
+              //so moving it is not an option
+              for(auto& [id, scene] : other.scenes){
+                this->scenes[id] = std::unique_ptr<Scene>(scene.get());
+              }
+
+              return *this;
+            }
 
         private:
             EngineResource::ResourceManager *resourceManager;

@@ -76,4 +76,6 @@ void Debugger::displayLog(int logSeverity, const char* logMessage, const char* s
     } else if(logSeverity == CRITICAL){
         std::cout << "[" << getTimeStamp() << "] " << "[CRITICAL_ERROR] " << "[" << subsystem << "] " << "(" << getFileName(FILE) << ":" << LINE << ") " << logMessage;
     }
+
+    std::cout << std::endl;
 }

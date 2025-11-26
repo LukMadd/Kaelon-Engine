@@ -19,6 +19,8 @@ namespace EngineCamera{
         if(cameraIndex >= cameras.size() || cameraIndex < 0) return;
 
         currentCameraIndex = cameraIndex;
+
+        hasCameraChanged = true;
     }
 
     //Prevents putting the same code in multiple different places

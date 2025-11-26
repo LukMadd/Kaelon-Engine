@@ -2,15 +2,13 @@
 #include <cstdint>
 #include "ECS/Components.hpp"
 
-#include "Scene/SceneManager.hpp"
 #include "Spatial/Spatial_Partitioner.hpp"
 
 namespace EnginePhysics{
     class PhysicsEngine{
         public:
-            void init(EngineScene::SceneManager *sceneManager, 
-                      EnginePartitioning::Spatial_Partitioner *spatialPartitioner,
-                      ECS* ecs);
+            void init(EnginePartitioning::Spatial_Partitioner *spatialPartitioner,
+                      EngineContext* engineContext);
 
             void tick(float deltaTime);
 
@@ -29,11 +27,9 @@ namespace EnginePhysics{
 
             uint64_t tickCount = 0;
 
-            EngineScene::SceneManager *sceneManager;
-
             EnginePartitioning::Spatial_Partitioner *spatialPartitioner;
 
-            ECS* ecs;
+            EngineContext* context;
 
             std::vector<Entity> changedBoundingBoxes;
     };

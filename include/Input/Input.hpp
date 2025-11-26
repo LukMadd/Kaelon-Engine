@@ -3,6 +3,7 @@
 
 #include "Camera/Camera.hpp"
 
+#include "EngineContext.hpp"
 #include "Scene/Scene.hpp"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -29,49 +30,45 @@ namespace Engine{
 
     using namespace Engine;
 
-    namespace EngineInput{
-        class Input{
-            private:
-                GLFWwindow* window;
+namespace EngineInput{
+    class Input{
+        private:
+            GLFWwindow* window;
+            static EngineContext* context;
 
-            public:
-                void init(GLFWwindow* windowRef);
+        public:
+            void init(GLFWwindow* windowRef, EngineContext* engine_context);
 
-                double xOffset = 0.0, yOffset = 0.0;
-                double lastX = 0.0, lastY = 0.0;
-                bool firstMouse = true;
+            double xOffset = 0.0, yOffset = 0.0;
+            double lastX = 0.0, lastY = 0.0;
+            bool firstMouse = true;
 
-                static EngineCamera::Camera *inputCamera;
-                static Entity selectedEntity;
-                static EngineScene::Scene *inputScene;
+            static EngineCamera::Camera *inputCamera;
+            static Entity selectedEntity;
+            static EngineScene::Scene *inputScene;
 
-                static std::unordered_map<int, bool> keyStates;
-                static std::unordered_map<int, bool> mouseButtonStates; 
+            static std::unordered_map<int, bool> keyStates;
+            static std::unordered_map<int, bool> mouseButtonStates; 
 
-                static void KeyCallBack(GLFWwindow* window, int key, int scanCode, int action, int mods);
-                static void MouseButtonCallBack(GLFWwindow* window, int button, int action, int mods);
+            static void KeyCallBack(GLFWwindow* window, int key, int scanCode, int action, int mods);
+            static void MouseButtonCallBack(GLFWwindow* window, int button, int action, int mods);
 
-                bool ignoreMouseDelta = false;
-                glm::vec2 getOffset();
+            bool ignoreMouseDelta = false;
+            glm::vec2 getOffset();
 
-                void resetMouse();
+            void resetMouse();
 
-                void setCallBacks();
+            void setCallBacks();
+            
+            static Input& get(){
+                static Input instance;
+                return instance;
+            }
 
-                void setECS(ECS* ecs){this->ecs = ecs;}
-                
-                static Input& get(){
-                    static Input instance;
-                    return instance;
-                }
+            static bool isKeyPressed(int key);
+            static bool isButtonPressed(int button);
+    };
 
-                static bool isKeyPressed(int key);
-                static bool isButtonPressed(int button);
-
-            private:
-                static ECS* ecs;
-        };
-
-    }
+}
 
     #endif

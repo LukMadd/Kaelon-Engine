@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "ECS/Components.hpp"
-#include "ECS/ECS.hpp"
+#include "EngineContext.hpp"
 
 constexpr int CELL_SIZE = 10;
 
@@ -22,7 +22,7 @@ namespace EnginePartitioning{
             void removeEntity(Entity entity);
         
         public:
-            void init(ECS* ecs){this->ecs = ecs;};
+            void init(EngineContext* context){current_context = context;};
 
             void addEntity(Entity e);
 
@@ -34,12 +34,14 @@ namespace EnginePartitioning{
 
             std::vector<Cell*> getCells(Entity entity);
 
+            std::vector<Cell*> getCellsFromAABB(BoundingBoxComponent* boundingBox);
+
             void reRegisterEntity(Entity entity, std::vector<uint64_t> &cellKeys);
 
             void reset() {grid.clear();}
 
             private:
-                ECS* ecs;
+                EngineContext* current_context;
     };
 }
 

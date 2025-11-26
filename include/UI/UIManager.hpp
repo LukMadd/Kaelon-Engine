@@ -2,6 +2,7 @@
 #include <vulkan/vulkan.hpp>
 
 #include "EngineUI.hpp"
+#include "EngineContext.hpp"
 #include "Scene/SceneManager.hpp"
 #include "Camera/CameraManager.hpp"
 #include "Core/ResourceManager.hpp"
@@ -18,7 +19,7 @@ namespace EngineUI{
         EngineCamera::CameraManager *cameraManager;
         EngineResource::ResourceManager *recourseManager;
         std::vector<Entity>* changedBoundingBoxes;
-        ECS* ecs = nullptr;
+        EngineContext* context = nullptr;
     };
 
     class UIManager{
@@ -33,6 +34,9 @@ namespace EngineUI{
             void shutDownImGui(VkDescriptorPool &imGuiDescriptorPool);
 
             bool shouldDrawBoundingBoxes(){return engineUI.getValueofDrawBoundingBoxes();}
+
+            void setSceneManager(EngineScene::SceneManager *sceneManager){uiInfo.sceneManager = sceneManager;}
+            void setCameraManager(EngineCamera::CameraManager *cameraManager){uiInfo.cameraManager = cameraManager;}
 
             private:
                 EngineUI engineUI;

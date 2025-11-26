@@ -8,15 +8,16 @@
 #include "UI/FPSManager.hpp"
 #include "Physics/PhysicsEngine.hpp"
 #include "Debug/DebugRenderer.hpp"
-#include "ECS/ECS.hpp"
+#include "EngineContext.hpp"
+
 
 #include <GLFW/glfw3.h>
+#include <cstddef>
 
 
 namespace Engine{
     struct GameEngine{    
         EngineResource::ResourceManager resourceManager;
-        SceneManager sceneManager;
         EngineInput::ActionManager actionManager;
         EngineInput::InputHandler inputHandler;
         EnginePhysics::PhysicsEngine physicsEngine;
@@ -27,28 +28,39 @@ namespace Engine{
     
         void init();
 
+        void MainLoopExtraChecks();
+
         void RendererMainLoop(float deltaTime);
 
         void SaveScenes(){
-            sceneManager.saveScenes();
+            currentContext->sceneManager.saveScenes();
         }
 
         void mainLoop();
 
         void cleanup();
+  
+        void switchContexts(EngineContext& newContext);
 
         private:
-            GLFWwindow *window = nullptr;
-            EngineRenderer::Renderer renderer;
-            EngineRenderer::Lighting lights;
-            VkDescriptorPool imguiPool;
+          GLFWwindow *window = nullptr;
+          EngineRenderer::Renderer renderer;
+          EngineRenderer::Lighting lights;
+          VkDescriptorPool imguiPool;
 
-            EnginePartitioning::Spatial_Partitioner spatialPartitioner;
-            DebugRenderer debugRenderer;
+          EnginePartitioning::Spatial_Partitioner spatialPartitioner;
+          DebugRenderer debugRenderer;
 
-            uint32_t currentSceneIndex = 0;
-            size_t totalObjects;
+          uint32_t currentSceneIndex = 0;
+          size_t totalObjects;
 
-            ECS ecs;
+          EngineContext* currentContext = nullptr;
+
+          EngineContext devContext;
+          EngineContext gameContext;
+  
+          std::vector<EngineContext*> contexts = {&devContext, &gameContext}; //For looping over the engine contexts
+
+          bool hasContextChanged = false;
     };
 }

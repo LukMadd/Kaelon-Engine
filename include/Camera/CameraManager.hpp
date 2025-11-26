@@ -8,6 +8,8 @@
 namespace EngineCamera{
     class CameraManager{
         public:
+            bool hasCameraChanged = false;
+
             std::shared_ptr<Camera> getCurrentCamera();
 
             std::vector<std::shared_ptr<Camera>> getCameras() {return cameras;}

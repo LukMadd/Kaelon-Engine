@@ -9,19 +9,19 @@ namespace EngineUI{
     class EngineUI{
         public:
             void drawMainLayout(EngineScene::SceneManager *sceneManager, 
-                                EngineCamera::CameraManager *cameraManager, ECS& ecs);
+                                EngineCamera::CameraManager *cameraManager, ECS* ecs);
 
-            void drawSceneHierarchy(EngineScene::Scene *scene, ECS& ecs);
+            void drawSceneHierarchy(EngineScene::Scene *scene, ECS* ecs);
 
-            void drawObjectInspector(EngineScene::Scene *scene, std::vector<Entity> &changedBoundingBoxes, ECS& ecs);
+            void drawEntityInspector(EngineScene::Scene *scene, std::vector<Entity> &changedBoundingBoxes, ECS* ecs);
 
             void drawCameraInspector();
 
-            void drawSceneInspector(EngineScene::SceneManager *sceneManager, ECS& ecs);
+            void drawSceneInspector(EngineScene::SceneManager *sceneManager, ECS* ecs);
 
             void drawRecourses(EngineResource::ResourceManager *recourseManager);
 
-            void drawRenderStats(EngineScene::Scene *scene, float fps, ECS& ecs);
+            void drawRenderStats(EngineScene::Scene *scene, float fps, ECS* ecs);
 
             void drawScenes(EngineScene::SceneManager *sceneManager);
         

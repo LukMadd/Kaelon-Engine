@@ -51,8 +51,8 @@ VkShaderModule createShaderModule(const std::vector<char>& code, VkDevice device
 
 namespace EngineRenderer {
     void PipelineManager::createGraphicsPipeline(VkPipeline &pipeline, PipelineInfo pipelineInfo, const char* name, VkExtent2D swapChainExtent){
-        std::vector<char> vertShaderCode = readFile(std::string(KAELON_SHADER_DIR) + pipelineInfo.vertShader);
-        std::vector<char> fragShaderCode = readFile(std::string(KAELON_SHADER_DIR) + pipelineInfo.fragShader);
+        std::vector<char> vertShaderCode = readFile(std::string(GRAPPLE_SHADER_DIR) + pipelineInfo.vertShader);
+        std::vector<char> fragShaderCode = readFile(std::string(GRAPPLE_SHADER_DIR) + pipelineInfo.fragShader);
 
         vertShaderModule = createShaderModule(vertShaderCode, device);
         fragShaderModule = createShaderModule(fragShaderCode, device);

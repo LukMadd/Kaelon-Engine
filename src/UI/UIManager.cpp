@@ -24,7 +24,7 @@ namespace EngineUI{
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-        std::string fontPath = std::string(KAELON_FONT_DIR) + "PixeloidMono.ttf";
+        std::string fontPath = std::string(GRAPPLE_FONT_DIR) + "PixeloidMono.ttf";
 
         ImGui::GetStyle().ScaleAllSizes(io.DisplayFramebufferScale.x);
         io.Fonts->AddFontFromFileTTF(fontPath.c_str(), io.DisplayFramebufferScale.x * scale);
@@ -140,7 +140,7 @@ namespace EngineUI{
         assert(uiInfo.ecs != nullptr);
         engineUI.drawMainLayout(uiInfo.sceneManager, uiInfo.cameraManager, *uiInfo.ecs);
         engineUI.drawSceneHierarchy(uiInfo.sceneManager->getCurrentScene(), *uiInfo.ecs);
-        engineUI.drawObjectInspector(uiInfo.sceneManager->getCurrentScene(), *uiInfo.changedBoundingBoxes,*uiInfo.ecs);
+        engineUI.drawEntityInspector(uiInfo.sceneManager->getCurrentScene(), *uiInfo.changedBoundingBoxes,*uiInfo.ecs);
         engineUI.drawCameraInspector();
         engineUI.drawRecourses(uiInfo.recourseManager);
         engineUI.drawRenderStats(uiInfo.sceneManager->getCurrentScene() ,fps, *uiInfo.ecs);

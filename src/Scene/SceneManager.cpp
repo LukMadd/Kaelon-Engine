@@ -27,14 +27,14 @@ namespace EngineScene{
     void SceneManager::addDefaultScene(){
         auto scene = Scene::createScene(currentID, "Default_Scene");
         ecs->setComponentStorage(&scene->componentStorage);
-        scene->initBaseScene(*resourceManager, *ecs);
+        scene->initBaseScene(*resourceManager);
         sceneOrder.push_back(currentID); //Pushes the scenes ID into sceneOrder to be used for current scene tracking
-        scene->update(*ecs);
+        scene->update();
         scenes[currentID] = std::move(scene);
 
         currentID++;
 
-        ecs->setComponentStorage(&scenes[0]->componentStorage);
+        ecs->setComponentStorage(&scenes[currentSceneIndex]->componentStorage);
     }
 
     void SceneManager::changeScenes(int index){
@@ -65,7 +65,7 @@ namespace EngineScene{
         this->ecs = ecs;
 
         std::vector<std::filesystem::path> files;
-        for(auto& entry : std::filesystem::directory_iterator(KAELON_SCENE_DIR))
+        for(auto& entry : std::filesystem::directory_iterator(GRAPPLE_SCENE_DIR))
             if(std::filesystem::is_regular_file(entry.path()) && entry.path().extension() == ".json")
                 files.push_back(entry.path());
 
@@ -102,8 +102,8 @@ namespace EngineScene{
 
         sceneData["next_entity"] = ecs->getNextEntity();
 
-        std::filesystem::create_directories((KAELON_SCENE_DIR));
-        std::ofstream file(std::string(KAELON_SCENE_DIR) + "/scene" + std::to_string(sceneIndex) + ".json");
+        std::filesystem::create_directories((GRAPPLE_SCENE_DIR));
+        std::ofstream file(std::string(GRAPPLE_SCENE_DIR) + "/scene" + std::to_string(sceneIndex) + ".json");
         if(!file.is_open()) {
             throw std::runtime_error("Failed to open JSON file");
         }
@@ -125,12 +125,12 @@ namespace EngineScene{
 
         for(auto &jsonObj : sceneData["entities"]){
             Entity e = deserializeEntity(jsonObj, *ecs);
-            initResources(e, *ecs, *resourceManager, spatialPartitioner);
+            EntityFunctions::initResources(e, *resourceManager, spatialPartitioner);
             if(ecs->hasComponent<TransformComponent>(e)){
                 auto* transform = ecs->getComponent<TransformComponent>(e);
-                move(transform->position, e, *ecs);
-                rotate(glm::quat(transform->rotation[0], transform->rotation[1], transform->rotation[2], transform->rotation[3]), e, *ecs);
-                scale(transform->scale, e, *ecs);
+                EntityFunctions::move(transform->position, e);
+                EntityFunctions::rotate(glm::quat(transform->rotation[0], transform->rotation[1], transform->rotation[2], transform->rotation[3]), e);
+                EntityFunctions::scale(transform->scale, e);
             }
             
         }
@@ -168,7 +168,7 @@ namespace EngineScene{
             }
         }
 
-        std::string filename = std::string(KAELON_SCENE_DIR) + "scene" + std::to_string(sceneID) + ".json";
+        std::string filename = std::string(GRAPPLE_SCENE_DIR) + "scene" + std::to_string(sceneID) + ".json";
         if(std::filesystem::exists(filename)){
             std::filesystem::remove(filename);
         }

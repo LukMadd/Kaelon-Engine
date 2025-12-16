@@ -26,11 +26,11 @@ namespace EngineRenderer{
 
         int texWidth, texHeight, texChannels;
         stbi_set_flip_vertically_on_load(true);
-        stbi_uc* pixels = stbi_load((std::string(KAELON_TEXTURE_DIR) + texturePath).c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+        stbi_uc* pixels = stbi_load((std::string(GRAPPLE_TEXTURE_DIR) + texturePath).c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
         VkDeviceSize imageSize = texWidth * texHeight * 4;
 
         if(!pixels){
-            throw std::runtime_error("Failed to load texture image: " + std::string(KAELON_TEXTURE_DIR) + texturePath + "!");
+            throw std::runtime_error("Failed to load texture image: " + std::string(GRAPPLE_TEXTURE_DIR) + texturePath + "!");
         }
  
         mipMap.mipLevels = static_cast<uint32_t>(std::floor(std::log2((std::max(texWidth, texHeight))))) + 1;

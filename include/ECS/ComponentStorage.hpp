@@ -2,6 +2,7 @@
 #define COMPONENT_STORAGE_HPP
 
 #include "Components.hpp"
+#include "Debug/Debugger.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <sys/types.h>
@@ -55,17 +56,17 @@ struct ComponentStorage{
     std::vector<Entity> metadataEntities;
     std::unordered_map<Entity, size_t> metadataIndices;
 
-    template<typename T, typename... Args>
-    T* addComponent(Entity e, Args&&... args){
-        auto &vec = ComponentAccessor<T>::getVector(this);
-        auto &map = ComponentAccessor<T>::getMap(this);
-        auto &entityVec = ComponentAccessor<T>::getEntityVector(this);
+    template<typename Component, typename... Args>
+    Component* addComponent(Entity e, Args&&... args){
+        auto &vec = ComponentAccessor<Component>::getVector(this);
+        auto &map = ComponentAccessor<Component>::getMap(this);
+        auto &entityVec = ComponentAccessor<Component>::getEntityVector(this);
 
         vec.emplace_back(std::forward<Args>(args)...);
         entityVec.push_back(e);
         map[e] = vec.size() - 1;
 
-        uint32_t hashKey = ComponentAccessor<T>::hash;
+        uint32_t hashKey = ComponentAccessor<Component>::hash;
         auto &compEntities = componentMap[hashKey];
         auto it = std::lower_bound(compEntities.begin(), compEntities.end(), e);
         if(it == compEntities.end() || *it != e){
@@ -91,48 +92,32 @@ struct ComponentStorage{
     }
 
     template<typename... Components>
-    std::vector<Entity> getEntitiesWith() const {
-        std::vector<const std::vector<Entity>*> lists;
+    std::vector<Entity> getEntitiesWith(){
+        if(sizeof...(Components) == 0){DEBUGGER_LOG(WARNING, "Size of components is empty!", "ECS");}
 
-        bool missingComponent = false;
+        const auto* smallest = &ComponentAccessor<typename std::tuple_element<0, std::tuple<Components...>>::type>::getEntityVector(this);
+  
+        const std::vector<const std::vector<Entity>*> vecPtrs{ &ComponentAccessor<Components>::getEntityVector(this)... };
+        for (const auto* vec : vecPtrs) {
+            if (vec->size() < smallest->size()) smallest = vec;
+        }
 
-        (..., ([&] {
-            auto it = componentMap.find(ComponentAccessor<Components>::hash);
-            if(it != componentMap.end()){
-                lists.push_back(&it->second);
-            } else {
-                missingComponent = true;
-            }
-        }()));
+        std::vector<Entity> result;
+        result.reserve(smallest->size());
 
-        if (missingComponent) return {}; 
-
-        auto smallest = *std::min_element(lists.begin(), lists.end(),
-        [](auto a, auto b){ return a->size() < b->size(); });
-
-        std::vector<Entity> result = *smallest;
-        std::vector<Entity> temp;
-
-        for(auto list : lists){
-            if(list == smallest) continue;
-
-            temp.clear();
-            std::set_intersection(result.begin(), result.end(),
-                                  list->begin(), list->end(),
-                                  std::back_inserter(temp));
-        
-            result.swap(temp);
-            if(result.empty()) break;
+        for(Entity e : *smallest){
+          bool hasAllComponents = (... && (ComponentAccessor<Components>::getMap(this).count(e) > 0));
+          if(hasAllComponents){result.push_back(e);}
         }
 
         return result;
     }
 
-    template<typename T>
+    template<typename Component>
     void removeComponent(Entity e){
-        auto &vec = ComponentAccessor<T>::getVector(this);
-        auto &entities = ComponentAccessor<T>::getEntityVector(this);
-        auto &map =ComponentAccessor<T>:: getMap(this);
+        auto &vec = ComponentAccessor<Component>::getVector(this);
+        auto &entities = ComponentAccessor<Component>::getEntityVector(this);
+        auto &map =ComponentAccessor<Component>::getMap(this);
 
         auto it = map.find(e);
         if(it == map.end()) return;

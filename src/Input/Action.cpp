@@ -2,27 +2,25 @@
 #include "Input/InputHandler.hpp"
 
 namespace EngineInput{    
-    void ActionManager::bind(Action action, Key key){
+    void ActionManager::bind(int action, Key key){
         bindedActions[action] = key;
     }
 
-    bool ActionManager::isActionActive(Action action){
+    bool ActionManager::isActionActive(int action){
         return inputHandler->isPressed(bindedActions[action]);
     }
 
-    void ActionManager::setupBindings(){
-        bind(Action::DEVELOPER_CHANGE_SCENE_PLUS, Key::KEY_ARROW_UP);
-        bind(Action::DEVELOPER_CHANGE_SCENE_MINUS, Key::KEY_ARROW_DOWN);
-        bind(Action::DEVELOPER_SCENE_IMMERSED, Key::KEY_PERIOD);
-        bind(Action::PLAYER_MOVE_FORWARD, Key::KEY_W);
-        bind(Action::PLAYER_MOVE_BACKWARD, Key::KEY_S);
-        bind(Action::PLAYER_MOVE_LEFT, Key::KEY_A);
-        bind(Action::PLAYER_MOVE_RIGHT, Key::KEY_D);
-        bind(Action::PLAYER_JUMP, Key::KEY_SPACE);
-        bind(Action::PLAYER_CROUCH, Key::KEY_TAB);
-        bind(Action::USER_ESCAPE_PROGRAM, Key::KEY_ESCAPE);
-        bind(Action::USER_FULL_SCREEN, Key::KEY_F10);
-        bind(Action::USER_HIDE_CURSOR, Key::KEY_SHIFT);
-        bind(Action::USER_SHOW_CURSOR, Key::KEY_GRAVE_ACCENT);
+    void ActionManager::setupDeveloperBindings(){
+        bind(Developer::TOGGLE_CAMERA_LOCK, Key::KEY_GRAVE_ACCENT);
+        bind(Developer::CAMERA_FORWARD, Key::KEY_W);
+        bind(Developer::CAMERA_BACKWARD, Key::KEY_S);
+        bind(Developer::CAMERA_LEFT, Key::KEY_A);
+        bind(Developer::CAMERA_RIGHT, Key::KEY_D);
+        bind(Developer::CAMERA_UP, Key::KEY_SPACE);
+        bind(Developer::CAMERA_DOWN, Key::KEY_TAB);
+        bind(Developer::EXIT_FULL_SCREEN, Key::KEY_ESCAPE);
+        bind(Developer::ENTER_FULL_SCREEN, Key::KEY_F10);
+        bind(Developer::HIDE_CURSOR, Key::KEY_SHIFT);
+        bind(Developer::SHOW_CURSOR, Key::KEY_GRAVE_ACCENT);
     }
 }

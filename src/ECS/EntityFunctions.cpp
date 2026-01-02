@@ -130,7 +130,7 @@ namespace EntityFunctions{
 
       entity_AABB->worldBoundingBox.isInitialized = true;    
 
-      Engine_Globals::changedBoundingBoxes.push_back(e);
+      EngineGlobals::changedBoundingBoxes.push_back(e);
   }
 
   void move(glm::vec3 position, Entity e, ECS* ecs){

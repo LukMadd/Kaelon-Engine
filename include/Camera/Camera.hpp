@@ -28,6 +28,7 @@ namespace EngineCamera{
             float& getSpeed(){return speed;}
             float& getYaw(){return yaw;}
             float& getPitch(){return pitch;}
+            float& getVelocity(){return velocity;}
             float& getSensitivity(){return sensitivity;}
 
             std::array<glm::vec4, 2> transformRay(glm::vec4 rayStartNDC, glm::vec4 rayEndNDC);
@@ -58,13 +59,6 @@ namespace EngineCamera{
 
             VkExtent2D swapChainExtent;
 
-            void moveUp(float velocity);
-            void moveDown(float velocity);
-            void moveForward(float velocity);
-            void moveBackward(float velocity);
-            void moveLeft(float velocity);
-            void moveRight(float velocity);
-
             void setCameraDefault();
 
         public:
@@ -82,6 +76,7 @@ namespace EngineCamera{
                 target_entity = e;
                 target_transform = transform;
             }
+            TransformComponent* getTargetTransform(){return target_transform;}
             void setTargetOffset(glm::vec3 offset){target_offset = offset;}
 
             Entity getTarget(){return target_entity;}
@@ -95,6 +90,14 @@ namespace EngineCamera{
 
 
            void resetCamera();
+
+            void moveUp(float velocity);
+            void moveDown(float velocity);
+            void moveForward(float velocity);
+            void moveBackward(float velocity);
+            void moveLeft(float velocity);
+            void moveRight(float velocity);
+
     };
 }
 

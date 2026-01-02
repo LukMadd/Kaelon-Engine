@@ -67,7 +67,7 @@ namespace EnginePartitioning{
     }
 
     void Spatial_Partitioner::registerEntity(Entity entity, std::vector<uint64_t> &cellKeys){
-        auto* spatial = ecs->getComponent<SpatialPartitioningComponent>(entity);
+        auto* spatial = current_context->ecs.getComponent<SpatialPartitioningComponent>(entity);
 
         for(auto &cellKey : cellKeys){
             grid[cellKey].entities.reserve(10); //Reserves space for 10 objects in a cell
@@ -80,9 +80,9 @@ namespace EnginePartitioning{
     }
 
     std::vector<uint64_t> Spatial_Partitioner::getCellKeys(Entity entity){
-        auto* boundingBox = ecs->getComponent<BoundingBoxComponent>(entity);
+        auto* boundingBox = current_context->ecs.getComponent<BoundingBoxComponent>(entity);
         if(!boundingBox->localBoundingBox.isInitialized || !boundingBox->worldBoundingBox.isInitialized){
-            createBoundingBox(entity, *ecs);
+            EntityFunctions::createBoundingBox(entity, &current_context->ecs);
         }
         std::vector<uint64_t> cellKeys;
 
@@ -101,7 +101,7 @@ namespace EnginePartitioning{
 
     void Spatial_Partitioner::updateEntityCells(Entity entity){
         std::vector<uint64_t> cellKeys = getCellKeys(entity);
-        auto* spatial = ecs->getComponent<SpatialPartitioningComponent>(entity);
+        auto* spatial = current_context->ecs.getComponent<SpatialPartitioningComponent>(entity);
 
         if(cellKeys != spatial->cells){
             if(spatial->assignedToCell == false){
@@ -115,7 +115,7 @@ namespace EnginePartitioning{
     void Spatial_Partitioner::removeEntity(Entity entity){
         std::vector<uint64_t> cellsToRemove;
 
-        auto* spatial = ecs->getComponent<SpatialPartitioningComponent>(entity);
+        auto* spatial = current_context->ecs.getComponent<SpatialPartitioningComponent>(entity);
 
         for(auto key : spatial->cells){
             grid[key].entities.erase(entity);
@@ -135,7 +135,7 @@ namespace EnginePartitioning{
     std::vector<Cell*> Spatial_Partitioner::getCells(Entity entity){
         std::vector<Cell*> cells;
 
-        auto* spatial = ecs->getComponent<SpatialPartitioningComponent>(entity);
+        auto* spatial = current_context->ecs.getComponent<SpatialPartitioningComponent>(entity);
 
         for(int i = 0; i < spatial->cells.size(); i++){
             cells.push_back(&grid[spatial->cells[i]]);

@@ -10,7 +10,7 @@ namespace EngineScene{
         public:    
             void addChild(SceneNodeComponent& childNode, Entity parent);
             void removeChild(SceneNodeComponent& childNode);
-            void update(Entity e, const glm::mat4& parentPos, ECS& ecs);
+            void update(Entity e, const glm::mat4& parentPos, ECS* ecs);
             glm::vec3 getWorldPosition(Entity e) const;
 
     };

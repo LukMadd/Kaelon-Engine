@@ -7,8 +7,6 @@
 #include "ECS/ComponentStorage.hpp"
 #include "Scene/SceneNode.hpp"
 
-;
-
 class DebugRenderer;
 
 namespace EngineScene{
@@ -33,20 +31,20 @@ namespace EngineScene{
             bool selected = false;
 
             static std::unique_ptr<Scene> createScene(int id, const std::string &name);
-            void initBaseScene(EngineResource::ResourceManager &resourceManager, ECS& ecs);
+            void initBaseScene(EngineResource::ResourceManager &resourceManager, ECS *ecs);
 
-            void addDefaultEntity(ECS& ecs);
+            void addDefaultEntity(ECS* ecs);
 
-            void removeEntity(Entity e, ECS& ecs);
+            void removeEntity(Entity e, ECS* ecs);
 
-            void drawBoundingBoxes(ECS& ecs, DebugRenderer *debugRenderer);
+            void drawBoundingBoxes(DebugRenderer *debugRenderer, ECS* ecs);
 
             int getIndex() const {return index;}
             std::string getName() const {return name;}
 
-            std::vector<std::shared_ptr<Texture>> getSceneTextures(ECS& ecs);
+            std::vector<std::shared_ptr<Texture>> getSceneTextures(ECS* ecs);
 
-            void update(ECS& ecs);
+            void update(ECS* ecs);
 
             void cleanupEntities();
     };

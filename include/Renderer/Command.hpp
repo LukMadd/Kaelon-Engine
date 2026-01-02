@@ -27,7 +27,7 @@ namespace EngineRenderer{
             }
 
             void recordCommandBuffers(
-                ECS& ecs, 
+                ECS* ecs, 
                 Scene* scene,
                 VkCommandBuffer commandBuffer, 
                 uint32_t imageIndex, 

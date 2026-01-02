@@ -10,19 +10,20 @@ namespace EnginePartitioning{
 
 class ECS;
 
-Entity initEntity(ECS& ecs, std::string meshPath = "", std::string texturePath = "", std::string name = "", std::string type = "");
+namespace EntityFunctions{
+  Entity initEntity(std::string meshPath = "", std::string texturePath = "", std::string name = "", std::string type = "", ECS* ecs = nullptr);
 
-void initResources(Entity e, ECS& ecs, EngineResource::ResourceManager &resourceManager,
-                   EnginePartitioning::Spatial_Partitioner *SpatialPartitioner);
+  void initResources(Entity e, EngineResource::ResourceManager &resourceManager,
+                    EnginePartitioning::Spatial_Partitioner *spatialPartitioner, ECS* ecs);
 
-void draw(Entity e, ECS& ecs, VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout);
+  void draw(Entity e, VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout, ECS* ecs);
 
-void createBoundingBox(Entity e, ECS& ecs);
+  void createBoundingBox(Entity e, ECS* ecs);
 
-void move(glm::vec3 position, Entity e, ECS& ecs);
+  void move(glm::vec3 position, Entity e, ECS* ecs);
 
-void rotate(glm::quat rotation, Entity e, ECS& ecs);
+  void rotate(glm::quat rotation, Entity e, ECS* ecs);
 
-void scale(glm::vec3 scale, Entity e, ECS& ecs);
-
+  void scale(glm::vec3 scale, Entity e, ECS* ecs);
+}
 #endif

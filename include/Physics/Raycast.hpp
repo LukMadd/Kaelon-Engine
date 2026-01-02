@@ -17,4 +17,4 @@ struct RayCastHit{
 };
 
 //Need to absract away the spatial partioner and ecs into a struct or something
-bool raycast(RayCastHit& hit, Ray ray, float maxDistance, Spatial_Partitioner* spatial_partitioner, ECS& ecs);
+bool raycast(RayCastHit& hit, Ray ray, float maxDistance, Spatial_Partitioner* spatial_partitioner, ECS* ecs);

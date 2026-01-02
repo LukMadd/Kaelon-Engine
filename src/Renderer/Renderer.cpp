@@ -81,15 +81,15 @@ namespace EngineRenderer{
     }
 
     void Renderer::initEntities(Scene &scene, EngineResource::ResourceManager &resourceManager, 
-                               EnginePartitioning::Spatial_Partitioner &spatialPartitioner, ECS& ecs){
-        for(auto& e : ecs.view<RenderableComponent>()){
-            initResources(e, ecs,resourceManager, &spatialPartitioner);
+                               EnginePartitioning::Spatial_Partitioner &spatialPartitioner, ECS* ecs){
+        for(auto& e : ecs->view<RenderableComponent>()){
+          EntityFunctions::initResources(e, resourceManager, &spatialPartitioner, ecs);
         }
 
         scene.areEntitiesInitialized = true;
     }
 
-    void Renderer::createSceneDescriptorSets(Scene *scene, ECS& ecs){
+    void Renderer::createSceneDescriptorSets(Scene *scene, ECS* ecs){
         if(!descriptorSetLayout){
             uniformBufferCommand.createDescriptorSetLayout(descriptorSetLayout);
         }
@@ -122,7 +122,7 @@ namespace EngineRenderer{
         }
     }
     
-    void Renderer::drawFrame(Scene *scene, ECS& ecs, FrameFlags frameFlags){
+    void Renderer::drawFrame(Scene *scene, ECS* ecs, FrameFlags frameFlags){
         vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex;
@@ -149,12 +149,12 @@ namespace EngineRenderer{
             appCommand.recordCommandBuffers(ecs, scene, commandbuffers[currentFrame], 
                                             imageIndex, appSwapChain, appPipeline, 
                                             currentFrame, vertexBuffer, indexBuffer, queryPool, 
-                    frameFlags.shouldDrawBoundingBoxes, objectUboStride);
+                                            frameFlags.shouldDrawBoundingBoxes, objectUboStride);
         } else{
             appCommand.recordCommandBuffers(ecs, scene, commandbuffers[currentFrame], 
                                             imageIndex, appSwapChain, appPipeline, 
                                             currentFrame, vertexBuffer, indexBuffer, queryPool, 
-                    frameFlags.shouldDrawBoundingBoxes, objectUboStride);
+                                            frameFlags.shouldDrawBoundingBoxes, objectUboStride);
         }
 
         VkSubmitInfo submitInfo{};
@@ -204,7 +204,7 @@ namespace EngineRenderer{
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
 
-    void Renderer::cleanup(Scene *scene){
+    void Renderer::cleanup(){
         appSwapChain.cleanupSwapChain(depthBuffer, multiSampler);
         depthBuffer.cleanup();
 

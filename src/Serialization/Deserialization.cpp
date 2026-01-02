@@ -4,26 +4,26 @@
 #include "Serialization/Serialization.hpp"
 
 
-Entity deserializeEntity(const nlohmann::json& jsonData, ECS& ecs){
+Entity deserializeEntity(const nlohmann::json& jsonData, ECS* ecs){
     Entity entity = jsonData["id"];
-    ecs.addEntity(entity);
+    ecs->addEntity(entity);
 
     json components = jsonData["entity"]["components"];
     for(const auto& component : components){
         if(component.contains("component_type")){
 
             if(component["component_type"] == "renderable"){
-                auto* renderable = ecs.addComponent<RenderableComponent>(entity);
+                auto* renderable = ecs->addComponent<RenderableComponent>(entity);
                 renderable->uniformIndex = component["uniform_index"];
             }
 
             else if(component["component_type"] == "mesh"){
-                auto* mesh = ecs.addComponent<MeshComponent>(entity);
+                auto* mesh = ecs->addComponent<MeshComponent>(entity);
                 mesh->mesh->meshPath = component["mesh_path"];
             }
 
             else if(component["component_type"] == "material"){
-                auto* material = ecs.addComponent<MaterialComponent>(entity);
+                auto* material = ecs->addComponent<MaterialComponent>(entity);
                 material->material = std::make_shared<Material>();
                 Shader shader;
                 shader.vertShader = component["shader"]["vert"];
@@ -47,37 +47,37 @@ Entity deserializeEntity(const nlohmann::json& jsonData, ECS& ecs){
             }
 
             else if(component["component_type"] == "physics"){
-                auto* physics = ecs.addComponent<PhysicsComponent>(entity);
+                auto* physics = ecs->addComponent<PhysicsComponent>(entity);
                 physics->isStatic = component["is_static"];
                 physics->velocity = glm::vec3(component["velocity"][0], component["velocity"][1], component["velocity"][2]);
             }
 
             else if(component["component_type"] == "bounding_box"){
-                auto* bounding_box = ecs.addComponent<BoundingBoxComponent>(entity);
-                if(ecs.hasComponent<MeshComponent>(entity)){
-                    createBoundingBox(entity, ecs);
+                auto* bounding_box = ecs->addComponent<BoundingBoxComponent>(entity);
+                if(ecs->hasComponent<MeshComponent>(entity)){
+                  EntityFunctions::createBoundingBox(entity, ecs);
                 }
             }
 
             else if(component["component_type"] == "spatial_partitioning"){
-                auto* spatial_partioner = ecs.addComponent<SpatialPartitioningComponent>(entity);
+                auto* spatial_partioner = ecs->addComponent<SpatialPartitioningComponent>(entity);
             }
 
             else if(component["component_type"] == "scene_node"){
-                auto* scene_node = ecs.addComponent<SceneNodeComponent>(entity);
+                auto* scene_node = ecs->addComponent<SceneNodeComponent>(entity);
                 scene_node->node = component["node"];
                 scene_node->parent = component["parent"];
             }
 
             else if(component["component_type"] == "metadata"){
-                auto* metadata = ecs.addComponent<MetadataComponent>(entity);
+                auto* metadata = ecs->addComponent<MetadataComponent>(entity);
                 metadata->name = component["name"];
                 metadata->type = component["type"];
                 metadata->uuid = component["uuid"];
             }
             
             else if(component["component_type"] == "transform"){
-                auto* transform = ecs.addComponent<TransformComponent>(entity);
+                auto* transform = ecs->addComponent<TransformComponent>(entity);
                 json json_transform = component["transform"];
                 transform->position = glm::vec3(json_transform["position"][0], json_transform["position"][1], json_transform["position"][2]); //x,y,z
                 transform->rotation = glm::quat(json_transform["rotation"][3], json_transform["rotation"][0], json_transform["rotation"][1], json_transform["rotation"][2]); //w,x,y,z
@@ -89,7 +89,7 @@ Entity deserializeEntity(const nlohmann::json& jsonData, ECS& ecs){
     return entity;
 }
 
-SceneNodeComponent* deserializeNode(Scene &scene, const json& jsonNode, ECS& ecs){
+SceneNodeComponent* deserializeNode(Scene &scene, const json& jsonNode, ECS* ecs){
     SceneNodeComponent *node = new SceneNodeComponent();
     node->node = nullEntity;
 
@@ -113,7 +113,7 @@ SceneNodeComponent* deserializeNode(Scene &scene, const json& jsonNode, ECS& ecs
     return node;
 }
 
-Camera* deserializeCamera(const nlohmann::json& jsonData, ECS& ecs){
+Camera* deserializeCamera(const nlohmann::json& jsonData, ECS* ecs){
     EngineCamera::Camera* camera = new EngineCamera::Camera();
 
     camera->is_initialized = jsonData["is_initialized"];
@@ -132,8 +132,8 @@ Camera* deserializeCamera(const nlohmann::json& jsonData, ECS& ecs){
 
     if(jsonData["target"]["target_entity"] != nullEntity){
         Entity entity = jsonData["target"]["target_entity"];
-        if(ecs.hasComponent<TransformComponent>(entity)){
-            auto* transform = ecs.getComponent<TransformComponent>(entity);
+        if(ecs->hasComponent<TransformComponent>(entity)){
+            auto* transform = ecs->getComponent<TransformComponent>(entity);
             glm::vec3 offset = {jsonData["target"]["target_offset"][0], jsonData["target"]["target_offset"][1], 
                              jsonData["target"]["target_offset"][2]};
 

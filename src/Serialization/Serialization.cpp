@@ -2,23 +2,23 @@
 #include "Camera/Camera.hpp"
 #include "ECS/Components.hpp"
 
-json serializeEntityData(const Entity e, ECS& ecs){
-    auto* sceneNode = ecs.getComponent<SceneNodeComponent>(e);
+json serializeEntityData(const Entity e, ECS* ecs){
+    auto* sceneNode = ecs->getComponent<SceneNodeComponent>(e);
 
     json entityData;
     json jsonData;
     json components = json::array();
 
-    if(ecs.hasComponent<RenderableComponent>(e)){
-        auto* renderable = ecs.getComponent<RenderableComponent>(e);
+    if(ecs->hasComponent<RenderableComponent>(e)){
+        auto* renderable = ecs->getComponent<RenderableComponent>(e);
         json json_renderable = json::object();
         json_renderable["component_type"] = "renderable";
         json_renderable["uniform_index"] = renderable->uniformIndex;
         components.push_back(json_renderable);
     }
 
-    if(ecs.hasComponent<TransformComponent>(e)){
-        auto* transform = ecs.getComponent<TransformComponent>(e);
+    if(ecs->hasComponent<TransformComponent>(e)){
+        auto* transform = ecs->getComponent<TransformComponent>(e);
         json json_transform = json::object();
         json_transform["component_type"] = "transform";
         json_transform["transform"] = {
@@ -29,16 +29,16 @@ json serializeEntityData(const Entity e, ECS& ecs){
         components.push_back(json_transform);
     }
 
-    if(ecs.hasComponent<MeshComponent>(e)){
-        auto* mesh = ecs.getComponent<MeshComponent>(e);
+    if(ecs->hasComponent<MeshComponent>(e)){
+        auto* mesh = ecs->getComponent<MeshComponent>(e);
         json json_mesh = json::object();
         json_mesh["component_type"] = "mesh";
         json_mesh["mesh_path"] = mesh->mesh->meshPath;
         components.push_back(json_mesh);
     }
 
-    if(ecs.hasComponent<MaterialComponent>(e)){
-        auto* material = ecs.getComponent<MaterialComponent>(e);
+    if(ecs->hasComponent<MaterialComponent>(e)){
+        auto* material = ecs->getComponent<MaterialComponent>(e);
         json json_material = json::object();
         json_material["component_type"] = "material";
         json_material["base_color"] = {
@@ -63,8 +63,8 @@ json serializeEntityData(const Entity e, ECS& ecs){
         components.push_back(json_material);
     }
 
-    if(ecs.hasComponent<PhysicsComponent>(e)){
-        auto* physics = ecs.getComponent<PhysicsComponent>(e);
+    if(ecs->hasComponent<PhysicsComponent>(e)){
+        auto* physics = ecs->getComponent<PhysicsComponent>(e);
         json json_physics = json::object();
         json_physics["component_type"] = "physics";
         json_physics["is_static"] = physics->isStatic; 
@@ -76,21 +76,21 @@ json serializeEntityData(const Entity e, ECS& ecs){
         components.push_back(json_physics);
     }
 
-    if(ecs.hasComponent<BoundingBoxComponent>(e)){
-        auto* boundingBox = ecs.getComponent<BoundingBoxComponent>(e);
+    if(ecs->hasComponent<BoundingBoxComponent>(e)){
+        auto* boundingBox = ecs->getComponent<BoundingBoxComponent>(e);
         json json_bounding_box = json::object();
         json_bounding_box["component_type"] = "bounding_box";
         components.push_back(json_bounding_box);
     }
     
-    if(ecs.hasComponent<SpatialPartitioningComponent>(e)){
+    if(ecs->hasComponent<SpatialPartitioningComponent>(e)){
         json json_partitioning = json::object();
         json_partitioning["component_type"] = "spatial_partitioning";
         components.push_back(json_partitioning);
     }
 
-    if(ecs.hasComponent<SceneNodeComponent>(e)){
-        auto* sceneNode = ecs.getComponent<SceneNodeComponent>(e);
+    if(ecs->hasComponent<SceneNodeComponent>(e)){
+        auto* sceneNode = ecs->getComponent<SceneNodeComponent>(e);
         json json_scene_node = json::object();
         json_scene_node["component_type"] = "scene_node";
         json_scene_node["node"] = sceneNode->node;
@@ -98,8 +98,8 @@ json serializeEntityData(const Entity e, ECS& ecs){
         components.push_back(json_scene_node);
     }
 
-    if(ecs.hasComponent<MetadataComponent>(e)){
-        auto* metadata = ecs.getComponent<MetadataComponent>(e);
+    if(ecs->hasComponent<MetadataComponent>(e)){
+        auto* metadata = ecs->getComponent<MetadataComponent>(e);
         json json_metadata = json::object();
         json_metadata["component_type"] = "metadata";
         if(!metadata->name.empty()){

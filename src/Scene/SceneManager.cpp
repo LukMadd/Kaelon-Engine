@@ -10,26 +10,24 @@
 #include "ECS/Components.hpp"
 #include "ECS/EntityFunctions.hpp"
 #include "nlohmann/json.hpp"
+#include "Spatial/Spatial_Partitioner.hpp"
 
 #include "Serialization/Serialization.hpp"
 
-;
 using namespace nlohmann;
 
 constexpr const char* SUB_SYSTEM = "Scene_Manager";
 
 
 namespace EngineScene{
-    SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), resourceManager(nullptr), ecs(nullptr){
-        Debugger::get().initDebugSystem(SUB_SYSTEM);
-    };
+    SceneManager::SceneManager() : currentID(0), currentSceneIndex(0), resourceManager(nullptr), ecs(nullptr){};
 
     void SceneManager::addDefaultScene(){
         auto scene = Scene::createScene(currentID, "Default_Scene");
         ecs->setComponentStorage(&scene->componentStorage);
-        scene->initBaseScene(*resourceManager);
+        scene->initBaseScene(*resourceManager, ecs);
         sceneOrder.push_back(currentID); //Pushes the scenes ID into sceneOrder to be used for current scene tracking
-        scene->update();
+        scene->update(ecs);
         scenes[currentID] = std::move(scene);
 
         currentID++;
@@ -59,10 +57,10 @@ namespace EngineScene{
 
     void SceneManager::init(EngineResource::ResourceManager &resourceManager, 
                             EnginePartitioning::Spatial_Partitioner *spatialPartitioner,
-                            ECS *ecs){
+                            ECS* _ecs){
         this->resourceManager = &resourceManager;
         this->spatialPartitioner = spatialPartitioner;
-        this->ecs = ecs;
+        ecs = _ecs;
 
         std::vector<std::filesystem::path> files;
         for(auto& entry : std::filesystem::directory_iterator(GRAPPLE_SCENE_DIR))
@@ -93,7 +91,7 @@ namespace EngineScene{
 
         //Loops through the scenes children and serializes them
         for(auto& entity : scene.componentStorage.entities){
-            sceneData["entities"].push_back(serializeEntityData(entity, *ecs));
+            sceneData["entities"].push_back(serializeEntityData(entity, ecs));
         }
 
         for(auto camera : scene.cameraManager.getCameras()){
@@ -124,19 +122,19 @@ namespace EngineScene{
         ecs->getNextEntity() = sceneData["next_entity"];
 
         for(auto &jsonObj : sceneData["entities"]){
-            Entity e = deserializeEntity(jsonObj, *ecs);
-            EntityFunctions::initResources(e, *resourceManager, spatialPartitioner);
+            Entity e = deserializeEntity(jsonObj, ecs);
+            EntityFunctions::initResources(e, *resourceManager, spatialPartitioner, ecs);
             if(ecs->hasComponent<TransformComponent>(e)){
                 auto* transform = ecs->getComponent<TransformComponent>(e);
-                EntityFunctions::move(transform->position, e);
-                EntityFunctions::rotate(glm::quat(transform->rotation[0], transform->rotation[1], transform->rotation[2], transform->rotation[3]), e);
-                EntityFunctions::scale(transform->scale, e);
+                EntityFunctions::move(transform->position, e, ecs);
+                EntityFunctions::rotate(glm::quat(transform->rotation[0], transform->rotation[1], transform->rotation[2], transform->rotation[3]), e, ecs);
+                EntityFunctions::scale(transform->scale, e, ecs);
             }
             
         }
 
         for(auto &jsonCam : sceneData["cameras"]){
-            EngineCamera::Camera *camera = deserializeCamera(jsonCam, *ecs);
+            EngineCamera::Camera *camera = deserializeCamera(jsonCam, ecs);
             scene->cameraManager.pushCamera(std::shared_ptr<EngineCamera::Camera>(camera));
         }
 

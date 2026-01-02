@@ -80,16 +80,16 @@ namespace EngineRenderer {
             public: 
                 Renderer();
 
-                GLFWwindow* window;
+                GLFWwindow* window = nullptr;
                 bool framebuffersrResized = false;
 
                 void initVulkan();
                 void initObjectResources(EngineResource::ResourceManager &resourceManager);
                 void initEntities(Scene &scene, EngineResource::ResourceManager &resourceManager, 
-                                 EnginePartitioning::Spatial_Partitioner &SpatialPartitioner, ECS& ecs);
-                void cleanup(Scene *scene);
-                void drawFrame(Scene *scene, ECS& ecs, FrameFlags frameFlags);
-                void createSceneDescriptorSets(Scene *scene, ECS& ecs);
+                                 EnginePartitioning::Spatial_Partitioner &SpatialPartitioner, ECS* ecs);
+                void cleanup();
+                void drawFrame(Scene *scene, ECS* ecs, FrameFlags frameFlags);
+                void createSceneDescriptorSets(Scene *scene, ECS* ecs);
 
                 void updateUniformBuffers(UniformBufferObject &ubo, float fov){
                     uniformBufferCommand.updateUniformBuffers(ubo, fov, currentFrame, appSwapChain.swapChainExtent, uniformBuffersMapped);
@@ -112,7 +112,6 @@ namespace EngineRenderer {
                 void setObjectUboStride(VkDeviceSize objectUboStride){this->objectUboStride = objectUboStride;}
                 VkDeviceSize getObjectUboStride(){return objectUboStride;}
                 std::vector<void*>& getObjectUniformBuffersMapped(){return objectUniformBuffersMapped;}
-
     };
 }
 

@@ -3,7 +3,7 @@
 #include "Spatial/Spatial_Partitioner.hpp"
 #include <unordered_set>
 
-bool raycast(RayCastHit& hit, Ray ray, float maxDistance, Spatial_Partitioner* spatial_partitioner, ECS& ecs){
+bool raycast(RayCastHit& hit, Ray ray, float maxDistance, Spatial_Partitioner* spatial_partitioner, ECS* ecs){
     ray.direction = glm::normalize(ray.direction);
     hit.normal = glm::vec3(0.0f);
 
@@ -24,9 +24,9 @@ bool raycast(RayCastHit& hit, Ray ray, float maxDistance, Spatial_Partitioner* s
     float closestHit = maxDistance;
 
     for(auto& entity : possibleEntities){
-        if(!ecs.hasComponent<BoundingBoxComponent>(entity)) continue;
+        if(!ecs->hasComponent<BoundingBoxComponent>(entity)) continue;
 
-        auto* boundingBox = ecs.getComponent<BoundingBoxComponent>(entity);
+        auto* boundingBox = ecs->getComponent<BoundingBoxComponent>(entity);
         
         float tx1 = (boundingBox->worldBoundingBox.min.x - ray.origin.x) / ray.direction.x;
         float tx2 = (boundingBox->worldBoundingBox.max.x - ray.origin.x) / ray.direction.x;

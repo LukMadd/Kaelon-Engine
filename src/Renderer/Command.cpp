@@ -80,7 +80,7 @@ namespace EngineRenderer{
     }
 
     void Command::recordCommandBuffers(
-        ECS& ecs, 
+        ECS* ecs, 
         Scene* scene,
         VkCommandBuffer commandBuffer, 
         uint32_t imageIndex, 
@@ -126,8 +126,8 @@ namespace EngineRenderer{
         if(wireFrameModeEnabled){
             vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineManager.graphicsPipelineWireFrame);
         } else{
-            for(auto& entity : ecs.view<RenderableComponent, MaterialComponent>()){
-                auto entity_material = ecs.getComponent<MaterialComponent>(entity);
+            for(auto& entity : ecs->view<RenderableComponent, MaterialComponent>()){
+                auto entity_material = ecs->getComponent<MaterialComponent>(entity);
                 // MAKE IT NOT RE BIND A PIPELINE
                 vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, 
                         *pipelineManager.pipelines[entity_material->material->getShader().fragShader.c_str()]);
@@ -147,12 +147,12 @@ namespace EngineRenderer{
         scissor.extent = swapChain.swapChainExtent;
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-        for(auto& entity : ecs.view<RenderableComponent>()){
+        for(auto& entity : ecs->view<RenderableComponent>()){
             if(!scene->descriptorSets[0]){
                 throw std::runtime_error("Invalid descriptor sets for binding!");
             }
 
-            uint32_t uniformIndex = ecs.getComponent<RenderableComponent>(entity)->uniformIndex;
+            uint32_t uniformIndex = ecs->getComponent<RenderableComponent>(entity)->uniformIndex;
 
 
             uint32_t dynamicOffset = uniformIndex * objectUboStride;
@@ -162,7 +162,7 @@ namespace EngineRenderer{
                                     0, 1, &scene->descriptorSets[currentFrame],
                                     1, &dynamicOffset);
            
-            draw(entity ,ecs, commandBuffer, pipelineManager.pipelineLayout);
+            EntityFunctions::draw(entity, commandBuffer, pipelineManager.pipelineLayout, ecs);
 
             drawCallCount++;
         }

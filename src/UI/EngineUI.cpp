@@ -7,11 +7,10 @@
 #include "Scene/SceneManager.hpp"
 #include "ECS/EntityFunctions.hpp"
 #include "imgui.h"
-#include <iostream>
 
 namespace EngineUI{
     void EngineUI::drawMainLayout(EngineScene::SceneManager *sceneManager, 
-                                  EngineCamera::CameraManager *cameraManager, ECS& ecs){
+                                  EngineCamera::CameraManager *cameraManager, ECS* ecs){
             if(ImGui::BeginMenuBar()){
             if(ImGui::BeginMenu("Scene")){
                 ImGui::Checkbox("View Scenes", &m_showScenesWindow);
@@ -46,30 +45,30 @@ namespace EngineUI{
         }
     }
 
-    void EngineUI::drawSceneHierarchy(EngineScene::Scene *scene, ECS& ecs){
+    void EngineUI::drawSceneHierarchy(EngineScene::Scene *scene, ECS* ecs){
         if(m_showSceneHierarchyWindow){
             ImGui::Begin("Scene Hierarchy");
             const char* entity_preview_text;
 
             if(selectedEntity != nullEntity){
-                auto* selected_metadata = ecs.getComponent<MetadataComponent>(selectedEntity);
+                auto* selected_metadata = ecs->getComponent<MetadataComponent>(selectedEntity);
                 entity_preview_text = selected_metadata->name.c_str();
             } else{
                 entity_preview_text = "Select an object";
             }
 
             if(ImGui::BeginCombo("Entities", entity_preview_text)){
-                for(auto& entity : ecs.view<MetadataComponent>()){
+                for(auto& entity : ecs->view<MetadataComponent>()){
                     ImGui::PushID(entity);
                     bool is_entity_selected = (selectedEntity == entity);
-                    auto* entity_metadata = ecs.getComponent<MetadataComponent>(entity);
+                    auto* entity_metadata = ecs->getComponent<MetadataComponent>(entity);
                     if(ImGui::Selectable(entity_metadata->name.c_str(), is_entity_selected)){
-                        auto* selected_entity_metadata = ecs.getComponent<MetadataComponent>(selectedEntity);
+                        auto* selected_entity_metadata = ecs->getComponent<MetadataComponent>(selectedEntity);
                         if(selectedEntity != nullEntity) selected_entity_metadata->selected = false;
                         
                         selectedEntity = entity;
                         
-                        selected_entity_metadata = ecs.getComponent<MetadataComponent>(entity);
+                        selected_entity_metadata = ecs->getComponent<MetadataComponent>(entity);
                         
                         selected_entity_metadata->selected = true;
                         m_showObjectInspector = true;
@@ -111,13 +110,13 @@ namespace EngineUI{
         }
     }
 
-    void EngineUI::drawObjectInspector(EngineScene::Scene *scene, std::vector<Entity> &changedBoundingBoxes, ECS& ecs){
+    void EngineUI::drawEntityInspector(EngineScene::Scene *scene, std::vector<Entity> &changedBoundingBoxes, ECS* ecs){
         if(m_showObjectInspector && selectedEntity || previousEntity != selectedEntity){
             previousEntity = selectedEntity;
             m_showObjectInspector = true;
 
-            auto* metadata = ecs.getComponent<MetadataComponent>(selectedEntity);
-            auto* transform = ecs.getComponent<TransformComponent>(selectedEntity);
+            auto* metadata = ecs->getComponent<MetadataComponent>(selectedEntity);
+            auto* transform = ecs->getComponent<TransformComponent>(selectedEntity);
 
             ImGui::Begin("Entity Inspector");
 
@@ -141,7 +140,7 @@ namespace EngineUI{
                     ImGui::InputFloat("Y: ", &positionY);
                     ImGui::InputFloat("Z: ", &positionZ);
                     if(glm::vec3(positionX, positionY, positionZ) != transform->position){
-                        move(glm::vec3(positionX, positionY, positionZ), selectedEntity, ecs);
+                      EntityFunctions::move(glm::vec3(positionX, positionY, positionZ), selectedEntity, ecs);
                     }
                     ImGui::TreePop();
                 }
@@ -157,8 +156,7 @@ namespace EngineUI{
                                                         transform->rotation.y,
                                                         transform->rotation.z);
                     if(glm::vec3(rotationX, rotationY, rotationZ) != currentRotation){
-                        std::cout << "Rotated\n";
-                        rotate(glm::vec3(rotationX, rotationY, rotationZ), selectedEntity, ecs);
+                      EntityFunctions::rotate(glm::vec3(rotationX, rotationY, rotationZ), selectedEntity, ecs);
                     }
                     ImGui::TreePop();
                 }
@@ -171,14 +169,14 @@ namespace EngineUI{
                     ImGui::InputFloat("Y: ", &scaleY);
                     ImGui::InputFloat("Z: ", &scaleZ);
                     if(glm::vec3(scaleX, scaleY, scaleZ) != transform->scale){
-                        scale(glm::vec3(scaleX, scaleY, scaleZ), selectedEntity, ecs);
+                      EntityFunctions::scale(glm::vec3(scaleX, scaleY, scaleZ), selectedEntity, ecs);
                     }
                     ImGui::TreePop();
                 }
             }
 
             if(ImGui::Button("Set As Target")){
-                auto* transform = ecs.getComponent<TransformComponent>(selectedEntity);
+                auto* transform = ecs->getComponent<TransformComponent>(selectedEntity);
                 selectedCamera->setTarget(selectedEntity, transform);
                 selectedCamera->setTargetOffset(glm::vec3(0.0f, 7.5f, -30.0f));
             }
@@ -243,13 +241,13 @@ namespace EngineUI{
         }
     }
 
-    void EngineUI::drawSceneInspector(EngineScene::SceneManager *sceneManager, ECS& ecs){
+    void EngineUI::drawSceneInspector(EngineScene::SceneManager *sceneManager, ECS* ecs){
         if(m_showSceneInspector && selectedScene){
             ImGui::Begin("Scene Inspector");
 
             ImGui::Text("Id: %d", selectedScene->index);
             ImGui::Text("Name: %s", selectedScene->name.c_str());
-            ImGui::Text("Entity Count: %d", (int)ecs.getTotalEntities());
+            ImGui::Text("Entity Count: %d", (int)ecs->getTotalEntities());
 
             if(ImGui::Button("Delete")){
                 sceneManager->deleteScene(selectedScene);
@@ -299,11 +297,11 @@ namespace EngineUI{
         }
     }
 
-    void EngineUI::drawRenderStats(EngineScene::Scene *scene, float fps, ECS& ecs){
+    void EngineUI::drawRenderStats(EngineScene::Scene *scene, float fps, ECS* ecs){
         if(m_showRenderStats){
             int triangleCount = 0;
 
-            ecs.foreach<MeshComponent>([&triangleCount](MeshComponent* m){
+            ecs->foreach<MeshComponent>([&triangleCount](MeshComponent* m){
                 triangleCount += m->mesh->indexCount /3;
             });
 
@@ -338,7 +336,5 @@ namespace EngineUI{
             ImGui::End();
         }
     }
-
-
 
 }

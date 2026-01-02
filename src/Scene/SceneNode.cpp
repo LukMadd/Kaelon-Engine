@@ -18,12 +18,12 @@ namespace EngineScene{
         transform.worldMatrix = parentMatrix * transform.localMatrix;
     }
 
-    void SceneNode::update(Entity e, const glm::mat4& parentMatrix, ECS& ecs){
-        auto* t = ecs.getComponent<TransformComponent>(e); 
+    void SceneNode::update(Entity e, const glm::mat4& parentMatrix, ECS* ecs){
+        auto* t = ecs->getComponent<TransformComponent>(e); 
         if(!t) return;
         updateMatrix(*t, parentMatrix);
-        for(auto& child : ecs.view<SceneNodeComponent>()){
-            auto* node = ecs.getComponent<SceneNodeComponent>(child);
+        for(auto& child : ecs->view<SceneNodeComponent>()){
+            auto* node = ecs->getComponent<SceneNodeComponent>(child);
             if(node->parent == e){
                 update(child, t->worldMatrix, ecs);
             }

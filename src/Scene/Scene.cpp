@@ -1,5 +1,4 @@
 #include "Scene/Scene.hpp"
-#include "Camera/Camera.hpp"
 #include "Debug/DebugRenderer.hpp"
 #include "ECS/Components.hpp"
 #include "ECS/ECS.hpp"

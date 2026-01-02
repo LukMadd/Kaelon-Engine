@@ -87,11 +87,15 @@ struct ECS{
     }
 
     Entity createEntity(std::string meshPath = "", std::string texturePath = "", std::string name = "", std::string type = ""){
-        return initEntity(*this, meshPath, texturePath, name, type);
+        return EntityFunctions::initEntity(meshPath, texturePath, name, type, this);
     }
 
     void setComponentStorage(ComponentStorage* storage){
         componentStorage = storage;
+    }
+
+    ComponentStorage* getComponentStorage(){
+        return componentStorage;
     }
 
     uint32_t getAvailableEntityID(){

@@ -21,10 +21,6 @@ namespace EngineRenderer {
 
     class PipelineManager{
         public:
-            PipelineManager(){
-                Debugger::get().initDebugSystem(DEBUG_SYSTEM);
-            }
-
             VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
             VkPipelineLayout debugLayout = VK_NULL_HANDLE;
 

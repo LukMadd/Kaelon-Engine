@@ -8,4 +8,6 @@ namespace EngineUtility{
         const glm::vec3& boxMax,
         float& t
     );
+
+    void initDebugSubSystems();
 }

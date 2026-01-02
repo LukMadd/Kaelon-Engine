@@ -3,6 +3,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/gtx/string_cast.hpp>
+#include "Debug/Debugger.hpp"
 
 namespace EngineUtility{
        bool rayIntersectsAABB(
@@ -38,5 +39,11 @@ namespace EngineUtility{
 
         glm::vec3 intersection = rayOrigin + rayDir * t;
         return true;
+    }
+
+    void initDebugSubSystems(){
+        //Initialize any debug subsystems here in the future
+        Debugger::get().initDebugSystem("Renderer");
+        Debugger::get().initDebugSystem("UI");
     }
 }

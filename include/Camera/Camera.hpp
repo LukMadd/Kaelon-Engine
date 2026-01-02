@@ -70,7 +70,7 @@ namespace EngineCamera{
         public:
             bool isFixed = false;
 
-            void updateCamera(float deltaTime, EngineInput::ActionManager &actionManager, bool is_scene_immersed);
+            void updateCamera(float deltaTime, EngineInput::ActionManager &actionManager);
 
             void updateYawAndPitch();
 

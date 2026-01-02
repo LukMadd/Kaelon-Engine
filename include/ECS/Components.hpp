@@ -1,17 +1,15 @@
 #ifndef COMPONENTS_HPP
 #define COMPONENTS_HPP
 
+#include "Misc/BoundingBox.hpp"
 #include "Misc/Mesh.hpp"
 #include "Misc/Material.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <memory>
-#include "Misc/AABB.hpp"
 
 using Entity = uint32_t;
 constexpr int nullEntity = std::numeric_limits<uint32_t>::max();
-
-;
 
 struct TransformComponent{
     glm::vec3 position{0.0f};

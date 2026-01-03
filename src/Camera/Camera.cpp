@@ -1,6 +1,7 @@
 #include "Camera/Camera.hpp"
 #include "Input/Action.hpp"
 #include "Input/Input.hpp"
+#include "Input/InputBindings.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <array>
@@ -86,7 +87,7 @@ namespace EngineCamera{
 
         view = glm::lookAt(position, position + front, up);
 
-        if(!isFixed || yaw != lastYawUpdate  || pitch != lastPitchUpdate){
+        if(!isFixed && !is_camera_locked || yaw != lastYawUpdate  || pitch != lastPitchUpdate){
             updateYawAndPitch();
         }
     }

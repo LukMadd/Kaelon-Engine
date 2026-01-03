@@ -11,7 +11,7 @@ namespace EngineInput{
     }
 
     void ActionManager::setupDeveloperBindings(){
-        bind(Developer::TOGGLE_CAMERA_LOCK, Key::KEY_GRAVE_ACCENT);
+        bind(Developer::TOGGLE_CAMERA_LOCK, Key::KEY_PERIOD);
         bind(Developer::CAMERA_FORWARD, Key::KEY_W);
         bind(Developer::CAMERA_BACKWARD, Key::KEY_S);
         bind(Developer::CAMERA_LEFT, Key::KEY_A);

@@ -34,7 +34,7 @@ InputBindings::getDeveloperBindings(Camera *camera, GLFWwindow *window,
   };
 
   auto dev_lock_camera = [actionManager]() {
-    if (!was_camera_locked_action_active) {
+    if(!was_camera_locked_action_active){
       is_camera_locked = !is_camera_locked;
     }
     is_camera_locked_action_active = true;

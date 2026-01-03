@@ -10,7 +10,7 @@ using namespace EngineCamera;
 
 namespace EngineInput {
 namespace InputBindings {
-  std::unordered_map<int, std::function<void()>>getDeveloperBindings(Camera *camera, GLFWwindow *window, ActionManager *actionManager);
+  std::unordered_map<int, std::function<void()>> getDeveloperBindings(Camera *camera, GLFWwindow *window, ActionManager *actionManager);
   std::unordered_map<int, std::function<void()>> getPlayerBindings3D(GLFWwindow *window, ActionManager *actionManager, ECS* ecs, Player3D& player);
 }; // namespace InputBindings
 

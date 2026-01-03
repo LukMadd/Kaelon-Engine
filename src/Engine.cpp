@@ -9,7 +9,7 @@
 #include "ECS/EntityFunctions.hpp"
 #include "Physics/Raycast.hpp"
 #include "EngineGlobals.hpp"
-
+#include <filesystem>
 
 using namespace EngineInput;
 
@@ -40,6 +40,8 @@ namespace Engine{
     }
 
     void GameEngine::init(){
+      std::filesystem::create_directories(GRAPPLE_SCENE_DIR); //Creates scenes directory if not present
+
       EngineUtility::initDebugSubSystems();
 
       renderer.initVulkan();

@@ -14,9 +14,9 @@
 using namespace EngineInput;
 
 namespace Engine{
-    GameEngine::GameEngine() : renderer(){};
+    GrappleEngine::GrappleEngine() : renderer(){};
 
-    void GameEngine::switchContexts(EngineContext& newContext){
+    void GrappleEngine::switchContexts(EngineContext& newContext){
       currentContext = &newContext;
 
       spatialPartitioner.reset();
@@ -39,7 +39,7 @@ namespace Engine{
       hasContextChanged = true;
     }
 
-    void GameEngine::init(){
+    void GrappleEngine::init(){
       std::filesystem::create_directories(GRAPPLE_SCENE_DIR); //Creates scenes directory if not present
 
       EngineUtility::initDebugSubSystems();
@@ -96,7 +96,7 @@ namespace Engine{
     }
 
     //Small extra checks to ensure everything is up-to-date without cluttering main function
-    void GameEngine::MainLoopExtraChecks(){
+    void GrappleEngine::MainLoopExtraChecks(){
         //Updates the binding if the camera has changed
         if(currentContext->sceneManager.getCurrentScene()->cameraManager.hasCameraChanged || hasContextChanged){
             auto bindings = InputBindings::getDeveloperBindings(currentContext->sceneManager.getCurrentScene()->cameraManager.getCurrentCamera().get(), 
@@ -105,7 +105,7 @@ namespace Engine{
         }
     }
 
-    void GameEngine::RendererMainLoop(float deltaTime){
+    void GrappleEngine::RendererMainLoop(float deltaTime){
         glfwPollEvents();
         drawCallCountLastFrame = drawCallCount;
         drawCallCount = 0;
@@ -198,7 +198,7 @@ namespace Engine{
         rawFps = renderer.getGpuFPS();
     }
 
-    void GameEngine::mainLoop(){
+    void GrappleEngine::mainLoop(){
         auto lastTime = std::chrono::high_resolution_clock::now();
 
         while(!glfwWindowShouldClose(window)){            
@@ -226,7 +226,7 @@ namespace Engine{
         vkDeviceWaitIdle(EngineRenderer::device);
     }
 
-    void GameEngine::cleanup(){
+    void GrappleEngine::cleanup(){
         vkDeviceWaitIdle(device);
         for(auto& context : contexts){
           if(!context->isSetup) continue;

@@ -16,7 +16,7 @@
 
 
 namespace Engine{
-    struct GameEngine{    
+    struct GrappleEngine{    
         EngineResource::ResourceManager resourceManager;
         EngineInput::ActionManager actionManager;
         EngineInput::InputHandler inputHandler;
@@ -24,7 +24,7 @@ namespace Engine{
         EngineUI::UIManager uiManager;
         EngineUI::FPSManager fpsManager; //Might just become debug manager in the future
 
-        GameEngine();
+        GrappleEngine();
     
         void init();
 
